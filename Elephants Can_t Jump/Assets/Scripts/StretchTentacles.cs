@@ -8,6 +8,7 @@ public class StretchTentacles : MonoBehaviour {
     public Tentacle tentacleArm;
     public float scale = 0.03f;
     public float rate = 0.01f;
+    public float scaleRatio = 0f;
     public SpriteRenderer rend;
     public Transform rot;
     public CircleCollider2D cc;
@@ -15,6 +16,8 @@ public class StretchTentacles : MonoBehaviour {
 
     public bool expand = false;
     public bool canExpand = true;
+    public bool stuck = false;
+    public bool canAnchor = false;
 
 
 
@@ -55,6 +58,17 @@ public class StretchTentacles : MonoBehaviour {
 
             scale += rate;
 
+            #region enable / disable collider based on distance of tentacle
+            if(scale > 0.07f)
+            {
+                cc.enabled = true;
+            }
+            else
+            {
+                cc.enabled = false;
+            }
+            #endregion
+
             if (scale > 0.5f)
             {
                 rate = -rate;
@@ -66,6 +80,8 @@ public class StretchTentacles : MonoBehaviour {
                 canExpand = true;
             }
         }
+
+        //Stick();
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -78,5 +94,24 @@ public class StretchTentacles : MonoBehaviour {
         }
         Debug.Log("Point of contact: " + hit.point);
         wallPos = hit.point;
+        canExpand = false;
+        expand = false;
+        stuck = true;
+    }
+
+    void Stick()
+    {
+        if(stuck)
+        {
+            cc.enabled = false;
+            scale = Vector2.Distance(transform.position, wallPos)/8.6f;
+
+            // expand the tentacle
+            transform.localPosition = new Vector3(scale, 0f, 0f);
+            rend.size = new Vector2(2 * scale, rend.size.y);
+
+
+            rot.right = -new Vector2(transform.position.x, transform.position.y) + wallPos;
+        }
     }
 }
