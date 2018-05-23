@@ -22,23 +22,17 @@ public class PlayerMove : MonoBehaviour {
 
     int left, right, hor, up, down, vert;
 
+    public GameObject anchor = null;
+    public Transform rot;
+
+
     void Start () {
         rb = GetComponent<Rigidbody2D>();
         walls = LayerMask.NameToLayer("Walls");
         Physics2D.queriesStartInColliders = false;
         gravity = Vector2.down * 9.8f;
-        wallClimb += Climb;
 	}
 	
-    void Climb(Tentacle side)
-    {
-        wallClimbing = true;
-
-        up = Input.GetKey(KeyCode.W)? 1 : 0;
-        down = Input.GetKey(KeyCode.S) ? -1 : 0;
-        vert = up + down;
-        rb.velocity = (Vector2.up * vert * speed);
-    }
 
     void DetermineGrounding(RaycastHit2D hit, Grounding ground)
     {
@@ -55,8 +49,6 @@ public class PlayerMove : MonoBehaviour {
 
     void Update ()
     {
-        wallClimbing = false;
-
         #region raycasting system
         hitRight = Physics2D.Raycast(transform.position, Vector2.right, wallDist);
         hitLeft = Physics2D.Raycast(transform.position, Vector2.left, wallDist);
@@ -112,21 +104,6 @@ public class PlayerMove : MonoBehaviour {
         }
         #endregion
 
-        if (Functions.GripButton())
-        {
-            if (raycastGrounding[(int)Grounding.Right])
-            {
-                    print("I am gripping Right!");
-                    wallClimb(Tentacle.Right);
-            }
-            else if (raycastGrounding[(int)Grounding.Left])
-            {
-                    print("I am gripping Left!");
-                    wallClimb(Tentacle.Left);
-            }
-
-        }
-
         if(raycastGrounding[(int)Grounding.Bottom])
         {
             left = Input.GetKey(KeyCode.A) ? -1 : 0;
@@ -148,17 +125,20 @@ public class PlayerMove : MonoBehaviour {
             right = (Input.GetKey(KeyCode.A)) ? -1 : 0;
         }
 
-        //up = Input.GetKey(KeyCode.W) ? 1 : 0;
-        //down = Input.GetKey(KeyCode.S) ? -1 : 0;
-        //vert = up + down;
-        //rb.velocity = (Vector2.up * vert * speed);
-
-        if (grounding == Grounding.None) gravityMult = 0.5f;
+        if (grounding == Grounding.None) gravityMult = 1f;
         else gravityMult = 0f;
 
         hor = left + right;
         vert = up + down;
         rb.velocity = (Vector2.right*hor*speed) + (Vector2.up * vert * speed) + (gravity * gravityMult);
+
+
+        if(anchor != null && Input.GetKeyDown(KeyCode.Space))
+        {
+            print("I want to latch my tentacle at the anchor!");
+            // rotate the anchor
+            rot.right = -new Vector3(anchor.transform.position.x, anchor.transform.position.y,0f) + transform.position;
+        }
 
     }
 

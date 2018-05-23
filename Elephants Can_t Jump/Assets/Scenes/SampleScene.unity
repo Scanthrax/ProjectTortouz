@@ -211,6 +211,7 @@ MonoBehaviour:
   expand: 0
   canExpand: 1
   stuck: 0
+  canAnchor: 0
 --- !u!58 &62995777
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -428,6 +429,7 @@ MonoBehaviour:
   expand: 0
   canExpand: 1
   stuck: 0
+  canAnchor: 0
 --- !u!58 &380587406
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -525,9 +527,9 @@ GameObject:
   m_Component:
   - component: {fileID: 542152032}
   - component: {fileID: 542152031}
-  - component: {fileID: 542152036}
   - component: {fileID: 542152035}
   - component: {fileID: 542152034}
+  - component: {fileID: 542152036}
   m_Layer: 11
   m_Name: Octopus
   m_TagString: Untagged
@@ -569,7 +571,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: b3a702ee83954a740a2788c13c51f8c2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -587,7 +589,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 542152030}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.404, y: -4.26, z: 0.14257812}
+  m_LocalPosition: {x: -2.404, y: -4.26, z: 0}
   m_LocalScale: {x: 8.0553, y: 8.0553, z: 8.0553}
   m_Children:
   - {fileID: 319799776}
@@ -659,7 +661,9 @@ MonoBehaviour:
   gravity: {x: 0, y: 0}
   gravityMult: 0
   raycastGrounding: 00000000
-  grounding: 0
+  grounding: 8
+  anchor: {fileID: 0}
+  rot: {fileID: 319799776}
 --- !u!1 &630932742
 GameObject:
   m_ObjectHideFlags: 0
@@ -706,7 +710,7 @@ GameObject:
   - component: {fileID: 717684243}
   - component: {fileID: 717684244}
   m_Layer: 10
-  m_Name: Ground (4)
+  m_Name: Anchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -802,9 +806,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.000000014901161}
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.6
+  m_Radius: 0.59
 --- !u!114 &717684244
 MonoBehaviour:
   m_ObjectHideFlags: 0

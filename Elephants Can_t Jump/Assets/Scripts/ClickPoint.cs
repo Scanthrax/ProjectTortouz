@@ -15,17 +15,17 @@ public class ClickPoint : MonoBehaviour {
         cam = Camera.main;
     }
 
-    void Update ()
-    {
-        Vector2 screenPoint = cam.ScreenToWorldPoint(Input.mousePosition);
+    //void Update ()
+    //{
+    //    Vector2 screenPoint = cam.ScreenToWorldPoint(Input.mousePosition);
 
-        if(Input.GetMouseButtonDown((int)Tentacle.Left))
-        {
-            notifyTentacle(Tentacle.Left, screenPoint);
-        }
-        if (Input.GetMouseButtonDown((int)Tentacle.Right))
-        {
-            notifyTentacle(Tentacle.Right, screenPoint);
-        }
-    }
+    //    if(Input.GetMouseButtonDown((int)Tentacle.Left))
+    //    {
+    //        notifyTentacle(Tentacle.Left, screenPoint);
+    //    }
+    //    if (Input.GetMouseButtonDown((int)Tentacle.Right))
+    //    {
+    //        notifyTentacle(Tentacle.Right, screenPoint);
+    //    }
+    //}
 }

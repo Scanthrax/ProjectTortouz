@@ -2,10 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Anchor : MonoBehaviour {
+public class Anchor : MonoBehaviour
+{
+    PlayerMove playerMove;
 
-    void OnTriggerStay2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        print("Akkoro is here!");
+        playerMove = collision.GetComponent<PlayerMove>();
+        playerMove.anchor = gameObject;
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        playerMove.anchor = null;
     }
 }
