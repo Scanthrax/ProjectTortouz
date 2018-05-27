@@ -4,11 +4,22 @@ using UnityEngine;
 
 public class Anchor : MonoBehaviour
 {
-    PlayerMove playerMove;
+    [SerializeField]    PlayerMove          playerMove;
+                        CircleCollider2D    cc;
+    [Range(0.45f, 2f)]  public float        rad;
+
+    private void Start()
+    {
+        cc = GetComponent<CircleCollider2D>();
+    }
+
+    private void Update()
+    {
+        cc.radius = rad;
+    }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        playerMove = collision.GetComponent<PlayerMove>();
         playerMove.anchor = gameObject;
     }
 

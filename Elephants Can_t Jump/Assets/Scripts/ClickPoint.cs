@@ -7,7 +7,7 @@ public class ClickPoint : MonoBehaviour {
 
     Camera cam;
 
-    public delegate void TentacleClick(Tentacle tent, Vector2 aim);
+    public delegate void TentacleClick(Tentacles tent, Vector2 aim);
     public static event TentacleClick notifyTentacle;
 
     void Start()

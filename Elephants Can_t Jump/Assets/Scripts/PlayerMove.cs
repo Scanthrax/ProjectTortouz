@@ -5,35 +5,25 @@ using Utility;
 
 public class PlayerMove : MonoBehaviour {
 
+    #region Movement
+    [Header("Movement")]
     public float speed;
-    Rigidbody2D rb;
-    public float wallDist;
-    public int walls;
-    public BoxCollider2D bc;
-    public bool wallClimbing = false;
-    public Vector2 gravity = Vector2.down * 9.8f;
     public float gravityMult = 0;
-    public bool[] raycastGrounding = new bool[4];
-    public Grounding grounding;
-    RaycastHit2D hitRight, hitLeft, hitTop, hitBottom;
-
-    public delegate void WallClimb(Tentacle side);
-    public static event WallClimb wallClimb;
-
-    int left, right, hor, up, down, vert;
-
+    Vector2 gravity = Vector2.down * 9.8f;
+    #endregion
+    #region Objects & Components
+    [Header("Objects & Components")]
     public GameObject anchor = null;
-    public Transform rot;
-
-
-    void Start () {
-        rb = GetComponent<Rigidbody2D>();
-        walls = LayerMask.NameToLayer("Walls");
-        Physics2D.queriesStartInColliders = false;
-        gravity = Vector2.down * 9.8f;
-	}
-	
-
+    Rigidbody2D rb;
+    #endregion
+    #region Grounding
+    [Header("Grounding")]
+    public Grounding grounding;
+    float wallDist = 0.8f;
+    bool[] raycastGrounding = new bool[4];
+    int left, right, hor, up, down, vert;
+    int walls;
+    RaycastHit2D hitRight, hitLeft, hitTop, hitBottom;
     void DetermineGrounding(RaycastHit2D hit, Grounding ground)
     {
         if (hit.collider != null && hit.collider.gameObject.layer == walls)
@@ -45,7 +35,42 @@ public class PlayerMove : MonoBehaviour {
             raycastGrounding[(int)ground] = false;
         }
     }
+    #endregion
+    #region Delegates
+    //public delegate void WallClimb(Tentacle side);
+    //public static event WallClimb wallClimb;
 
+    
+
+
+    #endregion
+    #region Tentacles
+    public float rate = 0.01f;
+    float magicNumber = 0.0666f;
+    public Tentacle anchorTentacle;
+    public Tentacle aimTentacle;
+    public Tentacle temp;
+    #endregion
+
+    [System.Serializable]
+    public struct Tentacle
+    {
+        public float scale;
+        public Tentacles state;
+        public float dist;
+        public SpriteRenderer rend;
+        public Transform rot;
+    }
+
+    Vector2 screenPoint;
+    public static Vector2? pointOfContact = null;
+
+    void Start () {
+        rb = GetComponent<Rigidbody2D>();
+        walls = LayerMask.NameToLayer("Walls");
+        Physics2D.queriesStartInColliders = false;
+
+	}
 
     void Update ()
     {
@@ -103,7 +128,7 @@ public class PlayerMove : MonoBehaviour {
             grounding = Grounding.None;
         }
         #endregion
-
+        #region movement
         if(raycastGrounding[(int)Grounding.Bottom])
         {
             left = Input.GetKey(KeyCode.A) ? -1 : 0;
@@ -130,18 +155,166 @@ public class PlayerMove : MonoBehaviour {
 
         hor = left + right;
         vert = up + down;
-        rb.velocity = (Vector2.right*hor*speed) + (Vector2.up * vert * speed) + (gravity * gravityMult);
+        rb.velocity = (Vector2.right * hor * speed) + (Vector2.up * vert * speed) + (gravity * gravityMult);
+        #endregion
+        TentacleAnchor();
+        TentacleAim();
+    }
 
 
-        if(anchor != null && Input.GetKeyDown(KeyCode.Space))
+    void TentacleAim()
+    {
+        if(pointOfContact != null)
         {
-            print("I want to latch my tentacle at the anchor!");
+            aimTentacle.dist = Vector2.Distance(pointOfContact.Value, transform.position);
+        }
+        switch(aimTentacle.state)
+        {
+            case Tentacles.None:
+                if(anchorTentacle.state == Tentacles.Anchored && Input.GetMouseButtonDown(0))
+                {
+                    print("I am launching my aiming tentacle!");
+                    aimTentacle.state = Tentacles.Expanding;
+                    screenPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                }
+                break;
+            case Tentacles.Expanding:
+                ExpandAim();
+                break;
+            case Tentacles.Anchored:
+                // rotate the anchor
+                aimTentacle.rot.right = new Vector3(pointOfContact.Value.x, pointOfContact.Value.y, 0f) - transform.position;
+                aimTentacle.scale = magicNumber * aimTentacle.dist;
+                CalculateTentacleLength(anchorTentacle);
+                break;
+            case Tentacles.Retracting:
+                print("Aim tentacle should be retracting!");
+                break;
+        }
+        if(anchorTentacle.state == Tentacles.Retracting)
+        {
+            aimTentacle.state = Tentacles.Retracting;
+        }
+    }
+ 
+    void TentacleAnchor()
+    {
+        switch(anchorTentacle.state)
+        {
+            case Tentacles.Expanding:
+                ExpandAnchor();
+                #region set anchor
+                // the tentacle is now anchored
+                if (anchorTentacle.scale >= anchorTentacle.dist * magicNumber)
+                {
+                    anchorTentacle.state = Tentacles.Anchored;
+                }
+                #endregion
+                break;
+            case Tentacles.Anchored:
+                AnchorAnchor();
+                break;
+            case Tentacles.Retracting:
+                RetractAnchor(anchorTentacle);
+                break;
+            case Tentacles.None:
+                #region trigger anchor tentacle expansion
+                if (anchor != null && Input.GetKeyDown(KeyCode.Space))
+                {
+                    print("I want to latch my tentacle at the anchor!");
+                    
+                    anchorTentacle.state = Tentacles.Expanding;
+                }
+                #endregion
+                break;
+        }
+    }
+
+
+
+    void RetractAnchor(Tentacle tent)
+    {
+        print("I should be retracting " + tent.ToString());
+
+        // retract tentacle
+        tent.scale -= rate;
+
+        // the tentacle is done retracting now
+        if (tent.scale <= 0f)
+        {
+            tent.scale = 0f;
+            tent.state = Tentacles.None;
+        }
+
+        CalculateTentacleLength(tent);
+    }
+    void ExpandAnchor()
+    {
+        print("I should be expanding my tentacle!");
+        if (anchor != null)
+        {
             // rotate the anchor
-            rot.right = -new Vector3(anchor.transform.position.x, anchor.transform.position.y,0f) + transform.position;
+            anchorTentacle.rot.right = new Vector3(anchor.transform.position.x, anchor.transform.position.y, 0f) - transform.position;
+            // find the distance from Akkoro to the anchor point
+            anchorTentacle.dist = Vector2.Distance(anchor.transform.position, transform.position);
+        }
+        else
+        {
+            anchorTentacle.state = Tentacles.Retracting;
+        }
+        // expand tentacle
+        anchorTentacle.scale += rate;
+        // expand the tentacle
+        CalculateTentacleLength(anchorTentacle);
+    }
+    void AnchorAnchor()
+    {
+        print("I should be anchored right now!");
+        if (anchor == null)
+        {
+            anchorTentacle.state = Tentacles.Retracting;
+        }
+        else
+        {
+            // rotate the anchor
+            anchorTentacle.rot.right = new Vector3(anchor.transform.position.x, anchor.transform.position.y, 0f) - transform.position;
+            // find the distance from Akkoro to the anchor point
+            anchorTentacle.dist = Vector2.Distance(anchor.transform.position, transform.position);
+        }
+        anchorTentacle.scale = magicNumber * anchorTentacle.dist;
+        CalculateTentacleLength(anchorTentacle);
+    }
+
+
+
+    void ExpandAim()
+    {
+        print("I should be expanding my aiming tentacle!");
+
+        // expand tentacle
+        aimTentacle.scale += rate;
+        CalculateTentacleLength(aimTentacle);
+
+        // rotate the anchor
+        aimTentacle.rot.right = new Vector3(screenPoint.x, screenPoint.y, 0f) - transform.position;
+
+
+        if(pointOfContact != null)
+        {
+            print("I've hit a wall with my tentacle!");
+            aimTentacle.state = Tentacles.Anchored;
         }
 
     }
 
+
+
+
+    void CalculateTentacleLength(Tentacle tent)
+    {
+        tent.rend.transform.localPosition = new Vector3(tent.scale, 0f, 0f);
+        tent.rend.size = new Vector2(2 * tent.scale, tent.rend.size.y);
+    }
 
     private void OnDrawGizmos()
     {

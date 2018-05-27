@@ -5,8 +5,8 @@ using Utility;
 
 public class StretchTentacles : MonoBehaviour {
 
-    public Tentacle tentacleArm;
-    public float scale = 0.03f;
+    public Tentacles tentacleArm;
+    public float scale = 0f;
     public float rate = 0.01f;
     public float scaleRatio = 0f;
     public SpriteRenderer rend;
@@ -30,7 +30,7 @@ public class StretchTentacles : MonoBehaviour {
         cc = GetComponent<CircleCollider2D>();
     }
 
-    void ThrowTentacle(Tentacle tent, Vector2 aim)
+    void ThrowTentacle(Tentacles tent, Vector2 aim)
     {
         // only throw if the correct input is pressed and can expand
         if (tent != tentacleArm || !canExpand) return;
@@ -49,36 +49,40 @@ public class StretchTentacles : MonoBehaviour {
     {
         if(expand)
         {
-            // expand the tentacle
-            transform.localPosition = new Vector3(scale, 0f, 0f);
-            rend.size = new Vector2(2 * scale, rend.size.y);
+            //// tentacle expansion rate
+            //scale += rate;
+
+            //// expand the tentacle
+            //transform.localPosition = new Vector3(scale, 0f, 0f);
+            //rend.size = new Vector2(2 * scale, rend.size.y);
 
             // the trigger will be at the end of the tentacle
-            cc.offset = new Vector2(scale, 0f);
+            // cc.offset = new Vector2(scale, 0f);
 
-            scale += rate;
+            
 
             #region enable / disable collider based on distance of tentacle
-            if(scale > 0.07f)
-            {
-                cc.enabled = true;
-            }
-            else
-            {
-                cc.enabled = false;
-            }
+            //if(scale > 0.07f)
+            //{
+            //    cc.enabled = true;
+            //}
+            //else
+            //{
+            //    cc.enabled = false;
+            //}
             #endregion
 
-            if (scale > 0.5f)
-            {
-                rate = -rate;
-            }
+            //if (scale > 0.5f)
+            //{
+            //    rate = -rate;
+            //}
 
-            if(scale <= 0f)
-            {
-                expand = false;
-                canExpand = true;
-            }
+            //if(scale <= 0f)
+            //{
+            //    scale = 0f;
+            //    expand = false;
+            //    canExpand = true;
+            //}
         }
 
         //Stick();
