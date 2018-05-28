@@ -46,10 +46,10 @@ public class PlayerMove : MonoBehaviour {
     #endregion
     #region Tentacles
     public float rate = 0.01f;
-    float magicNumber = 0.0666f;
+    float magicNumber = 0.064f;
     public Tentacle anchorTentacle;
     public Tentacle aimTentacle;
-    public Tentacle temp;
+    public CircleCollider2D aimTentacleCol;
     #endregion
 
     [System.Serializable]
@@ -175,6 +175,8 @@ public class PlayerMove : MonoBehaviour {
                 {
                     print("I am launching my aiming tentacle!");
                     aimTentacle.state = Tentacles.Expanding;
+                    pointOfContact = null;
+                    aimTentacleCol.enabled = true;
                     screenPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 }
                 break;
@@ -184,11 +186,12 @@ public class PlayerMove : MonoBehaviour {
             case Tentacles.Anchored:
                 // rotate the anchor
                 aimTentacle.rot.right = new Vector3(pointOfContact.Value.x, pointOfContact.Value.y, 0f) - transform.position;
-                aimTentacle.scale = magicNumber * aimTentacle.dist;
-                CalculateTentacleLength(anchorTentacle);
+                aimTentacle.scale = aimTentacle.dist * magicNumber;
+                CalculateTentacleLength(aimTentacle);
                 break;
             case Tentacles.Retracting:
                 print("Aim tentacle should be retracting!");
+                aimTentacle = RetractAnchor(aimTentacle);
                 break;
         }
         if(anchorTentacle.state == Tentacles.Retracting)
@@ -207,6 +210,7 @@ public class PlayerMove : MonoBehaviour {
                 // the tentacle is now anchored
                 if (anchorTentacle.scale >= anchorTentacle.dist * magicNumber)
                 {
+                    anchorTentacle.scale = anchorTentacle.dist * magicNumber;
                     anchorTentacle.state = Tentacles.Anchored;
                 }
                 #endregion
@@ -215,7 +219,7 @@ public class PlayerMove : MonoBehaviour {
                 AnchorAnchor();
                 break;
             case Tentacles.Retracting:
-                RetractAnchor(anchorTentacle);
+                anchorTentacle = RetractAnchor(anchorTentacle);
                 break;
             case Tentacles.None:
                 #region trigger anchor tentacle expansion
@@ -232,7 +236,7 @@ public class PlayerMove : MonoBehaviour {
 
 
 
-    void RetractAnchor(Tentacle tent)
+    Tentacle RetractAnchor(Tentacle tent)
     {
         print("I should be retracting " + tent.ToString());
 
@@ -247,7 +251,9 @@ public class PlayerMove : MonoBehaviour {
         }
 
         CalculateTentacleLength(tent);
+        return tent;
     }
+
     void ExpandAnchor()
     {
         print("I should be expanding my tentacle!");
@@ -298,6 +304,11 @@ public class PlayerMove : MonoBehaviour {
         // rotate the anchor
         aimTentacle.rot.right = new Vector3(screenPoint.x, screenPoint.y, 0f) - transform.position;
 
+
+        if(aimTentacle.scale > 0.35f)
+        {
+            aimTentacle.state = Tentacles.Retracting;
+        }
 
         if(pointOfContact != null)
         {
