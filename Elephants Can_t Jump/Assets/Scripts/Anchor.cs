@@ -6,7 +6,7 @@ public class Anchor : MonoBehaviour
 {
     [SerializeField]    PlayerMove          playerMove;
                         CircleCollider2D    cc;
-    [Range(0.45f, 2f)]  public float        rad;
+    [Range(0.45f, 2f)]  public float        rad = 2f;
 
     private void Start()
     {
