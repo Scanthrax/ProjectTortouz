@@ -32,7 +32,8 @@ public class PlayerMove : MonoBehaviour
         // array of booleans used to identify which surfaces Akkoro is grounded to
         bool[] raycastGrounding = new bool[4];
         // integers used to determine vertical & horizontal movement
-        int left, right, hor, up, down, vert;
+        int left, right, up, down;
+        float hor, vert;
         // integer value of layer Walls
         int walls;
         // Raycasts to pass into the DetermineGrounding function
@@ -136,10 +137,9 @@ public class PlayerMove : MonoBehaviour
             if (gripping && grounding != Grounding.None) EnableGravity(false);
             else EnableGravity(true);
         #endregion
-
         #region raycasting system
-            #region Set up raycasting for 4 directions
-                hitRight = Physics2D.Raycast(transform.position, Vector2.right, wallDist);
+        #region Set up raycasting for 4 directions
+        hitRight = Physics2D.Raycast(transform.position, Vector2.right, wallDist);
                 hitLeft = Physics2D.Raycast(transform.position, Vector2.left, wallDist);
                 hitBottom = Physics2D.Raycast(transform.position, Vector2.down, wallDist);
                 hitTop = Physics2D.Raycast(transform.position, Vector2.up, wallDist);
@@ -203,6 +203,11 @@ public class PlayerMove : MonoBehaviour
                 left = Input.GetKey(KeyCode.A) ? -1 : 0;
                 right = Input.GetKey(KeyCode.D) ? 1 : 0;
             }
+            else
+            {
+                left = 0;
+                right = 0;
+            }
             // The player will only be able to move on walls when gripping
             if (gripping)
             {
@@ -211,23 +216,39 @@ public class PlayerMove : MonoBehaviour
                     up = (Input.GetKey(KeyCode.W)) ? 1 : 0;
                     down = (Input.GetKey(KeyCode.S)) ? -1 : 0;
                 }
+                else if (!raycastGrounding[(int)Grounding.Right])
+                {
+                    up = 0;
+                    down = 0;
+                }
+
                 if (raycastGrounding[(int)Grounding.Right])
                 {
                     up = (Input.GetKey(KeyCode.W)) ? 1 : 0;
                     down = (Input.GetKey(KeyCode.S)) ? -1 : 0;
+                }
+                else if (!raycastGrounding[(int)Grounding.Left])
+                {
+                    up = 0;
+                    down = 0;
                 }
                 if (raycastGrounding[(int)Grounding.Top])
                 {
                     left = (Input.GetKey(KeyCode.D)) ? 1 : 0;
                     right = (Input.GetKey(KeyCode.A)) ? -1 : 0;
                 }
+                else if(!raycastGrounding[(int)Grounding.Bottom])
+                {
+                    left = 0;
+                    right = 0;
+                }
             }
             // horizontal movement with A & D
-            hor = (left + right) * 100;
+            hor = (left + right) * speed * Time.deltaTime;
             // vertical movement with W & S
-            vert = (up + down) * 100;
+            vert = (up + down) * speed * Time.deltaTime;
             // add force to Akkoro
-            rb.AddForce(new Vector2(hor, vert));
+            transform.Translate(new Vector2(hor,vert));
         #endregion
 
         TentacleAnchor();
