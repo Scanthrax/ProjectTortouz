@@ -197,52 +197,35 @@ public class PlayerMove : MonoBehaviour
         #endregion
 
         #region movement
+            // The player will only be able to move on walls when gripping
+            if (gripping)
+            {
+                if (raycastGrounding[(int)Grounding.Left] || raycastGrounding[(int)Grounding.Right])
+                {
+                    up = (Input.GetKey(KeyCode.W)) ? 1 : 0;
+                    down = (Input.GetKey(KeyCode.S)) ? -1 : 0;
+                }
+
+                if (raycastGrounding[(int)Grounding.Top])
+                {
+                    left = (Input.GetKey(KeyCode.D)) ? 1 : 0;
+                    right = (Input.GetKey(KeyCode.A)) ? -1 : 0;
+                }
+            }
+            else
+            {
+                up = 0;
+                down = 0;
+                left = 0;
+                right = 0;
+            }
             // The player will always be able to move on the ground
             if (raycastGrounding[(int)Grounding.Bottom])
             {
                 left = Input.GetKey(KeyCode.A) ? -1 : 0;
                 right = Input.GetKey(KeyCode.D) ? 1 : 0;
             }
-            else
-            {
-                left = 0;
-                right = 0;
-            }
-            // The player will only be able to move on walls when gripping
-            if (gripping)
-            {
-                if (raycastGrounding[(int)Grounding.Left])
-                {
-                    up = (Input.GetKey(KeyCode.W)) ? 1 : 0;
-                    down = (Input.GetKey(KeyCode.S)) ? -1 : 0;
-                }
-                else if (!raycastGrounding[(int)Grounding.Right])
-                {
-                    up = 0;
-                    down = 0;
-                }
 
-                if (raycastGrounding[(int)Grounding.Right])
-                {
-                    up = (Input.GetKey(KeyCode.W)) ? 1 : 0;
-                    down = (Input.GetKey(KeyCode.S)) ? -1 : 0;
-                }
-                else if (!raycastGrounding[(int)Grounding.Left])
-                {
-                    up = 0;
-                    down = 0;
-                }
-                if (raycastGrounding[(int)Grounding.Top])
-                {
-                    left = (Input.GetKey(KeyCode.D)) ? 1 : 0;
-                    right = (Input.GetKey(KeyCode.A)) ? -1 : 0;
-                }
-                else if(!raycastGrounding[(int)Grounding.Bottom])
-                {
-                    left = 0;
-                    right = 0;
-                }
-            }
             // horizontal movement with A & D
             hor = (left + right) * speed * Time.deltaTime;
             // vertical movement with W & S
