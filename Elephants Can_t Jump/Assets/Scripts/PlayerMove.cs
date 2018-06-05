@@ -6,37 +6,68 @@ using Utility;
 public class PlayerMove : MonoBehaviour
 {
     #region Movement
+        /// <summary>
+        /// Movement speed
+        /// </summary>
         [Header("Movement")]
-        // movement speed
         public float speed = 10f;
-        // scales the intensity of the gravity
+        /// <summary>
+        /// Scales the intensity of the gravity
+        /// </summary>
         public float gravScale = 4f;
-        // is Akkoro gripping?
+        /// <summary>
+        /// is Akkoro gripping?
+        /// </summary>    
         public bool gripping = true;
     #endregion
     #region Objects & Components
-    [Header("Objects & Components")]
-        // anchor that is currently in range; it is set to null if none are in range
+        /// <summary>
+        /// The anchor that is currently in range; it is set to null if none are in range
+        /// </summary>
+        [Header("Objects & Components")]
         public GameObject anchor = null;
-        // rigid body component
+        /// <summary>
+        /// The rigid body component
+        /// </summary>
         Rigidbody2D rb;
-        // The rotation of this transform will be used to calculate the launch direction of Akkoro
+        /// <summary>
+        /// The rotation of this transform will be used to calculate the launch direction of Akkoro
+        /// </summary>
         public Transform launchDir;
+        /// <summary>
+        /// Box Collider used for attacking
+        /// </summary>
+        public BoxCollider2D attackCollider;
     #endregion
     #region Grounding
-    [Header("Grounding")]
-        // enum used to display which surfaces Akkoro is being grounded to
+        /// <summary>
+        /// Displays which surfaces Akkoro is being grounded to
+        /// </summary>
+        [Header("Grounding")]
         public Grounding grounding;
-        // distance from walls; used to determine grounding range
+        /// <summary>
+        /// Range of the raycasts that project from Akkoro to all sides; used to determine grounding range
+        /// </summary>
         float wallDist = 0.8f;
-        // array of booleans used to identify which surfaces Akkoro is grounded to
+        /// <summary>
+        /// Array of booleans used to identify which surfaces Akkoro is grounded to
+        /// </summary>
         bool[] raycastGrounding = new bool[4];
-        // integers used to determine vertical & horizontal movement
+        /// <summary>
+        /// Ints used to determine direction
+        /// </summary>
         int left, right, up, down;
+        /// <summary>
+        /// Floats used to translate Akkoro
+        /// </summary>
         float hor, vert;
-        // integer value of layer Walls
+        /// <summary>
+        /// Integer value of layer Walls
+        /// </summary>
         int walls;
-        // Raycasts to pass into the DetermineGrounding function
+        /// <summary>
+        /// Raycasts to pass into the DetermineGrounding function
+        /// </summary>
         RaycastHit2D hitRight, hitLeft, hitTop, hitBottom;
         /// <summary>
         /// This function is used to calculate the grounding from the raycast. The RaycastHit param is the raycast to be checked; the Grounding param assigns which side the hit should be checking for.
@@ -44,16 +75,16 @@ public class PlayerMove : MonoBehaviour
         /// <param name="hit"></param>
         /// <param name="ground"></param>
         void DetermineGrounding(RaycastHit2D hit, Grounding ground)
-        {
-            if (hit.collider != null && hit.collider.gameObject.layer == walls)
             {
-                raycastGrounding[(int)ground] = true;
+                if (hit.collider != null && hit.collider.gameObject.layer == walls)
+                {
+                    raycastGrounding[(int)ground] = true;
+                }
+                else
+                {
+                    raycastGrounding[(int)ground] = false;
+                }
             }
-            else
-            {
-                raycastGrounding[(int)ground] = false;
-            }
-        }
     #endregion
     #region Delegates
     //public delegate void WallClimb(Tentacle side);
@@ -69,13 +100,21 @@ public class PlayerMove : MonoBehaviour
         /// The free-aiming tentacle that will latch onto surfaces
         /// </summary>
         public Tentacle aimTentacle;
-        // the collider on the aiming tentacle that will collide with surfaces
+        /// <summary>
+        /// the collider on the Aim tentacle that will collide with surfaces
+        /// </summary>
         public CircleCollider2D aimTentacleCol;
-        // rate at chich tentacles will expand / contract
+        /// <summary>
+        /// The rate at chich tentacles will expand/contract
+        /// </summary>
         public float rate = 0.01f;
-        // the "magic number" is multiplied with the tentacle distance in order to assign the appropriate scale for the tentacle (used to expand the tentacle) 
+        /// <summary>
+        /// The "magic number" is multiplied with the tentacle distance in order to assign the appropriate scale for the tentacle (used to expand the tentacle) 
+        /// </summary>
         float magicNumber = 0.064f;
-        // range of the tentacles
+        /// <summary>
+        /// Maximum range of the tentacles
+        /// </summary>
         public float tentacleRange;
         /// <summary>
         /// The Tentacle class creates the two tentacles that Akkoro will use throughout the game
@@ -83,16 +122,29 @@ public class PlayerMove : MonoBehaviour
         [System.Serializable]
         public struct Tentacle
         {
+            /// <summary>
+            /// Scale value of the tencale.  It is incremented over time to extend/retract the tentacle
+            /// </summary>
             public float scale;
-            // current state of the tentacle
+            /// <summary>
+        /// Current state of the tentacle
+        /// </summary>
             public Tentacles state;
-            // length of the tentacle
+            /// <summary>
+        /// Distance between Akkoro's origin & the end of the tentacle
+        /// </summary>
             public float dist;
-            // sprite renderer of the tentacle
+            /// <summary>
+            /// Sprite renderer of the tentacle
+            /// </summary>
             public SpriteRenderer rend;
-            // rotation of the tentacle arm
+            /// <summary>
+        /// Rotation of the tentacle arm
+        /// </summary>
             public Transform rot;
-            // anchor position of the tentacle; set to null of there is no position
+            /// <summary>
+        /// Anchor position of the tentacle; set to null of there is no position
+        /// </summary>
             public Vector2? anchorPos;
         }
     #endregion
@@ -202,22 +254,22 @@ public class PlayerMove : MonoBehaviour
             {
                 if (raycastGrounding[(int)Grounding.Left] || raycastGrounding[(int)Grounding.Right])
                 {
-                    up = (Input.GetKey(KeyCode.W)) ? 1 : 0;
-                    down = (Input.GetKey(KeyCode.S)) ? -1 : 0;
+                    up = Input.GetKey(KeyCode.W) ? 1 : 0;
+                    down = Input.GetKey(KeyCode.S) ? -1 : 0;
                 }
 
                 if (raycastGrounding[(int)Grounding.Top])
                 {
-                    left = (Input.GetKey(KeyCode.D)) ? 1 : 0;
-                    right = (Input.GetKey(KeyCode.A)) ? -1 : 0;
+                    left = Input.GetKey(KeyCode.A) ? -1 : 0;
+                    right = Input.GetKey(KeyCode.D) ? 1 : 0;
                 }
             }
             else
             {
                 up = 0;
-                down = 0;
                 left = 0;
                 right = 0;
+                down = 0;
             }
             // The player will always be able to move on the ground
             if (raycastGrounding[(int)Grounding.Bottom])
@@ -226,12 +278,43 @@ public class PlayerMove : MonoBehaviour
                 right = Input.GetKey(KeyCode.D) ? 1 : 0;
             }
 
-            // horizontal movement with A & D
-            hor = (left + right) * speed * Time.deltaTime;
+            if(raycastGrounding[(int)Grounding.Left])
+            {
+                left = 0;
+            }
+            if (raycastGrounding[(int)Grounding.Right])
+            {
+                right = 0;
+            }
+        if (raycastGrounding[(int)Grounding.Top])
+        {
+            up = 0;
+        }
+        if (raycastGrounding[(int)Grounding.Bottom])
+        {
+            down = 0;
+        }
+
+
+        // horizontal movement with A & D
+        hor = (left + right) * speed * Time.deltaTime;
             // vertical movement with W & S
             vert = (up + down) * speed * Time.deltaTime;
-            // add force to Akkoro
-            transform.Translate(new Vector2(hor,vert));
+
+
+        if (hor < 0)
+        {
+            transform.rotation = Quaternion.Euler(new Vector3(0f, 180f, 0f));
+            // flip the horizontal direction, since the gameobject has been rotated 180 degrees
+            hor = -hor;
+        }
+        else if (hor > 0)
+        {
+            transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
+        }
+
+        // add force to Akkoro
+        transform.Translate(new Vector2(hor, vert));
         #endregion
 
         TentacleAnchor();
@@ -242,11 +325,18 @@ public class PlayerMove : MonoBehaviour
         if (aimTentacle.state == Tentacles.Anchored && anchorTentacle.state == Tentacles.Anchored)
         {
             // Visualize launch direction through gameobject transform
-            launchDir.right = CalculateVector();
+            launchDir.right = CalculateLaunchDirection();
         }
         #endregion
 
         Launching();
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            attackCollider.enabled = true;
+        }
+        else attackCollider.enabled = false;
+
     }
 
 
@@ -273,11 +363,11 @@ public class PlayerMove : MonoBehaviour
                 #region Expand the tentacle
                     // expand tentacle
                     aimTentacle.scale += rate;
-                    CalculateTentacleLength(aimTentacle);
+                    UpdateTentacleLength(aimTentacle);
                     // rotate the anchor
                     aimTentacle.rot.right = new Vector3(screenPos.x, screenPos.y, 0f) - transform.position;
                 #region  only expand to a certain extent
-                    if (aimTentacle.dist > tentacleRange)
+                    if (aimTentacle.scale / magicNumber > tentacleRange)
                     {
                         aimTentacle.state = Tentacles.Retracting;
                     }
@@ -297,7 +387,7 @@ public class PlayerMove : MonoBehaviour
                 // expand / contract
                 aimTentacle.scale = aimTentacle.dist * magicNumber;
                 // adjust length
-                CalculateTentacleLength(aimTentacle);
+                UpdateTentacleLength(aimTentacle);
 
                 if (aimTentacle.dist >= tentacleRange)
                 {
@@ -314,7 +404,7 @@ public class PlayerMove : MonoBehaviour
             #endregion
             case Tentacles.Retracting:
                 #region Retract the tentacle
-                aimTentacle = RetractAnchor(aimTentacle);
+                aimTentacle = RetractTentacle(aimTentacle);
                 break;
                 #endregion
         }
@@ -337,25 +427,82 @@ public class PlayerMove : MonoBehaviour
         switch(anchorTentacle.state)
         {
             case Tentacles.Expanding:
-                #region Expand the anchor
-                ExpandAnchor();
+                #region calculate distance
+                // TODO: fix null error
+                if (anchorTentacle.anchorPos.HasValue)
+                {
+                    // rotate the anchor
+                    // error is here
+                    anchorTentacle.rot.right = new Vector3(anchorTentacle.anchorPos.Value.x, anchorTentacle.anchorPos.Value.y, 0f) - transform.position;
+                    // find the distance from Akkoro to the anchor point
+                    anchorTentacle.dist = Vector2.Distance(anchorTentacle.anchorPos.Value, transform.position);
+                }
+                else
+                {
+                    anchorTentacle.state = Tentacles.Retracting;
+                }
+                #endregion
+                #region Update Tentacle length
+                // expand tentacle
+                anchorTentacle.scale += rate;
+                UpdateTentacleLength(anchorTentacle);
                 #endregion
                 #region Set anchor when full distance to anchor is reached
                 if (anchorTentacle.scale >= anchorTentacle.dist * magicNumber)
                 {
                     anchorTentacle.scale = anchorTentacle.dist * magicNumber;
+                    // set state to Anchored
                     anchorTentacle.state = Tentacles.Anchored;
+                    // set the anchor position
+                    if (anchor != null)
+                        anchorTentacle.anchorPos = anchor.transform.position;
+                    else anchorTentacle.state = Tentacles.Retracting;
                 }
                 #endregion
-                break;
+                #region Retract when max tentacle range is reached
+                    if(anchorTentacle.scale / magicNumber >= tentacleRange)
+                    {
+                        anchorTentacle.state = Tentacles.Retracting;
+                    }
+                    break;
+                #endregion
             case Tentacles.Anchored:
-                #region Keep the tentacle anchored
-                AnchorAnchor();
-                break;
-            #endregion
+                #region Press E to retract
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        anchorTentacle.state = Tentacles.Retracting;
+                    }
+                #endregion
+                #region Rotate the anchor
+                    anchorTentacle.rot.right = new Vector3(anchorTentacle.anchorPos.Value.x, anchorTentacle.anchorPos.Value.y, 0f) - transform.position;
+                #endregion
+                #region Adjust tentacle based on distance
+                    // find the distance from Akkoro to the anchor point
+                    anchorTentacle.dist = Vector2.Distance(anchorTentacle.anchorPos.Value, transform.position);
+                    // adjust scale based on distance
+                    anchorTentacle.scale = magicNumber * anchorTentacle.dist;
+                    UpdateTentacleLength(anchorTentacle);
+                #endregion
+                #region Keep Akkoro clamped between the range of the tentacles
+                    if (anchorTentacle.dist >= tentacleRange)
+                    {
+                        // find the point on the edge of the radius
+                        Vector2 circlePoint = CirclePoint(anchorTentacle.anchorPos.Value, tentacleRange, (Vector2.SignedAngle(Vector2.right, anchorTentacle.rot.right * -1)));
+                        // Only adjust the x value of the transform when on ceiling or ground
+                        if (grounding == Grounding.Bottom || grounding == Grounding.Top)
+                            transform.position = new Vector2(circlePoint.x, transform.position.y);
+                        // Only adjust the y value of the transform when on walls
+                        else if (grounding == Grounding.Left || grounding == Grounding.Right)
+                            transform.position = new Vector2(transform.position.x, circlePoint.y);
+                        // Adjust both x & y during any other case
+                        else
+                            transform.position = new Vector2(circlePoint.x, circlePoint.y);
+                    }
+                    break;
+                #endregion
             case Tentacles.Retracting:
                 #region retract Anchor tentacle
-                anchorTentacle = RetractAnchor(anchorTentacle);
+                anchorTentacle = RetractTentacle(anchorTentacle);
                 break;
             #endregion
             case Tentacles.None:
@@ -363,10 +510,17 @@ public class PlayerMove : MonoBehaviour
                 if (anchor != null && Input.GetKeyDown(KeyCode.E))
                 {
                     anchorTentacle.state = Tentacles.Expanding;
+                    print("should be expanding");
                 }
                 #endregion
                 break;
         }
+        #region calculate tentacle distance
+        if (anchorTentacle.anchorPos.HasValue)
+        {
+            anchorTentacle.dist = Vector2.Distance(anchorTentacle.anchorPos.Value, transform.position);
+        }
+        #endregion
     }
 
     void Launching()
@@ -374,21 +528,22 @@ public class PlayerMove : MonoBehaviour
         switch (launchState)
         {
             case Launch.Grounded:
-                // Launch if the player presses Q
-                if (Input.GetKeyDown(KeyCode.Q) && aimTentacle.state == Tentacles.Anchored)
-                {
-                    // delay sticking back to the surface you just launched from
-                    launchDelay = 0;
-                    // the player is now being launched
-                    launchState = Launch.Contracting;
-
-                    impulse = SpringCalc();
-
-                    // set starting position to set up Lerp
-                    startingPos = transform.position;
-                    lerp = 0f;
-                }
-                break;
+                #region Launch if the player presses Q
+                    if (Input.GetKeyDown(KeyCode.Q) && aimTentacle.state == Tentacles.Anchored)
+                    {
+                        // delay sticking back to the surface you just launched from
+                        launchDelay = 0;
+                        // the player is now being launched
+                        launchState = Launch.Contracting;
+                        // save impulse information
+                        impulse = SpringCalc();
+                        // set starting position to set up Lerp
+                        startingPos = transform.position;
+                        // reset lerp
+                        lerp = 0f;
+                    }
+                    break;
+                #endregion
             case Launch.Contracting:
                 // increase lerp over time
                 lerp += 0.1f;
@@ -399,10 +554,9 @@ public class PlayerMove : MonoBehaviour
                     anchorTentacle.state = Tentacles.Retracting;
                     aimTentacle.state = Tentacles.Retracting;
                     #endregion
-
-                    // launch between both tentacles
-                    //rb.AddForce(launchDir.right * impulse);
                     launchState = Launch.Launching;
+                    // launch between both tentacles
+                    rb.AddForce(launchDir.right * impulse);
                 }
                 break;
             case Launch.Launching:
@@ -415,13 +569,16 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-
-    Tentacle RetractAnchor(Tentacle tent)
+    /// <summary>
+    /// Retracts the tentacle that is sent into the function
+    /// </summary>
+    /// <param name="tent"></param>
+    /// <returns></returns>
+    Tentacle RetractTentacle(Tentacle tent)
     {
-
-        // retract tentacle
+        #region Retract tentacle
         tent.scale -= rate;
-
+        #endregion
         // the tentacle is done retracting now
         if (tent.scale <= 0f)
         {
@@ -429,63 +586,15 @@ public class PlayerMove : MonoBehaviour
             tent.state = Tentacles.None;
             tent.dist = 0f;
         }
-
-        CalculateTentacleLength(tent);
+        UpdateTentacleLength(tent);
         return tent;
-    }
-
-    void ExpandAnchor()
-    {
-        if (anchor != null)
-        {
-            // rotate the anchor
-            anchorTentacle.rot.right = new Vector3(anchor.transform.position.x, anchor.transform.position.y, 0f) - transform.position;
-            // find the distance from Akkoro to the anchor point
-            anchorTentacle.dist = Vector2.Distance(anchor.transform.position, transform.position);
-        }
-        else
-        {
-            anchorTentacle.state = Tentacles.Retracting;
-        }
-        // expand tentacle
-        anchorTentacle.scale += rate;
-        // expand the tentacle
-        CalculateTentacleLength(anchorTentacle);
-    }
-
-    void AnchorAnchor()
-    {
-        #region Press E to retract
-        if(Input.GetKeyDown(KeyCode.E))
-        {
-            anchorTentacle.state = Tentacles.Retracting;
-        }
-        #endregion
-        // rotate the anchor
-        anchorTentacle.rot.right = new Vector3(anchor.transform.position.x, anchor.transform.position.y, 0f) - transform.position;
-        // find the distance from Akkoro to the anchor point
-        anchorTentacle.dist = Vector2.Distance(anchor.transform.position, transform.position);
-        anchorTentacle.scale = magicNumber * anchorTentacle.dist;
-        CalculateTentacleLength(anchorTentacle);
-
-        
-        if(anchorTentacle.dist >= tentacleRange)
-        {
-            Vector2 circlePoint = CirclePoint(anchor.transform.position, tentacleRange, (Vector2.SignedAngle(Vector2.right, anchorTentacle.rot.right * -1)));
-            if(grounding == Grounding.Bottom || grounding == Grounding.Top)
-                transform.position = new Vector2(circlePoint.x, transform.position.y);
-            else if(grounding == Grounding.Left || grounding == Grounding.Right)
-                transform.position = new Vector2(transform.position.x, circlePoint.y);
-            else
-                transform.position = new Vector2(circlePoint.x, circlePoint.y);
-        }
     }
 
     /// <summary>
     /// Updates the length of the tentacle based on the scale of the tentacle provided
     /// </summary>
     /// <param name="tent"></param>
-    void CalculateTentacleLength(Tentacle tent)
+    void UpdateTentacleLength(Tentacle tent)
     {
         tent.rend.transform.localPosition = new Vector3(tent.scale, 0f, 0f);
         tent.rend.size = new Vector2(2 * tent.scale, tent.rend.size.y);
@@ -501,31 +610,35 @@ public class PlayerMove : MonoBehaviour
         else        rb.gravityScale = 0f;
     }
 
+    /// <summary>
+    /// Spring Equation
+    /// </summary>
+    /// <returns></returns>
     float SpringCalc()
     {
-        float k = 1000000f;
+        // k = spring constant
+        float k = 650000f;
+        // a & b = anchor of aim tentacle
         float a = aimTentacle.anchorPos.Value.x;
         float b = aimTentacle.anchorPos.Value.y;
+        // x0 & y0 = Akkoro's position
         float x0 = transform.position.x;
-        float x1 = anchor.transform.position.x;
         float y0 = transform.position.y;
-        float y1 = anchor.transform.position.y;
+        // x1 & y1 = anchor of anchor tentacle
+        float x1 = anchorTentacle.anchorPos.Value.x;
+        float y1 = anchorTentacle.anchorPos.Value.y;
+        // x & y are variables
         float x = Mathf.Abs((a * (x0 - x1)) + (b * (y0 - y1)));
         float y = Mathf.Sqrt(Mathf.Pow(a, 2) + Mathf.Pow(b, 2));
+        // l = distance of anchor tentacle
         l = anchorTentacle.dist;
+        // d = x / yis a variable of x / y
         d = x / y;
+        // X gets stored for later use
         X = Mathf.Sqrt(Mathf.Pow(l, 2) - Mathf.Pow(d, 2));
-        float z = Mathf.Sqrt(k * (Mathf.Pow(l, 2) - Mathf.Pow((x / y), 2f)));
-        return z;
+        // this is the final result
+        return Mathf.Sqrt(k * (Mathf.Pow(l, 2) - Mathf.Pow(d, 2)));
     }
-
-
-    //  x = cx + r* cos(a)
-    //  y = cy + r* sin(a)
-    //  Where r is the radius, cx, cy the origin, and a the angle.
-    //   That's pretty easy to adapt into any language with basic trig functions
-    //  Note that most languages will use radians for the angle in trig functions,
-    //  so rather than cycling through 0..360 degrees, you're cycling through 0..2PI radians.
 
     /// <summary>
     /// Calculates a point on the edge of a circle when provided an origin point, radius, and angle.
@@ -542,53 +655,22 @@ public class PlayerMove : MonoBehaviour
     }
 
     /// <summary>
-    /// Finds the direction between the Aim & Anchor tentacles
+    /// Finds the normalized launch direction between the Aim & Anchor tentacles
     /// </summary>
-    Vector2 CalculateVector()
+    Vector2 CalculateLaunchDirection()
     {
         Vector2 aimVector = aimTentacle.rot.right;
         Vector2 anchorVector = anchorTentacle.rot.right;
         return (aimVector + anchorVector).normalized;
     }
 
-    // c = Akkoro's arm length
-    // b = dist between anchor points
-    // k = spring constant
-    // F = K(c^2 - b^2)
-
-
-    //float SpringCalculations()
-    //{
-    //    // return if either anchor point becomes null
-    //    if(anchor == null || !pointOfContact.HasValue)
-    //    {
-    //        print("A value for the spring calculations is null!");
-    //        return 0f;
-    //    }
-
-    //    //float c = aimTentacle.dist;
-    //    float c = anchorTentacle.dist;
-    //    float b = Vector2.Distance(pointOfContact.Value, anchor.transform.position);
-    //    float k = 3f;
-    //    return k * (Mathf.Pow(c, 2) - Mathf.Pow(b, 2));
-    //}
-
-
-
-
-
-    //float ArcEquation()
-    //{
-    //    return (Mathf.Pow(SpringCalc(), 2)* Mathf.Sin(2*Vector2.Angle(Vector2.right,launchDir.right)))/9.8f;
-    //}
-
-
     void OnDrawGizmos()
     {
-        //Gizmos.color = Color.green;
+        Gizmos.color = Color.green;
         //Gizmos.DrawLine(transform.position, transform.position + (Vector3.right * wallDist));
         //Gizmos.DrawLine(transform.position, transform.position + (Vector3.left * wallDist));
         //Gizmos.DrawLine(transform.position, transform.position + (Vector3.down * wallDist));
         //Gizmos.DrawLine(transform.position, transform.position + (Vector3.up * wallDist));
+        //Gizmos.DrawLine(transform.position, launchDir.right * X);
     }
 }

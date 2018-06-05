@@ -14,6 +14,7 @@ public class StickToSurface : MonoBehaviour
         cc = GetComponent<CircleCollider2D>();
 
         Physics2D.queriesStartInColliders = false;
+        
     }
 
     private void LateUpdate()
