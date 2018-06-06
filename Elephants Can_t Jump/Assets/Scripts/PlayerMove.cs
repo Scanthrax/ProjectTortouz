@@ -48,11 +48,12 @@ public class PlayerMove : MonoBehaviour
         /// <summary>
         /// Range of the raycasts that project from Akkoro to all sides; used to determine grounding range
         /// </summary>
-        float wallDist = 0.8f;
-        /// <summary>
-        /// Array of booleans used to identify which surfaces Akkoro is grounded to
-        /// </summary>
-        bool[] raycastGrounding = new bool[4];
+        float wallDist = 0.86f;
+        float wallDist2 = 1.2f;
+    /// <summary>
+    /// Array of booleans used to identify which surfaces Akkoro is grounded to
+    /// </summary>
+    public bool[] raycastGrounding = new bool[8];
         /// <summary>
         /// Ints used to determine direction
         /// </summary>
@@ -65,10 +66,10 @@ public class PlayerMove : MonoBehaviour
         /// Integer value of layer Walls
         /// </summary>
         int walls;
-        /// <summary>
-        /// Raycasts to pass into the DetermineGrounding function
-        /// </summary>
-        RaycastHit2D hitRight, hitLeft, hitTop, hitBottom;
+    /// <summary>
+    /// Raycasts to pass into the DetermineGrounding function
+    /// </summary>
+    RaycastHit2D hitRight, hitLeft, hitTop, hitBottom, hitTR, hitTL, hitBR, hitBL;
         /// <summary>
         /// This function is used to calculate the grounding from the raycast. The RaycastHit param is the raycast to be checked; the Grounding param assigns which side the hit should be checking for.
         /// </summary>
@@ -190,19 +191,29 @@ public class PlayerMove : MonoBehaviour
             else EnableGravity(true);
         #endregion
         #region raycasting system
-        #region Set up raycasting for 4 directions
-        hitRight = Physics2D.Raycast(transform.position, Vector2.right, wallDist);
+            #region Set up raycasting for 4 directions
+                hitRight = Physics2D.Raycast(transform.position, Vector2.right, wallDist);
                 hitLeft = Physics2D.Raycast(transform.position, Vector2.left, wallDist);
                 hitBottom = Physics2D.Raycast(transform.position, Vector2.down, wallDist);
                 hitTop = Physics2D.Raycast(transform.position, Vector2.up, wallDist);
-            #endregion
-            #region Calculate the groundings for all directions
+
+                hitTR = Physics2D.Raycast(transform.position, new Vector2(1,1), wallDist2);
+                hitBR = Physics2D.Raycast(transform.position, new Vector2(1, -1), wallDist2);
+                hitBL = Physics2D.Raycast(transform.position, new Vector2(-1,-1), wallDist2);
+                hitTL = Physics2D.Raycast(transform.position, new Vector2(-1,1), wallDist2);
+        #endregion
+        #region Calculate the groundings for all directions
                 DetermineGrounding(hitRight,Grounding.Right);
                 DetermineGrounding(hitLeft,Grounding.Left);
                 DetermineGrounding(hitTop,Grounding.Top);
                 DetermineGrounding(hitBottom,Grounding.Bottom);
-            #endregion
-            #region Find out which walls Akkoro is currently grounded to
+                DetermineGrounding(hitTR, Grounding.TopRight);
+                DetermineGrounding(hitTL, Grounding.TopLeft);
+                DetermineGrounding(hitBL, Grounding.BottomLeft);
+                DetermineGrounding(hitBR, Grounding.BottomRight);
+
+        #endregion
+        #region Find out which walls Akkoro is currently grounded to
                 if (raycastGrounding[(int)Grounding.Bottom])
                 {
                     if(raycastGrounding[(int)Grounding.Right])
@@ -241,51 +252,46 @@ public class PlayerMove : MonoBehaviour
                 {
                     grounding = Grounding.Right;
                 }
+                else if(raycastGrounding[(int)Grounding.TopLeft] ||
+                        raycastGrounding[(int)Grounding.TopRight] ||
+                        raycastGrounding[(int)Grounding.BottomLeft] ||
+                        raycastGrounding[(int)Grounding.BottomRight])
+                {
+                    grounding = Grounding.Corner;
+                }
                 else
                 {
                     grounding = Grounding.None;
                 }
-            #endregion
+        #endregion
         #endregion
 
         #region movement
-            // The player will only be able to move on walls when gripping
-            if (gripping)
-            {
-                if (raycastGrounding[(int)Grounding.Left] || raycastGrounding[(int)Grounding.Right])
-                {
-                    up = Input.GetKey(KeyCode.W) ? 1 : 0;
-                    down = Input.GetKey(KeyCode.S) ? -1 : 0;
-                }
+        // The player will only be able to move on walls when gripping
+        if (gripping && grounding != Grounding.None)
+        {
+            up = Input.GetKey(KeyCode.W) ? 1 : 0;
+            down = Input.GetKey(KeyCode.S) ? -1 : 0;
+            left = Input.GetKey(KeyCode.A) ? -1 : 0;
+            right = Input.GetKey(KeyCode.D) ? 1 : 0;
+        }
+        else
+        {
+            up = 0;
+            down = 0;
+            left = Input.GetKey(KeyCode.A) ? -1 : 0;
+            right = Input.GetKey(KeyCode.D) ? 1 : 0;
+            
+        }
 
-                if (raycastGrounding[(int)Grounding.Top])
-                {
-                    left = Input.GetKey(KeyCode.A) ? -1 : 0;
-                    right = Input.GetKey(KeyCode.D) ? 1 : 0;
-                }
-            }
-            else
-            {
-                up = 0;
-                left = 0;
-                right = 0;
-                down = 0;
-            }
-            // The player will always be able to move on the ground
-            if (raycastGrounding[(int)Grounding.Bottom])
-            {
-                left = Input.GetKey(KeyCode.A) ? -1 : 0;
-                right = Input.GetKey(KeyCode.D) ? 1 : 0;
-            }
-
-            if(raycastGrounding[(int)Grounding.Left])
-            {
-                left = 0;
-            }
-            if (raycastGrounding[(int)Grounding.Right])
-            {
-                right = 0;
-            }
+        if(raycastGrounding[(int)Grounding.Left])
+        {
+            left = 0;
+        }
+        if (raycastGrounding[(int)Grounding.Right])
+        {
+            right = 0;
+        }
         if (raycastGrounding[(int)Grounding.Top])
         {
             up = 0;
@@ -293,7 +299,13 @@ public class PlayerMove : MonoBehaviour
         if (raycastGrounding[(int)Grounding.Bottom])
         {
             down = 0;
+            if(!raycastGrounding[(int)Grounding.Right] && !raycastGrounding[(int)Grounding.Left])
+            {
+                up = 0;
+            }
         }
+
+
 
 
         // horizontal movement with A & D
@@ -666,11 +678,15 @@ public class PlayerMove : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
+        //Gizmos.color = Color.green;
         //Gizmos.DrawLine(transform.position, transform.position + (Vector3.right * wallDist));
         //Gizmos.DrawLine(transform.position, transform.position + (Vector3.left * wallDist));
         //Gizmos.DrawLine(transform.position, transform.position + (Vector3.down * wallDist));
         //Gizmos.DrawLine(transform.position, transform.position + (Vector3.up * wallDist));
-        //Gizmos.DrawLine(transform.position, launchDir.right * X);
+
+        //Gizmos.DrawLine(transform.position, transform.position + (new Vector3(1, 1, 0) * wallDist));
+        //Gizmos.DrawLine(transform.position, transform.position + (new Vector3(-1, 1, 0) * wallDist));
+        //Gizmos.DrawLine(transform.position, transform.position + (new Vector3(-1, -1, 0) * wallDist));
+        //Gizmos.DrawLine(transform.position, transform.position + (new Vector3(1, -1, 0) * wallDist));
     }
 }
