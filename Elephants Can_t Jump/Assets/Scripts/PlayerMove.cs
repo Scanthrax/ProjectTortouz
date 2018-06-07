@@ -144,9 +144,9 @@ public class PlayerMove : MonoBehaviour
         /// </summary>
             public Transform rot;
             /// <summary>
-        /// Anchor position of the tentacle; set to null of there is no position
-        /// </summary>
-            public Vector2? anchorPos;
+            /// Anchor position of the tentacle; set to null of there is no position
+            /// </summary>
+            public Vector3? anchorPos;
         }
     #endregion
 
@@ -157,12 +157,13 @@ public class PlayerMove : MonoBehaviour
     int launchDelay = 0;
 
 
-    Vector2 screenPos = Vector2.zero;
+    Vector3 screenPos = Vector2.zero;
     float l = 0f, d = 0f, X = 0f;
     Vector3 startingPos = Vector3.zero;
     float lerp = 0f, impulse = 0f;
 
-
+    public List<Vector3> anchorPositions = new List<Vector3>();
+    int anchorLayer;
 
     void Start ()
     {
@@ -170,14 +171,18 @@ public class PlayerMove : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         // assign Wall layer to variable
         walls = LayerMask.NameToLayer("Walls");
+        anchorLayer = LayerMask.NameToLayer("Anchor");
         // make sure that raycasts don't detect the colliders that they start in
         Physics2D.queriesStartInColliders = false;
 	}
 
     void Update ()
     {
+        #region Order nearby anchorpoints by distance
+        Functions.OrderByDistance(anchorPositions, transform.position);
+        #endregion
         #region Holding spacebar enables grip
-            if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
             {
                 gripping = true;
             }
@@ -373,11 +378,11 @@ public class PlayerMove : MonoBehaviour
                 #endregion
             case Tentacles.Expanding:
                 #region Expand the tentacle
-                    // expand tentacle
                     aimTentacle.scale += rate;
                     UpdateTentacleLength(aimTentacle);
-                    // rotate the anchor
-                    aimTentacle.rot.right = new Vector3(screenPos.x, screenPos.y, 0f) - transform.position;
+
+                    // rotate anchor
+                    aimTentacle.rot.right = screenPos - transform.position;
                 #region  only expand to a certain extent
                     if (aimTentacle.scale / magicNumber > tentacleRange)
                     {
@@ -395,7 +400,7 @@ public class PlayerMove : MonoBehaviour
             case Tentacles.Anchored:
                 #region Keep the tentacle anchored by expanding / contracting
                 // rotate the anchor
-                aimTentacle.rot.right = new Vector3(aimTentacle.anchorPos.Value.x, aimTentacle.anchorPos.Value.y, 0f) - transform.position;
+                aimTentacle.rot.right = aimTentacle.anchorPos.Value - transform.position;
                 // expand / contract
                 aimTentacle.scale = aimTentacle.dist * magicNumber;
                 // adjust length
@@ -420,11 +425,10 @@ public class PlayerMove : MonoBehaviour
                 break;
                 #endregion
         }
+
         #region calculate tentacle distance
-        if (aimTentacle.anchorPos.HasValue)
-        {
+        if(aimTentacle.anchorPos.HasValue)
             aimTentacle.dist = Vector2.Distance(aimTentacle.anchorPos.Value, transform.position);
-        }
         #endregion
         #region Retract this tentacle if the anchor tentacle is retracting
         if (anchorTentacle.state == Tentacles.Retracting)
@@ -438,24 +442,32 @@ public class PlayerMove : MonoBehaviour
     {
         switch(anchorTentacle.state)
         {
-            case Tentacles.Expanding:
-                #region calculate distance
-                // TODO: fix null error
-                if (anchorTentacle.anchorPos.HasValue)
+            case Tentacles.None:
+                #region Expand the Anchor tentacle when in range of anchor & spacebar is pressed
+                if (anchorPositions.Count != 0 && Input.GetKeyDown(KeyCode.E))
                 {
-                    // rotate the anchor
-                    // error is here
-                    anchorTentacle.rot.right = new Vector3(anchorTentacle.anchorPos.Value.x, anchorTentacle.anchorPos.Value.y, 0f) - transform.position;
-                    // find the distance from Akkoro to the anchor point
-                    anchorTentacle.dist = Vector2.Distance(anchorTentacle.anchorPos.Value, transform.position);
-                }
-                else
-                {
-                    anchorTentacle.state = Tentacles.Retracting;
+                    anchorTentacle.state = Tentacles.Expanding;
+                    anchorTentacle.anchorPos = anchorPositions[0];
                 }
                 #endregion
+                break;
+            case Tentacles.Expanding:
+                #region retract & break if connection is broken
+                if (anchorPositions.Count == 0 || anchorTentacle.anchorPos == null)
+                {
+                    print("Retracting & breaking connection");
+                    anchorTentacle.state = Tentacles.Retracting;
+                    anchorTentacle.anchorPos = null;
+                    break;
+                    
+                }
+                #endregion
+                #region calculate distance
+                anchorTentacle.rot.right = anchorTentacle.anchorPos.Value - transform.position;
+                // find the distance from Akkoro to the anchor point
+                anchorTentacle.dist = Vector2.Distance(anchorTentacle.anchorPos.Value, transform.position);
+                #endregion
                 #region Update Tentacle length
-                // expand tentacle
                 anchorTentacle.scale += rate;
                 UpdateTentacleLength(anchorTentacle);
                 #endregion
@@ -465,28 +477,19 @@ public class PlayerMove : MonoBehaviour
                     anchorTentacle.scale = anchorTentacle.dist * magicNumber;
                     // set state to Anchored
                     anchorTentacle.state = Tentacles.Anchored;
-                    // set the anchor position
-                    if (anchor != null)
-                        anchorTentacle.anchorPos = anchor.transform.position;
-                    else anchorTentacle.state = Tentacles.Retracting;
                 }
                 #endregion
-                #region Retract when max tentacle range is reached
-                    if(anchorTentacle.scale / magicNumber >= tentacleRange)
-                    {
-                        anchorTentacle.state = Tentacles.Retracting;
-                    }
-                    break;
-                #endregion
+                break;
             case Tentacles.Anchored:
                 #region Press E to retract
                     if (Input.GetKeyDown(KeyCode.E))
                     {
                         anchorTentacle.state = Tentacles.Retracting;
+                        anchorTentacle.anchorPos = null;
                     }
                 #endregion
                 #region Rotate the anchor
-                    anchorTentacle.rot.right = new Vector3(anchorTentacle.anchorPos.Value.x, anchorTentacle.anchorPos.Value.y, 0f) - transform.position;
+                    anchorTentacle.rot.right = anchorTentacle.anchorPos.Value - transform.position;
                 #endregion
                 #region Adjust tentacle based on distance
                     // find the distance from Akkoro to the anchor point
@@ -517,21 +520,11 @@ public class PlayerMove : MonoBehaviour
                 anchorTentacle = RetractTentacle(anchorTentacle);
                 break;
             #endregion
-            case Tentacles.None:
-                #region Expand the Anchor tentacle when in range of anchor & spacebar is pressed
-                if (anchor != null && Input.GetKeyDown(KeyCode.E))
-                {
-                    anchorTentacle.state = Tentacles.Expanding;
-                    print("should be expanding");
-                }
-                #endregion
-                break;
+
         }
         #region calculate tentacle distance
-        if (anchorTentacle.anchorPos.HasValue)
-        {
+        if(anchorTentacle.anchorPos.HasValue)
             anchorTentacle.dist = Vector2.Distance(anchorTentacle.anchorPos.Value, transform.position);
-        }
         #endregion
     }
 
@@ -675,6 +668,27 @@ public class PlayerMove : MonoBehaviour
         Vector2 anchorVector = anchorTentacle.rot.right;
         return (aimVector + anchorVector).normalized;
     }
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == anchorLayer)
+        {
+            if(!anchorPositions.Contains(collision.gameObject.transform.position))
+                anchorPositions.Add(collision.gameObject.transform.position);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == anchorLayer)
+        {
+            if (anchorPositions.Contains(collision.gameObject.transform.position))
+                anchorPositions.Remove(collision.gameObject.transform.position);
+        }
+    }
+
+
 
     void OnDrawGizmos()
     {

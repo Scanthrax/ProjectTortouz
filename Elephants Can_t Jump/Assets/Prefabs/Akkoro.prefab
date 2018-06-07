@@ -159,7 +159,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1350421427341460}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.45, y: -3.56, z: 0}
+  m_LocalPosition: {x: -1.23, y: -6.27, z: 0}
   m_LocalScale: {x: 8.0553, y: 8.0553, z: 8.0553}
   m_Children:
   - {fileID: 4912298113404276}
@@ -352,8 +352,9 @@ MonoBehaviour:
     rot: {fileID: 4510136607714612}
   aimTentacleCol: {fileID: 58009732887704232}
   rate: 0.03
-  tentacleRange: 6
+  tentacleRange: 7
   launchState: 1
+  anchorPositions: []
 --- !u!114 &114921537096534024
 MonoBehaviour:
   m_ObjectHideFlags: 1
