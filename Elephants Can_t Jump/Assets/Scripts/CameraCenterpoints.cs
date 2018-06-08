@@ -36,11 +36,13 @@ public class CameraCenterpoints : MonoBehaviour {
     void CameraPan(int current, int next)
     {
         cam.transform.position = Vector3.Lerp(cameraPoints[current].position, cameraPoints[next].position,lerp);
-        lerp += 0.01f;
-        if(lerp >= 1f)
+        lerp += 0.08f;
+        if(lerp > 1f)
         {
+            lerp = 1f;
             panCam = false;
             selectPoint++;
+            cam.transform.position = cameraPoints[selectPoint].position;
         }
     }
 
@@ -54,7 +56,7 @@ public class CameraCenterpoints : MonoBehaviour {
                 Gizmos.DrawLine(cameraPoints[i].position, cameraPoints[i + 1].position);
 
             var vertExtent = cam.orthographicSize;
-            var horzExtent = (vertExtent * Screen.width / Screen.height);
+            var horzExtent = cam.orthographicSize * (1366f/768f);
 
             Gizmos.color = Color.yellow;
             Gizmos.DrawLine(cameraPoints[i].position - new Vector3(horzExtent, -vertExtent, 0f), cameraPoints[i].position + new Vector3(horzExtent, vertExtent, 0f));
