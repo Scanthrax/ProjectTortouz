@@ -486,6 +486,7 @@ public class PlayerMove : MonoBehaviour
                     {
                         anchorTentacle.state = Tentacles.Retracting;
                         anchorTentacle.anchorPos = null;
+                        break;
                     }
                 #endregion
                 #region Rotate the anchor
@@ -503,13 +504,13 @@ public class PlayerMove : MonoBehaviour
                     {
                         // find the point on the edge of the radius
                         Vector2 circlePoint = CirclePoint(anchorTentacle.anchorPos.Value, tentacleRange, (Vector2.SignedAngle(Vector2.right, anchorTentacle.rot.right * -1)));
-                        // Only adjust the x value of the transform when on ceiling or ground
-                        if (grounding == Grounding.Bottom || grounding == Grounding.Top)
-                            transform.position = new Vector2(circlePoint.x, transform.position.y);
-                        // Only adjust the y value of the transform when on walls
-                        else if (grounding == Grounding.Left || grounding == Grounding.Right)
-                            transform.position = new Vector2(transform.position.x, circlePoint.y);
-                        // Adjust both x & y during any other case
+                    // Only adjust the x value of the transform when on ceiling or ground
+                    if (grounding == Grounding.Bottom || grounding == Grounding.Top)
+                        transform.position = new Vector2(circlePoint.x, transform.position.y);
+                    // Only adjust the y value of the transform when on walls
+                    else if (grounding == Grounding.Left || grounding == Grounding.Right)
+                        transform.position = new Vector2(transform.position.x, circlePoint.y);
+                    //Adjust both x & y during any other case
                         else
                             transform.position = new Vector2(circlePoint.x, circlePoint.y);
                     }
@@ -621,6 +622,11 @@ public class PlayerMove : MonoBehaviour
     /// <returns></returns>
     float SpringCalc()
     {
+        if(!aimTentacle.anchorPos.HasValue || !anchorTentacle.anchorPos.HasValue)
+        {
+            print("NULL VALUE in spring calculations");
+            return 0f;
+        }
         // k = spring constant
         float k = 650000f;
         // a & b = anchor of aim tentacle
@@ -687,6 +693,7 @@ public class PlayerMove : MonoBehaviour
                 anchorPositions.Remove(collision.gameObject.transform.position);
         }
     }
+
 
 
 
