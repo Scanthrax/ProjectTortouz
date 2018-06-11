@@ -165,6 +165,9 @@ public class PlayerMove : MonoBehaviour
     public List<Vector3> anchorPositions = new List<Vector3>();
     int anchorLayer;
 
+    bool isMoving = false;
+    public int stamina = 100;
+
     void Start ()
     {
         // assign the rigidbody component
@@ -189,10 +192,14 @@ public class PlayerMove : MonoBehaviour
             else
             {
                 gripping = false;
+                stamina++;
             }
         #endregion
+
+        
+
         #region Disable gravity if gripping & grounded to a wall
-            if (gripping && grounding != Grounding.None) EnableGravity(false);
+        if (gripping && grounding != Grounding.None && stamina > 0) EnableGravity(false);
             else EnableGravity(true);
         #endregion
         #region raycasting system
@@ -273,7 +280,7 @@ public class PlayerMove : MonoBehaviour
 
         #region movement
         // The player will only be able to move on walls when gripping
-        if (gripping && grounding != Grounding.None)
+        if (gripping && grounding != Grounding.None && stamina > 0)
         {
             up = Input.GetKey(KeyCode.W) ? 1 : 0;
             down = Input.GetKey(KeyCode.S) ? -1 : 0;
@@ -330,8 +337,23 @@ public class PlayerMove : MonoBehaviour
             transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
         }
 
+        if (hor != 0 || vert != 0)
+        {
+            isMoving = true;
+        }
+        else isMoving = false;
+
         // add force to Akkoro
         transform.Translate(new Vector2(hor, vert));
+        #endregion
+
+        #region Stickiness
+        if(grounding != Grounding.None && gripping && isMoving)
+        {
+            print("I should be draining stamina!");
+            stamina -= 1;
+        }
+
         #endregion
 
         TentacleAnchor();
@@ -354,6 +376,7 @@ public class PlayerMove : MonoBehaviour
         }
         else attackCollider.enabled = false;
 
+        stamina = Mathf.Clamp(stamina, 0, 100);
     }
 
 
