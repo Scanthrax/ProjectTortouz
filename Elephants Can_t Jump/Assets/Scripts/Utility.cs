@@ -21,8 +21,10 @@ namespace Utility
     /// The different states of launch
     /// </summary>
     public enum Launch { Contracting, Launching, Grounded}
-
-    
+    /// <summary>
+    /// Names of the rooms
+    /// </summary>
+    public enum Rooms { Room1, Room2}
 
     public static class Functions
     {
@@ -38,6 +40,14 @@ namespace Utility
                 });
             }
         }
+    }
+
+    public static class Variables
+    {
+        public static float vertExtent = Camera.main.orthographicSize;
+        public static float horzExtent = Camera.main.orthographicSize * (16f / 9f);
+
+        public static Rooms room = Rooms.Room1;
     }
 
 }

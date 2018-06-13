@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Utility;
 
 public class CameraCenterpoints : MonoBehaviour {
 
@@ -10,12 +11,14 @@ public class CameraCenterpoints : MonoBehaviour {
     public int selectPoint;
     float lerp;
     public bool panCam;
+    
+    public GameObject player;
 
-	void Start ()
+    void Start ()
     {
         panCam = false;
         cam.transform.position = cameraPoints[selectPoint].position;
-	}
+    }
 
     private void Update()
     {
@@ -54,15 +57,11 @@ public class CameraCenterpoints : MonoBehaviour {
             Gizmos.color = Color.white;
             if(i != cameraPoints.Length-1)
                 Gizmos.DrawLine(cameraPoints[i].position, cameraPoints[i + 1].position);
-
-            var vertExtent = cam.orthographicSize;
-            var horzExtent = cam.orthographicSize * (1366f/768f);
-
             Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(cameraPoints[i].position - new Vector3(horzExtent, -vertExtent, 0f), cameraPoints[i].position + new Vector3(horzExtent, vertExtent, 0f));
-            Gizmos.DrawLine(cameraPoints[i].position - new Vector3(horzExtent, vertExtent, 0f), cameraPoints[i].position + new Vector3(horzExtent, -vertExtent, 0f));
-            Gizmos.DrawLine(cameraPoints[i].position - new Vector3(horzExtent, -vertExtent, 0f), cameraPoints[i].position + new Vector3(-horzExtent, -vertExtent, 0f));
-            Gizmos.DrawLine(cameraPoints[i].position - new Vector3(-horzExtent, vertExtent, 0f), cameraPoints[i].position + new Vector3(horzExtent, vertExtent, 0f));
+            Gizmos.DrawLine(cameraPoints[i].position - new Vector3(Variables.horzExtent, -Variables.vertExtent, 0f), cameraPoints[i].position + new Vector3(Variables.horzExtent, Variables.vertExtent, 0f));
+            Gizmos.DrawLine(cameraPoints[i].position - new Vector3(Variables.horzExtent, Variables.vertExtent, 0f), cameraPoints[i].position + new Vector3(Variables.horzExtent, -Variables.vertExtent, 0f));
+            Gizmos.DrawLine(cameraPoints[i].position - new Vector3(Variables.horzExtent, -Variables.vertExtent, 0f), cameraPoints[i].position + new Vector3(-Variables.horzExtent, -Variables.vertExtent, 0f));
+            Gizmos.DrawLine(cameraPoints[i].position - new Vector3(-Variables.horzExtent, Variables.vertExtent, 0f), cameraPoints[i].position + new Vector3(Variables.horzExtent, Variables.vertExtent, 0f));
 
 
         }

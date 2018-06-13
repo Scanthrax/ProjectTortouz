@@ -192,11 +192,17 @@ public class PlayerMove : MonoBehaviour
             else
             {
                 gripping = false;
-                stamina++;
             }
         #endregion
 
-        
+
+        #region Recover Stamina
+        if(grounding == Grounding.None || raycastGrounding[(int)Grounding.Bottom])
+        {
+            stamina++;
+        }
+        #endregion
+
 
         #region Disable gravity if gripping & grounded to a wall
         if (gripping && grounding != Grounding.None && stamina > 0) EnableGravity(false);
@@ -337,21 +343,23 @@ public class PlayerMove : MonoBehaviour
             transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
         }
 
+        #region is Akkoro moving?
         if (hor != 0 || vert != 0)
         {
             isMoving = true;
         }
         else isMoving = false;
+        #endregion
 
         // add force to Akkoro
         transform.Translate(new Vector2(hor, vert));
         #endregion
 
         #region Stickiness
-        if(grounding != Grounding.None && gripping && isMoving)
+        if(grounding != Grounding.None && gripping && isMoving && !raycastGrounding[(int)Grounding.Bottom])
         {
             print("I should be draining stamina!");
-            stamina -= 1;
+            stamina--;
         }
 
         #endregion
