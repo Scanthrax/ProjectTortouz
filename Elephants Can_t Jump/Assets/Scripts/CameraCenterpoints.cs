@@ -5,8 +5,7 @@ using Utility;
 
 public class CameraCenterpoints : MonoBehaviour {
 
-
-    public Transform[] cameraPoints;
+    public Transform startRoom;
     public Camera cam;
     public int selectPoint;
     float lerp;
@@ -17,53 +16,29 @@ public class CameraCenterpoints : MonoBehaviour {
     void Start ()
     {
         panCam = false;
-        cam.transform.position = cameraPoints[selectPoint].position;
+        cam.transform.position = startRoom.position;
+        Variables.room = startRoom;
+        Room.roomChange += ChangeRoom;
     }
 
-    private void Update()
-    {
-        selectPoint = Mathf.Clamp(selectPoint, 0, cameraPoints.Length-1);
 
-        if(Input.GetKeyDown(KeyCode.P) && !panCam)
+
+    void ChangeRoom(Transform from, Transform to)
+    {
+        print("should be changing room");
+        Time.timeScale = 0f;
+        cam.transform.position = Vector3.Lerp(from.position, to.position, lerp);
+        lerp += 0.08f;
+        if (lerp > 1f)
         {
             lerp = 0f;
-            panCam = true;
+            cam.transform.position = to.position;
+            Variables.room = to;
+            Time.timeScale = 1f;
         }
 
-        if(panCam && selectPoint < cameraPoints.Length - 1)
-        {
-            CameraPan(selectPoint, selectPoint + 1);
-        }
-    }
-
-    void CameraPan(int current, int next)
-    {
-        cam.transform.position = Vector3.Lerp(cameraPoints[current].position, cameraPoints[next].position,lerp);
-        lerp += 0.08f;
-        if(lerp > 1f)
-        {
-            lerp = 1f;
-            panCam = false;
-            selectPoint++;
-            cam.transform.position = cameraPoints[selectPoint].position;
-        }
     }
 
 
-    private void OnDrawGizmos()
-    {
-        for (int i = 0; i < cameraPoints.Length; i++)
-        {
-            Gizmos.color = Color.white;
-            if(i != cameraPoints.Length-1)
-                Gizmos.DrawLine(cameraPoints[i].position, cameraPoints[i + 1].position);
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(cameraPoints[i].position - new Vector3(Variables.horzExtent, -Variables.vertExtent, 0f), cameraPoints[i].position + new Vector3(Variables.horzExtent, Variables.vertExtent, 0f));
-            Gizmos.DrawLine(cameraPoints[i].position - new Vector3(Variables.horzExtent, Variables.vertExtent, 0f), cameraPoints[i].position + new Vector3(Variables.horzExtent, -Variables.vertExtent, 0f));
-            Gizmos.DrawLine(cameraPoints[i].position - new Vector3(Variables.horzExtent, -Variables.vertExtent, 0f), cameraPoints[i].position + new Vector3(-Variables.horzExtent, -Variables.vertExtent, 0f));
-            Gizmos.DrawLine(cameraPoints[i].position - new Vector3(-Variables.horzExtent, Variables.vertExtent, 0f), cameraPoints[i].position + new Vector3(Variables.horzExtent, Variables.vertExtent, 0f));
 
-
-        }
-    }
 }

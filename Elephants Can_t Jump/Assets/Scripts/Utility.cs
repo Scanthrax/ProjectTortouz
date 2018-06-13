@@ -24,7 +24,7 @@ namespace Utility
     /// <summary>
     /// Names of the rooms
     /// </summary>
-    public enum Rooms { Room1, Room2}
+    public enum Rooms { Room1, Room2, Room3}
 
     public static class Functions
     {
@@ -47,7 +47,7 @@ namespace Utility
         public static float vertExtent = Camera.main.orthographicSize;
         public static float horzExtent = Camera.main.orthographicSize * (16f / 9f);
 
-        public static Rooms room = Rooms.Room1;
+        public static Transform room = null;
     }
 
 }
