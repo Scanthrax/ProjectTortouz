@@ -166,7 +166,10 @@ public class PlayerMove : MonoBehaviour
     int anchorLayer;
 
     bool isMoving = false;
-    public int stamina = 100;
+    public int maxStamina = 120;
+    public int stamina;
+
+    public Controlling control;
 
     void Start ()
     {
@@ -177,6 +180,7 @@ public class PlayerMove : MonoBehaviour
         anchorLayer = LayerMask.NameToLayer("Anchor");
         // make sure that raycasts don't detect the colliders that they start in
         Physics2D.queriesStartInColliders = false;
+        stamina = maxStamina;
 	}
 
     void Update ()
@@ -194,16 +198,12 @@ public class PlayerMove : MonoBehaviour
                 gripping = false;
             }
         #endregion
-
-
         #region Recover Stamina
         if(grounding == Grounding.None || raycastGrounding[(int)Grounding.Bottom])
         {
             stamina++;
         }
         #endregion
-
-
         #region Disable gravity if gripping & grounded to a wall
         if (gripping && grounding != Grounding.None && stamina > 0) EnableGravity(false);
             else EnableGravity(true);
@@ -326,8 +326,8 @@ public class PlayerMove : MonoBehaviour
 
 
 
-        // horizontal movement with A & D
-        hor = (left + right) * speed * Time.deltaTime;
+            // horizontal movement with A & D
+            hor = (left + right) * speed * Time.deltaTime;
             // vertical movement with W & S
             vert = (up + down) * speed * Time.deltaTime;
 
@@ -356,7 +356,7 @@ public class PlayerMove : MonoBehaviour
         #endregion
 
         #region Stickiness
-        if(grounding != Grounding.None && gripping && isMoving && !raycastGrounding[(int)Grounding.Bottom])
+        if(grounding != Grounding.None && gripping && !raycastGrounding[(int)Grounding.Bottom] && Time.timeScale != 0f)
         {
             print("I should be draining stamina!");
             stamina--;
@@ -384,7 +384,7 @@ public class PlayerMove : MonoBehaviour
         }
         else attackCollider.enabled = false;
 
-        stamina = Mathf.Clamp(stamina, 0, 100);
+        stamina = Mathf.Clamp(stamina, 0, maxStamina);
     }
 
 
@@ -723,22 +723,5 @@ public class PlayerMove : MonoBehaviour
             if (anchorPositions.Contains(collision.gameObject.transform.position))
                 anchorPositions.Remove(collision.gameObject.transform.position);
         }
-    }
-
-
-
-
-    void OnDrawGizmos()
-    {
-        //Gizmos.color = Color.green;
-        //Gizmos.DrawLine(transform.position, transform.position + (Vector3.right * wallDist));
-        //Gizmos.DrawLine(transform.position, transform.position + (Vector3.left * wallDist));
-        //Gizmos.DrawLine(transform.position, transform.position + (Vector3.down * wallDist));
-        //Gizmos.DrawLine(transform.position, transform.position + (Vector3.up * wallDist));
-
-        //Gizmos.DrawLine(transform.position, transform.position + (new Vector3(1, 1, 0) * wallDist));
-        //Gizmos.DrawLine(transform.position, transform.position + (new Vector3(-1, 1, 0) * wallDist));
-        //Gizmos.DrawLine(transform.position, transform.position + (new Vector3(-1, -1, 0) * wallDist));
-        //Gizmos.DrawLine(transform.position, transform.position + (new Vector3(1, -1, 0) * wallDist));
     }
 }

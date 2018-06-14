@@ -21,10 +21,8 @@ namespace Utility
     /// The different states of launch
     /// </summary>
     public enum Launch { Contracting, Launching, Grounded}
-    /// <summary>
-    /// Names of the rooms
-    /// </summary>
-    public enum Rooms { Room1, Room2, Room3}
+
+    public enum Controlling { Akkoro, Both}
 
     public static class Functions
     {
