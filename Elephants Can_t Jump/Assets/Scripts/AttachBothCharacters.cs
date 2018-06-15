@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Utility;
 
 public class AttachBothCharacters : MonoBehaviour
 {
@@ -9,10 +10,6 @@ public class AttachBothCharacters : MonoBehaviour
     /// </summary>
     int akkoro;
 
-    #region Delegates
-    public delegate void AttachCharacters();
-    public static event AttachCharacters attachCharacters;
-    #endregion
 
     private void Start()
     {
@@ -21,11 +18,14 @@ public class AttachBothCharacters : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == akkoro)
+        if (Variables.controlling == Controlling.Akkoro)
         {
-            if (Input.GetKeyDown(KeyCode.P))
+            if (collision.gameObject.layer == akkoro)
             {
-                attachCharacters();
+                if (Input.GetKeyDown(Variables.detach))
+                {
+                    Controller.changeChar = true;
+                }
             }
         }
     }
