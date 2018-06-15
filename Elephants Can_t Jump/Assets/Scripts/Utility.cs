@@ -44,8 +44,9 @@ namespace Utility
         public static Transform room = null;
 
         public static KeyCode firstTentacle = KeyCode.Q;
-        public static KeyCode rightTentacle = KeyCode.E;
+        public static KeyCode secondTentacle = KeyCode.E;
         public static KeyCode detach = KeyCode.R;
+        public static KeyCode launch = KeyCode.T;
 
         public static Controlling controlling = Controlling.Akkoro;
 
