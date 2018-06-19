@@ -169,6 +169,7 @@ public class PlayerMove : MonoBehaviour
     public int stamina;
     SpriteRenderer rend;
     public Controlling control;
+    public Transform betweenAnchors, xPoint;
 
     void Start ()
     {
@@ -341,6 +342,12 @@ public class PlayerMove : MonoBehaviour
             rend.flipX = false;
         }
 
+        //if (launchState == Launch.Contracting || launchState == Launch.Launching)
+        //{
+        //    hor = 0;
+        //    vert = 0;
+        //}
+
         #region is Akkoro moving?
         if (hor != 0 || vert != 0)
         {
@@ -386,6 +393,12 @@ public class PlayerMove : MonoBehaviour
         #region clamp stamina
         stamina = Mathf.Clamp(stamina, 0, maxStamina);
         #endregion
+
+        if(firstTentacle.anchorPos.HasValue && secondTentacle.anchorPos.HasValue)
+        {
+            betweenAnchors.position = firstTentacle.anchorPos.Value;
+            betweenAnchors.LookAt(secondTentacle.anchorPos.Value);
+        }
     }
 
 
@@ -576,7 +589,7 @@ public class PlayerMove : MonoBehaviour
                         launchState = Launch.Contracting;
                         // save impulse information
                         impulse = SpringCalc();
-                        print(impulse);
+                        //print(impulse);
                         // set starting position to set up Lerp
                         startingPos = transform.position;
                         // reset lerp
@@ -595,6 +608,7 @@ public class PlayerMove : MonoBehaviour
                     secondTentacle.state = Tentacles.Retracting;
                     #endregion
                     launchState = Launch.Launching;
+                    lerp = 0f;
                     // launch between both tentacles
                     rb.AddForce(launchDir.right * impulse);
                 }
@@ -672,18 +686,25 @@ public class PlayerMove : MonoBehaviour
         // x1 & y1 = anchor of anchor tentacle
         float x1 = firstTentacle.anchorPos.Value.x;
         float y1 = firstTentacle.anchorPos.Value.y;
+
+        
         // x & y are variables
-        float x = Mathf.Abs((a * (x0 - x1)) + (b * (y0 - y1)));
-        float y = Mathf.Sqrt(Mathf.Pow(a, 2) + Mathf.Pow(b, 2));
+        float xx = Mathf.Abs((a * (x0 - x1)) + (b * (y0 - y1)));
+        float yy = Mathf.Sqrt(Mathf.Pow(a, 2) + Mathf.Pow(b, 2));
         // l = distance of anchor tentacle
-        l = secondTentacle.dist;
+        l = secondTentacle.dist < firstTentacle.dist? secondTentacle.dist: firstTentacle.dist;
         // d = x / y is a variable of x / y
-        d = x / y;
+        d = xx / yy;
         // X gets stored for later use
-        /// FIX X
-        X = Mathf.Sqrt(Mathf.Pow(l, 2) - Mathf.Pow(d, 2));
+
+        Vector2 temp = betweenAnchors.right * d;
+        xPoint.position = temp;
+
+        //X = Mathf.Sqrt(Mathf.Pow(l, 2) - Mathf.Pow(d, 2));
+        //print(X);
         // this is the final result
-        return Mathf.Sqrt(k * ((Mathf.Pow(l, 2) - Mathf.Pow(d, 2))));
+        //return Mathf.Clamp(Mathf.Sqrt(k * ((Mathf.Pow(l, 2) - Mathf.Pow(d, 2))))*100,0f,2500f);
+        return 0f;
     }
 
     /// <summary>
