@@ -7,7 +7,7 @@ public class BreakableWall : MonoBehaviour, IBreakable
     /// <summary>
     /// Wall health; how many hits it can withstand
     /// </summary>
-    public int health = 5;
+    public int health;
 
     public void Break(int damage)
     {

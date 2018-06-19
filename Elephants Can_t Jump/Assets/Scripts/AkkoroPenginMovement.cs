@@ -18,8 +18,11 @@ public class AkkoroPenginMovement : MonoBehaviour {
 
     SpriteRenderer rend;
 
+    Animator anim;
+
 	void Start ()
     {
+        anim = GetComponent<Animator>();
         walls = LayerMask.NameToLayer("Walls");
         Physics2D.queriesStartInColliders = false;
         rend = GetComponent<SpriteRenderer>();
@@ -79,6 +82,15 @@ public class AkkoroPenginMovement : MonoBehaviour {
         {
             rend.flipX = false;
         }
+
+        if (hor == 0)
+        {
+            // we're not walking
+            anim.SetBool("isWalking", false);
+        }
+        // otherwise we're walking
+        else anim.SetBool("isWalking", true);
+        
 
         // apply horizontal force
         transform.Translate(new Vector2(hor, 0));

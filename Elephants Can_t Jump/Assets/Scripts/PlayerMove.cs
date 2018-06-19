@@ -363,7 +363,6 @@ public class PlayerMove : MonoBehaviour
         #endregion
 
         FirstTentacle();
-        //TentacleAim();
         SecondTentacle();
 
         #region Calculate launch direction
@@ -577,6 +576,7 @@ public class PlayerMove : MonoBehaviour
                         launchState = Launch.Contracting;
                         // save impulse information
                         impulse = SpringCalc();
+                        print(impulse);
                         // set starting position to set up Lerp
                         startingPos = transform.position;
                         // reset lerp
@@ -662,7 +662,7 @@ public class PlayerMove : MonoBehaviour
             return 0f;
         }
         // k = spring constant
-        float k = 650000f;
+        float k = 1f;
         // a & b = anchor of aim tentacle
         float a = secondTentacle.anchorPos.Value.x;
         float b = secondTentacle.anchorPos.Value.y;
@@ -676,13 +676,14 @@ public class PlayerMove : MonoBehaviour
         float x = Mathf.Abs((a * (x0 - x1)) + (b * (y0 - y1)));
         float y = Mathf.Sqrt(Mathf.Pow(a, 2) + Mathf.Pow(b, 2));
         // l = distance of anchor tentacle
-        l = firstTentacle.dist;
-        // d = x / yis a variable of x / y
+        l = secondTentacle.dist;
+        // d = x / y is a variable of x / y
         d = x / y;
         // X gets stored for later use
+        /// FIX X
         X = Mathf.Sqrt(Mathf.Pow(l, 2) - Mathf.Pow(d, 2));
         // this is the final result
-        return Mathf.Sqrt(k * (Mathf.Pow(l, 2) - Mathf.Pow(d, 2)));
+        return Mathf.Sqrt(k * ((Mathf.Pow(l, 2) - Mathf.Pow(d, 2))));
     }
 
     /// <summary>
