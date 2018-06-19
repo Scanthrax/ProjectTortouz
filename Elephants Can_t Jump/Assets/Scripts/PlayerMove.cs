@@ -396,8 +396,12 @@ public class PlayerMove : MonoBehaviour
 
         if(firstTentacle.anchorPos.HasValue && secondTentacle.anchorPos.HasValue)
         {
-            betweenAnchors.position = firstTentacle.anchorPos.Value;
-            betweenAnchors.LookAt(secondTentacle.anchorPos.Value);
+            Vector3 temp = firstTentacle.dist > secondTentacle.dist ?
+                firstTentacle.anchorPos.Value : secondTentacle.anchorPos.Value;
+            Vector3 temp2 = firstTentacle.dist < secondTentacle.dist ?
+                firstTentacle.anchorPos.Value : secondTentacle.anchorPos.Value;
+            betweenAnchors.position = temp;
+            betweenAnchors.LookAt(temp2);
         }
     }
 
@@ -692,19 +696,21 @@ public class PlayerMove : MonoBehaviour
         float xx = Mathf.Abs((a * (x0 - x1)) + (b * (y0 - y1)));
         float yy = Mathf.Sqrt(Mathf.Pow(a, 2) + Mathf.Pow(b, 2));
         // l = distance of anchor tentacle
-        l = secondTentacle.dist < firstTentacle.dist? secondTentacle.dist: firstTentacle.dist;
+        l = secondTentacle.dist > firstTentacle.dist? secondTentacle.dist: firstTentacle.dist;
         // d = x / y is a variable of x / y
         d = xx / yy;
         // X gets stored for later use
-
-        Vector2 temp = betweenAnchors.right * d;
+        print("d: " + d);
+        
+        Vector2 temp = betweenAnchors.position + (betweenAnchors.forward * d);
         xPoint.position = temp;
+        xPoint.LookAt(transform);
 
+        X = Vector2.Distance(transform.position, temp);
         //X = Mathf.Sqrt(Mathf.Pow(l, 2) - Mathf.Pow(d, 2));
         //print(X);
         // this is the final result
-        //return Mathf.Clamp(Mathf.Sqrt(k * ((Mathf.Pow(l, 2) - Mathf.Pow(d, 2))))*100,0f,2500f);
-        return 0f;
+        return Mathf.Clamp(Mathf.Sqrt(k * ((Mathf.Pow(l, 2) - Mathf.Pow(d, 2))))*1000,0f,4000f);
     }
 
     /// <summary>
