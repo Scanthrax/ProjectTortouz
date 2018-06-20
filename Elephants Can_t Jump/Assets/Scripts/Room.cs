@@ -11,6 +11,10 @@ public class Room : MonoBehaviour {
     public delegate void RoomChange(Transform fromRoom, Transform toRoom);
     public static event RoomChange roomChange;
 
+    private void Awake()
+    {
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+    }
 
     void Update()
     {

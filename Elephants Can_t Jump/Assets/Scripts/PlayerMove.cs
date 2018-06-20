@@ -417,18 +417,10 @@ public class PlayerMove : MonoBehaviour
         {
             case Tentacles.None:
                 #region Expand the Anchor tentacle when in range of anchor & spacebar is pressed
-                if (Input.GetKeyDown(Variables.expandTentacle))
+                if (Input.GetKeyDown(Variables.expandTentacle) && secondTentacle.state == Tentacles.None && anchorPositions.Count >= 1)
                 {
-                    if (!oneTentacleAnchored && anchorPositions.Count >= 1)
-                    {
-                        firstTentacle.state = Tentacles.Expanding;
-                        firstTentacle.anchorPos = anchorPositions[0];
-                    }
-                    else if (oneTentacleAnchored && anchorPositions.Count >= 2)
-                    {
-                        firstTentacle.state = Tentacles.Expanding;
-                        firstTentacle.anchorPos = anchorPositions[1];
-                    }
+                    firstTentacle.state = Tentacles.Expanding;
+                    firstTentacle.anchorPos = anchorPositions[0];
                 }
                 #endregion
                 break;
@@ -511,10 +503,10 @@ public class PlayerMove : MonoBehaviour
         {
             case Tentacles.None:
                 #region Expand the Anchor tentacle when in range of anchor & spacebar is pressed
-                if (Input.GetKeyDown(Variables.expandTentacle) && firstTentacle.state == Tentacles.Anchored)
+                if (Input.GetKeyDown(Variables.expandTentacle) && firstTentacle.state == Tentacles.Anchored && anchorPositions.Count >= 2)
                 {
-                        secondTentacle.state = Tentacles.Expanding;
-                        secondTentacle.anchorPos = anchorPositions[1];
+                    secondTentacle.state = Tentacles.Expanding;
+                    secondTentacle.anchorPos = anchorPositions[1];
                 }
                 #endregion
                 break;
