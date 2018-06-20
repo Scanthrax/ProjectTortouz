@@ -170,6 +170,7 @@ public class PlayerMove : MonoBehaviour
     SpriteRenderer rend;
     public Controlling control;
     public Transform betweenAnchors, xPoint;
+    public bool oneTentacleAnchored = false;
 
     void Start ()
     {
@@ -371,7 +372,11 @@ public class PlayerMove : MonoBehaviour
 
         FirstTentacle();
         SecondTentacle();
-
+        if (firstTentacle.state == Tentacles.Anchored || secondTentacle.state == Tentacles.Anchored)
+        {
+            oneTentacleAnchored = true;
+        }
+        else oneTentacleAnchored = false;
         #region Calculate launch direction
         // if both tentacles are anchored, set the launch direction
         if (secondTentacle.state == Tentacles.Anchored && firstTentacle.state == Tentacles.Anchored)
@@ -412,10 +417,18 @@ public class PlayerMove : MonoBehaviour
         {
             case Tentacles.None:
                 #region Expand the Anchor tentacle when in range of anchor & spacebar is pressed
-                if (anchorPositions.Count != 0 && Input.GetKeyDown(Variables.firstTentacle))
+                if (Input.GetKeyDown(Variables.expandTentacle))
                 {
-                    firstTentacle.state = Tentacles.Expanding;
-                    firstTentacle.anchorPos = anchorPositions[0];
+                    if (!oneTentacleAnchored && anchorPositions.Count >= 1)
+                    {
+                        firstTentacle.state = Tentacles.Expanding;
+                        firstTentacle.anchorPos = anchorPositions[0];
+                    }
+                    else if (oneTentacleAnchored && anchorPositions.Count >= 2)
+                    {
+                        firstTentacle.state = Tentacles.Expanding;
+                        firstTentacle.anchorPos = anchorPositions[1];
+                    }
                 }
                 #endregion
                 break;
@@ -449,7 +462,7 @@ public class PlayerMove : MonoBehaviour
                 break;
             case Tentacles.Anchored:
                 #region Press E to retract
-                    if (Input.GetKeyDown(Variables.firstTentacle))
+                    if (Input.GetKeyDown(Variables.expandTentacle))
                     {
                         firstTentacle.state = Tentacles.Retracting;
                         firstTentacle.anchorPos = null;
@@ -489,7 +502,6 @@ public class PlayerMove : MonoBehaviour
                 break;
             #endregion
         }
-
     }
 
 
@@ -499,10 +511,10 @@ public class PlayerMove : MonoBehaviour
         {
             case Tentacles.None:
                 #region Expand the Anchor tentacle when in range of anchor & spacebar is pressed
-                if (anchorPositions.Count != 0 && Input.GetKeyDown(Variables.secondTentacle))
+                if (Input.GetKeyDown(Variables.expandTentacle) && firstTentacle.state == Tentacles.Anchored)
                 {
-                    secondTentacle.state = Tentacles.Expanding;
-                    secondTentacle.anchorPos = anchorPositions[0];
+                        secondTentacle.state = Tentacles.Expanding;
+                        secondTentacle.anchorPos = anchorPositions[1];
                 }
                 #endregion
                 break;
@@ -536,7 +548,7 @@ public class PlayerMove : MonoBehaviour
                 break;
             case Tentacles.Anchored:
                 #region Press E to retract
-                if (Input.GetKeyDown(Variables.secondTentacle))
+                if (Input.GetKeyDown(Variables.expandTentacle))
                 {
                     secondTentacle.state = Tentacles.Retracting;
                     secondTentacle.anchorPos = null;

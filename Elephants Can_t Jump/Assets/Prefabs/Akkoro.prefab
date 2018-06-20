@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114691400991941304}
   - component: {fileID: 50715249494927388}
   - component: {fileID: 61195668425913694}
+  - component: {fileID: 95986857796575290}
   m_Layer: 11
   m_Name: Akkoro
   m_TagString: Untagged
@@ -55,7 +56,7 @@ GameObject:
   - component: {fileID: 4016465028756934}
   - component: {fileID: 212391307654322874}
   m_Layer: 9
-  m_Name: Anchor Tentacle
+  m_Name: First Tentacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,10 +71,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4273989409083004}
   - component: {fileID: 212499979673956132}
-  - component: {fileID: 58009732887704232}
-  - component: {fileID: 114921537096534024}
   m_Layer: 9
-  m_Name: Aim Tentacle
+  m_Name: Second Tentacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,7 +104,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4510136607714612}
   m_Layer: 0
-  m_Name: Aim
+  m_Name: Second
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -120,7 +119,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4912298113404276}
   m_Layer: 0
-  m_Name: Anchor
+  m_Name: First
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -158,8 +157,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1350421427341460}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.23, y: -6.27, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -12, y: -11, z: 0.171875}
   m_LocalScale: {x: 8.0553, y: 8.0553, z: 8.0553}
   m_Children:
   - {fileID: 4912298113404276}
@@ -243,21 +242,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!58 &58009732887704232
-CircleCollider2D:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1676600813157902}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.01
 --- !u!61 &61195668425913694
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -308,6 +292,24 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.27, y: 0.12}
   m_EdgeRadius: 0
+--- !u!95 &95986857796575290
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1350421427341460}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7d8cfb7a2b35e6645a32c3d5465cf93a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &114499297802822126
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -338,35 +340,28 @@ MonoBehaviour:
   attackCollider: {fileID: 61438670450407564}
   grounding: 8
   raycastGrounding: 0000000000000000
-  anchorTentacle:
+  firstTentacle:
     scale: 0
     state: 3
     dist: 0
     rend: {fileID: 212391307654322874}
     rot: {fileID: 4912298113404276}
-  aimTentacle:
+  secondTentacle:
     scale: 0
     state: 3
     dist: 0
     rend: {fileID: 212499979673956132}
     rot: {fileID: 4510136607714612}
-  aimTentacleCol: {fileID: 58009732887704232}
   rate: 0.03
   tentacleRange: 7
   launchState: 1
   anchorPositions: []
---- !u!114 &114921537096534024
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1676600813157902}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72a8c20a8e0b8f747a835faf8c5a01d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerMove: {fileID: 114691400991941304}
+  maxStamina: 120
+  stamina: 0
+  control: 0
+  betweenAnchors: {fileID: 0}
+  xPoint: {fileID: 0}
+  oneTentacleAnchored: 0
 --- !u!212 &212391307654322874
 SpriteRenderer:
   m_ObjectHideFlags: 1
