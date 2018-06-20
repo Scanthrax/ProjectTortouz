@@ -1109,6 +1109,30 @@ Prefab:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4016465028756934, guid: 6bf584c4fd3be8b47af41885279630d6, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212391307654322874, guid: 6bf584c4fd3be8b47af41885279630d6,
+        type: 2}
+      propertyPath: m_Size.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212391307654322874, guid: 6bf584c4fd3be8b47af41885279630d6,
+        type: 2}
+      propertyPath: m_Size.y
+      value: 0.06366854
+      objectReference: {fileID: 0}
+    - target: {fileID: 212499979673956132, guid: 6bf584c4fd3be8b47af41885279630d6,
+        type: 2}
+      propertyPath: m_Size.y
+      value: 0.06366854
+      objectReference: {fileID: 0}
+    - target: {fileID: 114691400991941304, guid: 6bf584c4fd3be8b47af41885279630d6,
+        type: 2}
+      propertyPath: gravScale
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 58009732887704232, guid: 6bf584c4fd3be8b47af41885279630d6, type: 2}
     - {fileID: 114921537096534024, guid: 6bf584c4fd3be8b47af41885279630d6, type: 2}

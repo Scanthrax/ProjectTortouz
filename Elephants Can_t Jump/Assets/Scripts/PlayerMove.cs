@@ -14,7 +14,7 @@ public class PlayerMove : MonoBehaviour
         /// <summary>
         /// Scales the intensity of the gravity
         /// </summary>
-        public float gravScale = 4f;
+        public float gravScale = 7f;
         /// <summary>
         /// is Akkoro gripping?
         /// </summary>    
@@ -386,6 +386,15 @@ public class PlayerMove : MonoBehaviour
         }
         #endregion
 
+        if (firstTentacle.anchorPos.HasValue && secondTentacle.anchorPos.HasValue)
+        {
+            Vector3 temp = firstTentacle.dist > secondTentacle.dist ?
+                firstTentacle.anchorPos.Value : secondTentacle.anchorPos.Value;
+            Vector3 temp2 = firstTentacle.dist < secondTentacle.dist ?
+                firstTentacle.anchorPos.Value : secondTentacle.anchorPos.Value;
+            betweenAnchors.position = temp;
+            betweenAnchors.LookAt(temp2);
+        }
         Launching();
 
         #region attack the walls
@@ -399,15 +408,7 @@ public class PlayerMove : MonoBehaviour
         stamina = Mathf.Clamp(stamina, 0, maxStamina);
         #endregion
 
-        if(firstTentacle.anchorPos.HasValue && secondTentacle.anchorPos.HasValue)
-        {
-            Vector3 temp = firstTentacle.dist > secondTentacle.dist ?
-                firstTentacle.anchorPos.Value : secondTentacle.anchorPos.Value;
-            Vector3 temp2 = firstTentacle.dist < secondTentacle.dist ?
-                firstTentacle.anchorPos.Value : secondTentacle.anchorPos.Value;
-            betweenAnchors.position = temp;
-            betweenAnchors.LookAt(temp2);
-        }
+
     }
 
 
@@ -417,7 +418,7 @@ public class PlayerMove : MonoBehaviour
         {
             case Tentacles.None:
                 #region Expand the Anchor tentacle when in range of anchor & spacebar is pressed
-                if (Input.GetKeyDown(Variables.expandTentacle) && secondTentacle.state == Tentacles.None && anchorPositions.Count >= 1)
+                if (Input.GetKeyDown(Variables.firstTentacle) && secondTentacle.state == Tentacles.None && anchorPositions.Count >= 1)
                 {
                     firstTentacle.state = Tentacles.Expanding;
                     firstTentacle.anchorPos = anchorPositions[0];
@@ -454,9 +455,10 @@ public class PlayerMove : MonoBehaviour
                 break;
             case Tentacles.Anchored:
                 #region Press E to retract
-                    if (Input.GetKeyDown(Variables.expandTentacle))
+                    if (Input.GetKeyDown(Variables.firstTentacle))
                     {
                         firstTentacle.state = Tentacles.Retracting;
+                        if (secondTentacle.state != Tentacles.None) secondTentacle.state = Tentacles.Retracting;
                         firstTentacle.anchorPos = null;
                         break;
                     }
@@ -503,10 +505,14 @@ public class PlayerMove : MonoBehaviour
         {
             case Tentacles.None:
                 #region Expand the Anchor tentacle when in range of anchor & spacebar is pressed
-                if (Input.GetKeyDown(Variables.expandTentacle) && firstTentacle.state == Tentacles.Anchored && anchorPositions.Count >= 2)
+                if (Input.GetKeyDown(Variables.secondTentacle) && firstTentacle.state == Tentacles.Anchored && anchorPositions.Count >= 2)
                 {
                     secondTentacle.state = Tentacles.Expanding;
-                    secondTentacle.anchorPos = anchorPositions[1];
+                    if (anchorPositions[0] == firstTentacle.anchorPos)
+                    {
+                        secondTentacle.anchorPos = anchorPositions[1];
+                    }
+                    else secondTentacle.anchorPos = anchorPositions[0];
                 }
                 #endregion
                 break;
@@ -540,9 +546,10 @@ public class PlayerMove : MonoBehaviour
                 break;
             case Tentacles.Anchored:
                 #region Press E to retract
-                if (Input.GetKeyDown(Variables.expandTentacle))
+                if (Input.GetKeyDown(Variables.secondTentacle))
                 {
                     secondTentacle.state = Tentacles.Retracting;
+                    firstTentacle.state = Tentacles.Retracting;
                     secondTentacle.anchorPos = null;
                     break;
                 }
@@ -591,18 +598,27 @@ public class PlayerMove : MonoBehaviour
                 #region Launch if the player presses Q
                     if (Input.GetKeyDown(Variables.launch) && secondTentacle.state == Tentacles.Anchored && firstTentacle.state == Tentacles.Anchored)
                     {
-                        // delay sticking back to the surface you just launched from
-                        launchDelay = 0;
-                        // the player is now being launched
-                        launchState = Launch.Contracting;
-                        // save impulse information
-                        impulse = SpringCalc();
-                        //print(impulse);
-                        // set starting position to set up Lerp
-                        startingPos = transform.position;
-                        // reset lerp
-                        lerp = 0f;
-                    }
+                    //// delay sticking back to the surface you just launched from
+                    //launchDelay = 0;
+                    //// the player is now being launched
+                    //launchState = Launch.Contracting;
+                    //// save impulse information
+                    //impulse = SpringCalc();
+                    ////print(impulse);
+                    //// set starting position to set up Lerp
+                    //startingPos = transform.position;
+                    //// reset lerp
+                    //lerp = 0f;
+
+                    launchDelay = 0;
+                    impulse = SpringCalc();
+                    launchState = Launch.Launching;
+                    #region retract both tentacles
+                    firstTentacle.state = Tentacles.Retracting;
+                    secondTentacle.state = Tentacles.Retracting;
+                    #endregion
+                    rb.AddForce(launchDir.right * impulse);
+                }
                     break;
                 #endregion
             case Launch.Contracting:
@@ -684,7 +700,7 @@ public class PlayerMove : MonoBehaviour
             return 0f;
         }
         // k = spring constant
-        float k = 1f;
+        float k = 0.4f;
         // a & b = anchor of aim tentacle
         float a = secondTentacle.anchorPos.Value.x;
         float b = secondTentacle.anchorPos.Value.y;
@@ -714,7 +730,7 @@ public class PlayerMove : MonoBehaviour
         //X = Mathf.Sqrt(Mathf.Pow(l, 2) - Mathf.Pow(d, 2));
         //print(X);
         // this is the final result
-        return Mathf.Clamp(Mathf.Sqrt(k * ((Mathf.Pow(l, 2) - Mathf.Pow(d, 2))))*1000,0f,4000f);
+        return Mathf.Clamp(Mathf.Sqrt(k * ((Mathf.Pow(l, 2) - Mathf.Pow(d, 2)))) * 4300,0f,7800f);
     }
 
     /// <summary>
