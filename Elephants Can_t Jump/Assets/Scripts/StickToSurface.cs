@@ -35,7 +35,7 @@ public class StickToSurface : MonoBehaviour
             return;
         }
         // we have hit a surface; assign to tentacle's anchor position
-        playerMove.aimTentacle.anchorPos = hit.Value.point;
+        playerMove.secondTentacle.anchorPos = hit.Value.point;
         // disable the circle collider since we have a hit
         cc.enabled = false;
     }

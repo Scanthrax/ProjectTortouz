@@ -87,24 +87,22 @@ public class PlayerMove : MonoBehaviour
                 }
             }
     #endregion
-    #region Delegates
-    //public delegate void WallClimb(Tentacle side);
-    //public static event WallClimb wallClimb;
-    #endregion
     #region Tentacles
         /// <summary>
-        /// Tentacle that will latch onto the anchorpoints provided in the levels
+        /// The first tentacle that will latch onto the anchorpoints provided in the levels
         /// </summary>
         [Header("Tentacles")]
-        public Tentacle anchorTentacle;
+        public Tentacle firstTentacle;
         /// <summary>
-        /// The free-aiming tentacle that will latch onto surfaces
+        /// The second tentacle that will latch onto the anchorpoints provided in the levels
         /// </summary>
-        public Tentacle aimTentacle;
+        public Tentacle secondTentacle;
+
         /// <summary>
         /// the collider on the Aim tentacle that will collide with surfaces
         /// </summary>
-        public CircleCollider2D aimTentacleCol;
+        //public CircleCollider2D aimTentacleCol;
+
         /// <summary>
         /// The rate at chich tentacles will expand/contract
         /// </summary>
@@ -150,6 +148,7 @@ public class PlayerMove : MonoBehaviour
         }
     #endregion
 
+
     // states of launch
     public Launch launchState = Launch.Launching;
 
@@ -166,7 +165,11 @@ public class PlayerMove : MonoBehaviour
     int anchorLayer;
 
     bool isMoving = false;
-    public int stamina = 100;
+    public int maxStamina = 120;
+    public int stamina;
+    SpriteRenderer rend;
+    public Controlling control;
+    public Transform betweenAnchors, xPoint;
 
     void Start ()
     {
@@ -177,6 +180,8 @@ public class PlayerMove : MonoBehaviour
         anchorLayer = LayerMask.NameToLayer("Anchor");
         // make sure that raycasts don't detect the colliders that they start in
         Physics2D.queriesStartInColliders = false;
+        stamina = maxStamina;
+        rend = GetComponent<SpriteRenderer>();
 	}
 
     void Update ()
@@ -194,16 +199,12 @@ public class PlayerMove : MonoBehaviour
                 gripping = false;
             }
         #endregion
-
-
         #region Recover Stamina
         if(grounding == Grounding.None || raycastGrounding[(int)Grounding.Bottom])
         {
             stamina++;
         }
         #endregion
-
-
         #region Disable gravity if gripping & grounded to a wall
         if (gripping && grounding != Grounding.None && stamina > 0) EnableGravity(false);
             else EnableGravity(true);
@@ -326,22 +327,26 @@ public class PlayerMove : MonoBehaviour
 
 
 
-        // horizontal movement with A & D
-        hor = (left + right) * speed * Time.deltaTime;
+            // horizontal movement with A & D
+            hor = (left + right) * speed * Time.deltaTime;
             // vertical movement with W & S
             vert = (up + down) * speed * Time.deltaTime;
 
 
         if (hor < 0)
         {
-            transform.rotation = Quaternion.Euler(new Vector3(0f, 180f, 0f));
-            // flip the horizontal direction, since the gameobject has been rotated 180 degrees
-            hor = -hor;
+            rend.flipX = true;
         }
         else if (hor > 0)
         {
-            transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
+            rend.flipX = false;
         }
+
+        //if (launchState == Launch.Contracting || launchState == Launch.Launching)
+        //{
+        //    hor = 0;
+        //    vert = 0;
+        //}
 
         #region is Akkoro moving?
         if (hor != 0 || vert != 0)
@@ -356,7 +361,7 @@ public class PlayerMove : MonoBehaviour
         #endregion
 
         #region Stickiness
-        if(grounding != Grounding.None && gripping && isMoving && !raycastGrounding[(int)Grounding.Bottom])
+        if(grounding != Grounding.None && gripping && !raycastGrounding[(int)Grounding.Bottom] && Time.timeScale != 0f)
         {
             print("I should be draining stamina!");
             stamina--;
@@ -364,12 +369,12 @@ public class PlayerMove : MonoBehaviour
 
         #endregion
 
-        TentacleAnchor();
-        TentacleAim();
+        FirstTentacle();
+        SecondTentacle();
 
         #region Calculate launch direction
         // if both tentacles are anchored, set the launch direction
-        if (aimTentacle.state == Tentacles.Anchored && anchorTentacle.state == Tentacles.Anchored)
+        if (secondTentacle.state == Tentacles.Anchored && firstTentacle.state == Tentacles.Anchored)
         {
             // Visualize launch direction through gameobject transform
             launchDir.right = CalculateLaunchDirection();
@@ -378,163 +383,94 @@ public class PlayerMove : MonoBehaviour
 
         Launching();
 
+        #region attack the walls
         if (Input.GetKeyDown(KeyCode.F))
         {
             attackCollider.enabled = true;
         }
         else attackCollider.enabled = false;
+        #endregion
+        #region clamp stamina
+        stamina = Mathf.Clamp(stamina, 0, maxStamina);
+        #endregion
 
-        stamina = Mathf.Clamp(stamina, 0, 100);
+        if(firstTentacle.anchorPos.HasValue && secondTentacle.anchorPos.HasValue)
+        {
+            Vector3 temp = firstTentacle.dist > secondTentacle.dist ?
+                firstTentacle.anchorPos.Value : secondTentacle.anchorPos.Value;
+            Vector3 temp2 = firstTentacle.dist < secondTentacle.dist ?
+                firstTentacle.anchorPos.Value : secondTentacle.anchorPos.Value;
+            betweenAnchors.position = temp;
+            betweenAnchors.LookAt(temp2);
+        }
     }
 
 
-    void TentacleAim()
+    void FirstTentacle()
     {
-        switch (aimTentacle.state)
-        {
-            case Tentacles.None:
-                #region Expand only when Anchor tentacle is anchored & Mouse button down
-                    if(anchorTentacle.state == Tentacles.Anchored && Input.GetMouseButtonDown(0))
-                    {
-                        // this tentacle will now be expanding
-                        aimTentacle.state = Tentacles.Expanding;
-                        // reset variable; this way, the tentacle is free from any point on a surface
-                        aimTentacle.anchorPos = null;
-                        // enable the circle collider at the end of the tentacle
-                        aimTentacleCol.enabled = true;
-                        // capture the coordinates of the mouse click to aim the tentacle
-                        screenPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                    }
-                    break;
-                #endregion
-            case Tentacles.Expanding:
-                #region Expand the tentacle
-                    aimTentacle.scale += rate;
-                    UpdateTentacleLength(aimTentacle);
-
-                    // rotate anchor
-                    aimTentacle.rot.right = screenPos - transform.position;
-                #region  only expand to a certain extent
-                    if (aimTentacle.scale / magicNumber > tentacleRange)
-                    {
-                        aimTentacle.state = Tentacles.Retracting;
-                    }
-                #endregion
-                #region Tentacle anchors when there is a point of contact
-                    if (aimTentacle.anchorPos.HasValue)
-                    {
-                        aimTentacle.state = Tentacles.Anchored;
-                    }
-                    break;
-                #endregion
-            #endregion
-            case Tentacles.Anchored:
-                #region Keep the tentacle anchored by expanding / contracting
-                // rotate the anchor
-                aimTentacle.rot.right = aimTentacle.anchorPos.Value - transform.position;
-                // expand / contract
-                aimTentacle.scale = aimTentacle.dist * magicNumber;
-                // adjust length
-                UpdateTentacleLength(aimTentacle);
-
-                if (aimTentacle.dist >= tentacleRange)
-                {
-                    Vector2 circlePoint = CirclePoint(aimTentacle.anchorPos.Value, tentacleRange, (Vector2.SignedAngle(Vector2.right, aimTentacle.rot.right * -1)));
-                    if (grounding == Grounding.Bottom || grounding == Grounding.Top)
-                        transform.position = new Vector2(circlePoint.x, transform.position.y);
-                    else if (grounding == Grounding.Left || grounding == Grounding.Right)
-                        transform.position = new Vector2(transform.position.x, circlePoint.y);
-                    else
-                        transform.position = new Vector2(circlePoint.x, circlePoint.y);
-                }
-
-                break;
-            #endregion
-            case Tentacles.Retracting:
-                #region Retract the tentacle
-                aimTentacle = RetractTentacle(aimTentacle);
-                break;
-                #endregion
-        }
-
-        #region calculate tentacle distance
-        if(aimTentacle.anchorPos.HasValue)
-            aimTentacle.dist = Vector2.Distance(aimTentacle.anchorPos.Value, transform.position);
-        #endregion
-        #region Retract this tentacle if the anchor tentacle is retracting
-        if (anchorTentacle.state == Tentacles.Retracting)
-        {
-            aimTentacle.state = Tentacles.Retracting;
-        }
-        #endregion
-    }
-
-    void TentacleAnchor()
-    {
-        switch(anchorTentacle.state)
+        switch(firstTentacle.state)
         {
             case Tentacles.None:
                 #region Expand the Anchor tentacle when in range of anchor & spacebar is pressed
-                if (anchorPositions.Count != 0 && Input.GetKeyDown(KeyCode.E))
+                if (anchorPositions.Count != 0 && Input.GetKeyDown(Variables.firstTentacle))
                 {
-                    anchorTentacle.state = Tentacles.Expanding;
-                    anchorTentacle.anchorPos = anchorPositions[0];
+                    firstTentacle.state = Tentacles.Expanding;
+                    firstTentacle.anchorPos = anchorPositions[0];
                 }
                 #endregion
                 break;
             case Tentacles.Expanding:
                 #region retract & break if connection is broken
-                if (anchorPositions.Count == 0 || anchorTentacle.anchorPos == null)
+                if (anchorPositions.Count == 0 || firstTentacle.anchorPos == null)
                 {
                     print("Retracting & breaking connection");
-                    anchorTentacle.state = Tentacles.Retracting;
-                    anchorTentacle.anchorPos = null;
+                    firstTentacle.state = Tentacles.Retracting;
+                    firstTentacle.anchorPos = null;
                     break;
-                    
                 }
                 #endregion
                 #region calculate distance
-                anchorTentacle.rot.right = anchorTentacle.anchorPos.Value - transform.position;
+                firstTentacle.rot.right = firstTentacle.anchorPos.Value - transform.position;
                 // find the distance from Akkoro to the anchor point
-                anchorTentacle.dist = Vector2.Distance(anchorTentacle.anchorPos.Value, transform.position);
+                firstTentacle.dist = Vector2.Distance(firstTentacle.anchorPos.Value, transform.position);
                 #endregion
                 #region Update Tentacle length
-                anchorTentacle.scale += rate;
-                UpdateTentacleLength(anchorTentacle);
+                firstTentacle.scale += rate;
+                UpdateTentacleLength(firstTentacle);
                 #endregion
                 #region Set anchor when full distance to anchor is reached
-                if (anchorTentacle.scale >= anchorTentacle.dist * magicNumber)
+                if (firstTentacle.scale >= firstTentacle.dist * magicNumber)
                 {
-                    anchorTentacle.scale = anchorTentacle.dist * magicNumber;
+                    firstTentacle.scale = firstTentacle.dist * magicNumber;
                     // set state to Anchored
-                    anchorTentacle.state = Tentacles.Anchored;
+                    firstTentacle.state = Tentacles.Anchored;
                 }
                 #endregion
                 break;
             case Tentacles.Anchored:
                 #region Press E to retract
-                    if (Input.GetKeyDown(KeyCode.E))
+                    if (Input.GetKeyDown(Variables.firstTentacle))
                     {
-                        anchorTentacle.state = Tentacles.Retracting;
-                        anchorTentacle.anchorPos = null;
+                        firstTentacle.state = Tentacles.Retracting;
+                        firstTentacle.anchorPos = null;
                         break;
                     }
                 #endregion
                 #region Rotate the anchor
-                    anchorTentacle.rot.right = anchorTentacle.anchorPos.Value - transform.position;
+                    firstTentacle.rot.right = firstTentacle.anchorPos.Value - transform.position;
                 #endregion
                 #region Adjust tentacle based on distance
                     // find the distance from Akkoro to the anchor point
-                    anchorTentacle.dist = Vector2.Distance(anchorTentacle.anchorPos.Value, transform.position);
+                    firstTentacle.dist = Vector2.Distance(firstTentacle.anchorPos.Value, transform.position);
                     // adjust scale based on distance
-                    anchorTentacle.scale = magicNumber * anchorTentacle.dist;
-                    UpdateTentacleLength(anchorTentacle);
+                    firstTentacle.scale = magicNumber * firstTentacle.dist;
+                    UpdateTentacleLength(firstTentacle);
                 #endregion
                 #region Keep Akkoro clamped between the range of the tentacles
-                    if (anchorTentacle.dist >= tentacleRange)
+                    if (firstTentacle.dist >= tentacleRange)
                     {
                         // find the point on the edge of the radius
-                        Vector2 circlePoint = CirclePoint(anchorTentacle.anchorPos.Value, tentacleRange, (Vector2.SignedAngle(Vector2.right, anchorTentacle.rot.right * -1)));
+                        Vector2 circlePoint = CirclePoint(firstTentacle.anchorPos.Value, tentacleRange, (Vector2.SignedAngle(Vector2.right, firstTentacle.rot.right * -1)));
                     // Only adjust the x value of the transform when on ceiling or ground
                     if (grounding == Grounding.Bottom || grounding == Grounding.Top)
                         transform.position = new Vector2(circlePoint.x, transform.position.y);
@@ -549,15 +485,98 @@ public class PlayerMove : MonoBehaviour
                 #endregion
             case Tentacles.Retracting:
                 #region retract Anchor tentacle
-                anchorTentacle = RetractTentacle(anchorTentacle);
+                firstTentacle = RetractTentacle(firstTentacle);
                 break;
             #endregion
-
         }
-        #region calculate tentacle distance
-        if(anchorTentacle.anchorPos.HasValue)
-            anchorTentacle.dist = Vector2.Distance(anchorTentacle.anchorPos.Value, transform.position);
-        #endregion
+
+    }
+
+
+    void SecondTentacle()
+    {
+        switch (secondTentacle.state)
+        {
+            case Tentacles.None:
+                #region Expand the Anchor tentacle when in range of anchor & spacebar is pressed
+                if (anchorPositions.Count != 0 && Input.GetKeyDown(Variables.secondTentacle))
+                {
+                    secondTentacle.state = Tentacles.Expanding;
+                    secondTentacle.anchorPos = anchorPositions[0];
+                }
+                #endregion
+                break;
+            case Tentacles.Expanding:
+                #region retract & break if connection is broken
+                if (anchorPositions.Count == 0 || secondTentacle.anchorPos == null)
+                {
+                    print("Retracting & breaking connection");
+                    secondTentacle.state = Tentacles.Retracting;
+                    secondTentacle.anchorPos = null;
+                    break;
+                }
+                #endregion
+                #region calculate distance
+                secondTentacle.rot.right = secondTentacle.anchorPos.Value - transform.position;
+                // find the distance from Akkoro to the anchor point
+                secondTentacle.dist = Vector2.Distance(secondTentacle.anchorPos.Value, transform.position);
+                #endregion
+                #region Update Tentacle length
+                secondTentacle.scale += rate;
+                UpdateTentacleLength(secondTentacle);
+                #endregion
+                #region Set anchor when full distance to anchor is reached
+                if (secondTentacle.scale >= secondTentacle.dist * magicNumber)
+                {
+                    secondTentacle.scale = secondTentacle.dist * magicNumber;
+                    // set state to Anchored
+                    secondTentacle.state = Tentacles.Anchored;
+                }
+                #endregion
+                break;
+            case Tentacles.Anchored:
+                #region Press E to retract
+                if (Input.GetKeyDown(Variables.secondTentacle))
+                {
+                    secondTentacle.state = Tentacles.Retracting;
+                    secondTentacle.anchorPos = null;
+                    break;
+                }
+                #endregion
+                #region Rotate the anchor
+                secondTentacle.rot.right = secondTentacle.anchorPos.Value - transform.position;
+                #endregion
+                #region Adjust tentacle based on distance
+                // find the distance from Akkoro to the anchor point
+                secondTentacle.dist = Vector2.Distance(secondTentacle.anchorPos.Value, transform.position);
+                // adjust scale based on distance
+                secondTentacle.scale = magicNumber * secondTentacle.dist;
+                UpdateTentacleLength(secondTentacle);
+                #endregion
+                #region Keep Akkoro clamped between the range of the tentacles
+                if (secondTentacle.dist >= tentacleRange)
+                {
+                    // find the point on the edge of the radius
+                    Vector2 circlePoint = CirclePoint(secondTentacle.anchorPos.Value, tentacleRange, (Vector2.SignedAngle(Vector2.right, secondTentacle.rot.right * -1)));
+                    // Only adjust the x value of the transform when on ceiling or ground
+                    if (grounding == Grounding.Bottom || grounding == Grounding.Top)
+                        transform.position = new Vector2(circlePoint.x, transform.position.y);
+                    // Only adjust the y value of the transform when on walls
+                    else if (grounding == Grounding.Left || grounding == Grounding.Right)
+                        transform.position = new Vector2(transform.position.x, circlePoint.y);
+                    //Adjust both x & y during any other case
+                    else
+                        transform.position = new Vector2(circlePoint.x, circlePoint.y);
+                }
+                break;
+            #endregion
+            case Tentacles.Retracting:
+                #region retract Anchor tentacle
+                secondTentacle = RetractTentacle(secondTentacle);
+                break;
+                #endregion
+        }
+
     }
 
     void Launching()
@@ -566,7 +585,7 @@ public class PlayerMove : MonoBehaviour
         {
             case Launch.Grounded:
                 #region Launch if the player presses Q
-                    if (Input.GetKeyDown(KeyCode.Q) && aimTentacle.state == Tentacles.Anchored)
+                    if (Input.GetKeyDown(Variables.launch) && secondTentacle.state == Tentacles.Anchored && firstTentacle.state == Tentacles.Anchored)
                     {
                         // delay sticking back to the surface you just launched from
                         launchDelay = 0;
@@ -574,6 +593,7 @@ public class PlayerMove : MonoBehaviour
                         launchState = Launch.Contracting;
                         // save impulse information
                         impulse = SpringCalc();
+                        //print(impulse);
                         // set starting position to set up Lerp
                         startingPos = transform.position;
                         // reset lerp
@@ -588,10 +608,11 @@ public class PlayerMove : MonoBehaviour
                 if(lerp >= 1f)
                 {
                     #region retract both tentacles
-                    anchorTentacle.state = Tentacles.Retracting;
-                    aimTentacle.state = Tentacles.Retracting;
+                    firstTentacle.state = Tentacles.Retracting;
+                    secondTentacle.state = Tentacles.Retracting;
                     #endregion
                     launchState = Launch.Launching;
+                    lerp = 0f;
                     // launch between both tentacles
                     rb.AddForce(launchDir.right * impulse);
                 }
@@ -653,33 +674,43 @@ public class PlayerMove : MonoBehaviour
     /// <returns></returns>
     float SpringCalc()
     {
-        if(!aimTentacle.anchorPos.HasValue || !anchorTentacle.anchorPos.HasValue)
+        if(!secondTentacle.anchorPos.HasValue || !firstTentacle.anchorPos.HasValue)
         {
             print("NULL VALUE in spring calculations");
             return 0f;
         }
         // k = spring constant
-        float k = 650000f;
+        float k = 1f;
         // a & b = anchor of aim tentacle
-        float a = aimTentacle.anchorPos.Value.x;
-        float b = aimTentacle.anchorPos.Value.y;
+        float a = secondTentacle.anchorPos.Value.x;
+        float b = secondTentacle.anchorPos.Value.y;
         // x0 & y0 = Akkoro's position
         float x0 = transform.position.x;
         float y0 = transform.position.y;
         // x1 & y1 = anchor of anchor tentacle
-        float x1 = anchorTentacle.anchorPos.Value.x;
-        float y1 = anchorTentacle.anchorPos.Value.y;
+        float x1 = firstTentacle.anchorPos.Value.x;
+        float y1 = firstTentacle.anchorPos.Value.y;
+
+        
         // x & y are variables
-        float x = Mathf.Abs((a * (x0 - x1)) + (b * (y0 - y1)));
-        float y = Mathf.Sqrt(Mathf.Pow(a, 2) + Mathf.Pow(b, 2));
+        float xx = Mathf.Abs((a * (x0 - x1)) + (b * (y0 - y1)));
+        float yy = Mathf.Sqrt(Mathf.Pow(a, 2) + Mathf.Pow(b, 2));
         // l = distance of anchor tentacle
-        l = anchorTentacle.dist;
-        // d = x / yis a variable of x / y
-        d = x / y;
+        l = secondTentacle.dist > firstTentacle.dist? secondTentacle.dist: firstTentacle.dist;
+        // d = x / y is a variable of x / y
+        d = xx / yy;
         // X gets stored for later use
-        X = Mathf.Sqrt(Mathf.Pow(l, 2) - Mathf.Pow(d, 2));
+        print("d: " + d);
+        
+        Vector2 temp = betweenAnchors.position + (betweenAnchors.forward * d);
+        xPoint.position = temp;
+        xPoint.LookAt(transform);
+
+        X = Vector2.Distance(transform.position, temp);
+        //X = Mathf.Sqrt(Mathf.Pow(l, 2) - Mathf.Pow(d, 2));
+        //print(X);
         // this is the final result
-        return Mathf.Sqrt(k * (Mathf.Pow(l, 2) - Mathf.Pow(d, 2)));
+        return Mathf.Clamp(Mathf.Sqrt(k * ((Mathf.Pow(l, 2) - Mathf.Pow(d, 2))))*1000,0f,4000f);
     }
 
     /// <summary>
@@ -701,8 +732,8 @@ public class PlayerMove : MonoBehaviour
     /// </summary>
     Vector2 CalculateLaunchDirection()
     {
-        Vector2 aimVector = aimTentacle.rot.right;
-        Vector2 anchorVector = anchorTentacle.rot.right;
+        Vector2 aimVector = secondTentacle.rot.right;
+        Vector2 anchorVector = firstTentacle.rot.right;
         return (aimVector + anchorVector).normalized;
     }
 
@@ -723,22 +754,5 @@ public class PlayerMove : MonoBehaviour
             if (anchorPositions.Contains(collision.gameObject.transform.position))
                 anchorPositions.Remove(collision.gameObject.transform.position);
         }
-    }
-
-
-
-
-    void OnDrawGizmos()
-    {
-        //Gizmos.color = Color.green;
-        //Gizmos.DrawLine(transform.position, transform.position + (Vector3.right * wallDist));
-        //Gizmos.DrawLine(transform.position, transform.position + (Vector3.left * wallDist));
-        //Gizmos.DrawLine(transform.position, transform.position + (Vector3.down * wallDist));
-        //Gizmos.DrawLine(transform.position, transform.position + (Vector3.up * wallDist));
-
-        //Gizmos.DrawLine(transform.position, transform.position + (new Vector3(1, 1, 0) * wallDist));
-        //Gizmos.DrawLine(transform.position, transform.position + (new Vector3(-1, 1, 0) * wallDist));
-        //Gizmos.DrawLine(transform.position, transform.position + (new Vector3(-1, -1, 0) * wallDist));
-        //Gizmos.DrawLine(transform.position, transform.position + (new Vector3(1, -1, 0) * wallDist));
     }
 }

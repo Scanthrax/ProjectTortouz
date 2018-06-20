@@ -6,13 +6,9 @@ using UnityEngine;
 namespace Utility
 {
     /// <summary>
-    /// Tentacle types are either Anchor or Aim
-    /// </summary>
-    public enum TentacleType { Anchor, Aim}
-    /// <summary>
     /// The states that the tentacles can be in
     /// </summary>
-    public enum Tentacles { Expanding, Retracting, Anchored, None}
+    public enum Tentacles { Expanding, Retracting, Anchored, None, First, Second}
     /// <summary>
     /// The various ways the characters can be grounded
     /// </summary>
@@ -21,10 +17,9 @@ namespace Utility
     /// The different states of launch
     /// </summary>
     public enum Launch { Contracting, Launching, Grounded}
-    /// <summary>
-    /// Names of the rooms
-    /// </summary>
-    public enum Rooms { Room1, Room2, Room3}
+
+    public enum Controlling { Akkoro, Both}
+
 
     public static class Functions
     {
@@ -46,8 +41,15 @@ namespace Utility
     {
         public static float vertExtent = Camera.main.orthographicSize;
         public static float horzExtent = Camera.main.orthographicSize * (16f / 9f);
-
         public static Transform room = null;
+
+        public static KeyCode firstTentacle = KeyCode.Q;
+        public static KeyCode secondTentacle = KeyCode.E;
+        public static KeyCode detach = KeyCode.R;
+        public static KeyCode launch = KeyCode.T;
+
+        public static Controlling controlling = Controlling.Akkoro;
+
     }
 
 }
