@@ -398,9 +398,13 @@ public class PlayerMove : MonoBehaviour
         Launching();
 
         #region attack the walls
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKey(KeyCode.F))
         {
             attackCollider.enabled = true;
+
+            if(hor < 0)
+                attackCollider.transform.eulerAngles = new Vector3(0, -180, 0);
+            else if(hor > 0) attackCollider.transform.eulerAngles = new Vector3(0, 0, 0);
         }
         else attackCollider.enabled = false;
         #endregion
