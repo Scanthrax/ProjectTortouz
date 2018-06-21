@@ -42,11 +42,8 @@ namespace Utility
         public static float vertExtent = Camera.main.orthographicSize;
         public static float horzExtent = Camera.main.orthographicSize * (16f / 9f);
         public static Transform room = null;
-
-        public static KeyCode firstTentacle = KeyCode.Q;
-        public static KeyCode secondTentacle = KeyCode.E;
         public static KeyCode detach = KeyCode.T;
-        public static KeyCode launch = KeyCode.R;
+        public static KeyCode launch = KeyCode.Space;
 
         public static Controlling controlling = Controlling.Akkoro;
 
