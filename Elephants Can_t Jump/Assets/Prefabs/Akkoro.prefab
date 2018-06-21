@@ -340,18 +340,20 @@ MonoBehaviour:
   attackCollider: {fileID: 61438670450407564}
   grounding: 0
   raycastGrounding: 0100000001010000
-  firstTentacle:
-    scale: 0.44799995
+  leftTentacle:
+    scale: 0
     state: 3
-    dist: 6.999999
+    dist: 0
     rend: {fileID: 212391307654322874}
     rot: {fileID: 4912298113404276}
-  secondTentacle:
+    key: 111
+  rightTentacle:
     scale: 0
     state: 3
     dist: 0
     rend: {fileID: 212499979673956132}
     rot: {fileID: 4510136607714612}
+    key: 112
   rate: 0.03
   tentacleRange: 7
   launchState: 2
