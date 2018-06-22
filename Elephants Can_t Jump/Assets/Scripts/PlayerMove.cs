@@ -21,7 +21,6 @@ public class PlayerMove : MonoBehaviour
     public bool gripping = true;
     #endregion
     #region Objects & Components
-<<<<<<< HEAD
     /// <summary>
     /// The anchor that is currently in range; it is set to null if none are in range
     /// </summary>
@@ -39,21 +38,6 @@ public class PlayerMove : MonoBehaviour
     /// Box Collider used for attacking
     /// </summary>
     public BoxCollider2D attackCollider;
-=======
-        [Header("Objects & Components")]
-        /// <summary>
-        /// The rigid body component
-        /// </summary>
-        Rigidbody2D rb;
-        /// <summary>
-        /// The rotation of this transform will be used to calculate the launch direction of Akkoro
-        /// </summary>
-        public Transform launchDir;
-        /// <summary>
-        /// Box Collider used for attacking
-        /// </summary>
-        public BoxCollider2D attackCollider;
->>>>>>> 8f80a0a1a490caa062db0f844e698a5dd8f0048c
     #endregion
     #region Grounding
         /// <summary>
@@ -752,11 +736,7 @@ public class PlayerMove : MonoBehaviour
 
     float SpringCalc2()
     {
-<<<<<<< HEAD
-        return Mathf.Pow((leftTentacle.dist + rightTentacle.dist) / 2f,4) * 6;
-=======
         return Mathf.Pow((leftTentacle.dist + rightTentacle.dist) / 2f,launchPow)*launchConst;
->>>>>>> 1a5ddd411fc920764cba9e97d0459059efb91d75
     }
 
     /// <summary>
