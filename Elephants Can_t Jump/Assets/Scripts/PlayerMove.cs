@@ -534,7 +534,7 @@ public class PlayerMove : MonoBehaviour
             case Tentacles.Anchored:
 
                 #region Press key to retract
-                if (Input.GetKeyDown(thisTentacle.key))
+                if (!Input.GetKey(thisTentacle.key))
                 {
                     thisTentacle.state = Tentacles.Retracting;
                     thisTentacle.anchorPos = null;
