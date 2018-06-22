@@ -365,6 +365,8 @@ MonoBehaviour:
   betweenAnchors: {fileID: 0}
   xPoint: {fileID: 0}
   oneTentacleAnchored: 1
+  launchConst: 580
+  launchPow: 1.55
 --- !u!212 &212391307654322874
 SpriteRenderer:
   m_ObjectHideFlags: 1

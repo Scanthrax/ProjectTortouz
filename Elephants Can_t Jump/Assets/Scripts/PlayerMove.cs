@@ -181,6 +181,7 @@ public class PlayerMove : MonoBehaviour
     public Transform betweenAnchors, xPoint;
     public bool oneTentacleAnchored = false;
 
+    public float launchConst, launchPow;
     void Start ()
     {
         // assign the rigidbody component
@@ -425,6 +426,11 @@ public class PlayerMove : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// The logic that drives a given tentacle to grab anchorpoints; considers the behavior of the other tentacle
+    /// </summary>
+    /// <param name="thisTentacle">The tentacle that the behavior is being applied to</param>
+    /// <param name="otherTentacle">The other tentacle to take into consideration</param>
     void TentacleGrab(ref Tentacle thisTentacle, ref Tentacle otherTentacle)
     {
         switch (thisTentacle.state)
@@ -444,9 +450,16 @@ public class PlayerMove : MonoBehaviour
                         // is the other tentacle attached?
                         if (otherTentacle.anchorPos.HasValue)
                         {
+                            print("other tentacle is attached");
+
                             if (otherTentacle.anchorPos == anchorPositions[0])
                             {
                                 thisTentacle.anchorPos = anchorPositions[1];
+                                thisTentacle.state = Tentacles.Expanding;
+                            }
+                            else
+                            {
+                                thisTentacle.anchorPos = anchorPositions[0];
                                 thisTentacle.state = Tentacles.Expanding;
                             }
                         }
@@ -461,10 +474,13 @@ public class PlayerMove : MonoBehaviour
                     if (anchorPositions.Count == 1)
                     {
                         // if the other tentacle is not anchored
-                        if (!otherTentacle.anchorPos.HasValue)
+                        if (otherTentacle.anchorPos.HasValue)
                         {
-                            thisTentacle.anchorPos = anchorPositions[0];
-                            thisTentacle.state = Tentacles.Expanding;
+                            if (otherTentacle.anchorPos != anchorPositions[0])
+                            {
+                                thisTentacle.anchorPos = anchorPositions[0];
+                                thisTentacle.state = Tentacles.Expanding;
+                            }
                         }
                     }
                 }
@@ -710,7 +726,11 @@ public class PlayerMove : MonoBehaviour
 
     float SpringCalc2()
     {
+<<<<<<< HEAD
         return Mathf.Pow((leftTentacle.dist + rightTentacle.dist) / 2f,4) * 6;
+=======
+        return Mathf.Pow((leftTentacle.dist + rightTentacle.dist) / 2f,launchPow)*launchConst;
+>>>>>>> 1a5ddd411fc920764cba9e97d0459059efb91d75
     }
 
     /// <summary>
