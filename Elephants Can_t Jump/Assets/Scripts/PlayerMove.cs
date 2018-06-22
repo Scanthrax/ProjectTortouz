@@ -21,11 +21,7 @@ public class PlayerMove : MonoBehaviour
         public bool gripping = true;
     #endregion
     #region Objects & Components
-        /// <summary>
-        /// The anchor that is currently in range; it is set to null if none are in range
-        /// </summary>
         [Header("Objects & Components")]
-        public GameObject anchor = null;
         /// <summary>
         /// The rigid body component
         /// </summary>
@@ -714,7 +710,7 @@ public class PlayerMove : MonoBehaviour
 
     float SpringCalc2()
     {
-        return Mathf.Pow((leftTentacle.dist + rightTentacle.dist) / 2f,4)*10;
+        return Mathf.Pow((leftTentacle.dist + rightTentacle.dist) / 2f,4) * 6;
     }
 
     /// <summary>
