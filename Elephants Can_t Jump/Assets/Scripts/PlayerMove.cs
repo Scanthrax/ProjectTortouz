@@ -212,7 +212,7 @@ public class PlayerMove : MonoBehaviour
         #endregion
 
         #region Holding spacebar enables grip
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(Variables.wallGrip))
             {
                 gripping = true;
             }
@@ -540,7 +540,7 @@ public class PlayerMove : MonoBehaviour
                     thisTentacle.anchorPos = null;
                     break;
                 }
-                if (Input.GetKeyDown(Variables.launch))
+                if (Input.GetKeyDown(Variables.launch) && otherTentacle.state == Tentacles.Anchored)
                 {
                     #region retract both tentacles
                     thisTentacle.state = Tentacles.Retracting;
