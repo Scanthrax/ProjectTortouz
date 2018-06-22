@@ -6,38 +6,38 @@ using Utility;
 public class PlayerMove : MonoBehaviour
 {
     #region Movement
-        /// <summary>
-        /// Movement speed
-        /// </summary>
-        [Header("Movement")]
-        public float speed = 10f;
-        /// <summary>
-        /// Scales the intensity of the gravity
-        /// </summary>
-        public float gravScale = 7f;
-        /// <summary>
-        /// is Akkoro gripping?
-        /// </summary>    
-        public bool gripping = true;
+    /// <summary>
+    /// Movement speed
+    /// </summary>
+    [Header("Movement")]
+    public float speed = 10f;
+    /// <summary>
+    /// Scales the intensity of the gravity
+    /// </summary>
+    public float gravScale = 7f;
+    /// <summary>
+    /// is Akkoro gripping?
+    /// </summary>    
+    public bool gripping = true;
     #endregion
     #region Objects & Components
-        /// <summary>
-        /// The anchor that is currently in range; it is set to null if none are in range
-        /// </summary>
-        [Header("Objects & Components")]
-        public GameObject anchor = null;
-        /// <summary>
-        /// The rigid body component
-        /// </summary>
-        Rigidbody2D rb;
-        /// <summary>
-        /// The rotation of this transform will be used to calculate the launch direction of Akkoro
-        /// </summary>
-        public Transform launchDir;
-        /// <summary>
-        /// Box Collider used for attacking
-        /// </summary>
-        public BoxCollider2D attackCollider;
+    /// <summary>
+    /// The anchor that is currently in range; it is set to null if none are in range
+    /// </summary>
+    [Header("Objects & Components")]
+    public GameObject anchor = null;
+    /// <summary>
+    /// The rigid body component
+    /// </summary>
+    Rigidbody2D rb;
+    /// <summary>
+    /// The rotation of this transform will be used to calculate the launch direction of Akkoro
+    /// </summary>
+    public Transform launchDir;
+    /// <summary>
+    /// Box Collider used for attacking
+    /// </summary>
+    public BoxCollider2D attackCollider;
     #endregion
     #region Grounding
         /// <summary>
@@ -88,77 +88,81 @@ public class PlayerMove : MonoBehaviour
             }
     #endregion
     #region Tentacles
-        /// <summary>
-        /// The first tentacle that will latch onto the anchorpoints provided in the levels
-        /// </summary>
-        [Header("Tentacles")]
-        public Tentacle leftTentacle = new Tentacle();
+    /// <summary>
+    /// The first tentacle that will latch onto the anchorpoints provided in the levels
+    /// </summary>
+    [Header("Tentacles")]
+    public Tentacle leftTentacle = new Tentacle();
     /// <summary>
     /// The second tentacle that will latch onto the anchorpoints provided in the levels
     /// </summary>
     public Tentacle rightTentacle = new Tentacle();
 
-        /// <summary>
-        /// the collider on the Aim tentacle that will collide with surfaces
-        /// </summary>
-        //public CircleCollider2D aimTentacleCol;
+    /// <summary>
+    /// the collider on the Aim tentacle that will collide with surfaces
+    /// </summary>
+    //public CircleCollider2D aimTentacleCol;
 
+    /// <summary>
+    /// The rate at chich tentacles will expand/contract
+    /// </summary>
+    public float rate = 0.01f;
+    /// <summary>
+    /// The "magic number" is multiplied with the tentacle distance in order to assign the appropriate scale for the tentacle (used to expand the tentacle) 
+    /// </summary>
+    float magicNumber = 0.064f;
+    /// <summary>
+    /// Maximum range of the tentacles
+    /// </summary>
+    public float tentacleRange;
+    /// <summary>
+    /// The Tentacle class creates the two tentacles that Akkoro will use throughout the game
+    /// </summary>
+    [System.Serializable]
+    public class Tentacle
+    {
         /// <summary>
-        /// The rate at chich tentacles will expand/contract
+        /// Scale value of the tencale.  It is incremented over time to extend/retract the tentacle
         /// </summary>
-        public float rate = 0.01f;
+        public float scale;
         /// <summary>
-        /// The "magic number" is multiplied with the tentacle distance in order to assign the appropriate scale for the tentacle (used to expand the tentacle) 
-        /// </summary>
-        float magicNumber = 0.064f;
-        /// <summary>
-        /// Maximum range of the tentacles
-        /// </summary>
-        public float tentacleRange;
-        /// <summary>
-        /// The Tentacle class creates the two tentacles that Akkoro will use throughout the game
-        /// </summary>
-        [System.Serializable]
-        public class Tentacle
-        {
-            /// <summary>
-            /// Scale value of the tencale.  It is incremented over time to extend/retract the tentacle
-            /// </summary>
-            public float scale;
-            /// <summary>
         /// Current state of the tentacle
         /// </summary>
-            public Tentacles state;
-            /// <summary>
+        public Tentacles state;
+        /// <summary>
         /// Distance between Akkoro's origin & the end of the tentacle
         /// </summary>
-            public float dist;
-            /// <summary>
-            /// Sprite renderer of the tentacle
-            /// </summary>
-            public SpriteRenderer rend;
-            /// <summary>
+        public float dist;
+        /// <summary>
+        /// Sprite renderer of the tentacle
+        /// </summary>
+        public SpriteRenderer rend;
+        /// <summary>
         /// Rotation of the tentacle arm
         /// </summary>
-            public Transform rot;
-            /// <summary>
-            /// Anchor position of the tentacle; set to null of there is no position
-            /// </summary>
-            public Vector3? anchorPos;
-
-            public KeyCode key;
-
-            public Tentacle()
-            {
-                scale = 0f;
-                state = Tentacles.None;
-                dist = 0f;
-                rend = null;
-                rot = null;
-                anchorPos = null;
-                key = KeyCode.None;
-            }
+        public Transform rot;
+        /// <summary>
+        /// Anchor position of the tentacle; set to null of there is no position
+        /// </summary>
+        public Vector3? anchorPos;
+        /// <summary>
+        /// The keycode that performs actions for this tentacle
+        /// </summary>
+        public KeyCode key;
+        /// <summary>
+        /// Contructor
+        /// </summary>
+        public Tentacle()
+        {
+            scale = 0f;
+            state = Tentacles.None;
+            dist = 0f;
+            rend = null;
+            rot = null;
+            anchorPos = null;
+            key = KeyCode.None;
         }
+    }
     #endregion
 
 
@@ -206,6 +210,7 @@ public class PlayerMove : MonoBehaviour
         #region Order nearby anchorpoints by distance
         Functions.OrderByDistance(anchorPositions, transform.position);
         #endregion
+
         #region Holding spacebar enables grip
         if (Input.GetKey(KeyCode.Space))
             {
@@ -216,16 +221,19 @@ public class PlayerMove : MonoBehaviour
                 gripping = false;
             }
         #endregion
+
         #region Recover Stamina
-        if(grounding == Grounding.None || raycastGrounding[(int)Grounding.Bottom])
+        if(raycastGrounding[(int)Grounding.Bottom])
         {
-            stamina++;
+            stamina += 5;
         }
         #endregion
+
         #region Disable gravity if gripping & grounded to a wall
         if (gripping && grounding != Grounding.None && stamina > 0) EnableGravity(false);
             else EnableGravity(true);
         #endregion
+
         #region raycasting system
             #region Set up raycasting for 4 directions
                 hitRight = Physics2D.Raycast(transform.position, Vector2.right, wallDist);
@@ -423,11 +431,10 @@ public class PlayerMove : MonoBehaviour
         }
         else attackCollider.enabled = false;
         #endregion
+
         #region clamp stamina
         stamina = Mathf.Clamp(stamina, 0, maxStamina);
         #endregion
-
-
     }
 
     /// <summary>
@@ -441,7 +448,7 @@ public class PlayerMove : MonoBehaviour
         {
             case Tentacles.None:
 
-                #region anchor to null
+                #region set anchor to null
                 thisTentacle.anchorPos = null;
                 #endregion
 
@@ -527,7 +534,7 @@ public class PlayerMove : MonoBehaviour
             case Tentacles.Anchored:
 
                 #region Press key to retract
-                if (!Input.GetKey(thisTentacle.key))
+                if (Input.GetKeyDown(thisTentacle.key))
                 {
                     thisTentacle.state = Tentacles.Retracting;
                     thisTentacle.anchorPos = null;
@@ -577,7 +584,7 @@ public class PlayerMove : MonoBehaviour
             case Tentacles.Retracting:
 
                 #region retract Anchor tentacle
-                thisTentacle = RetractTentacle(thisTentacle);
+                RetractTentacle(ref thisTentacle);
                 #endregion
 
                 break;
@@ -647,7 +654,7 @@ public class PlayerMove : MonoBehaviour
     /// </summary>
     /// <param name="tent"></param>
     /// <returns></returns>
-    Tentacle RetractTentacle(Tentacle tent)
+    void RetractTentacle(ref Tentacle tent)
     {
         #region Retract tentacle
         tent.scale -= rate;
@@ -660,7 +667,6 @@ public class PlayerMove : MonoBehaviour
             tent.dist = 0f;
         }
         UpdateTentacleLength(tent);
-        return tent;
     }
 
     /// <summary>

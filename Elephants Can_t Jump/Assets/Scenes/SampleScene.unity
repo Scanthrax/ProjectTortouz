@@ -1086,16 +1086,6 @@ Prefab:
       propertyPath: xPoint
       value: 
       objectReference: {fileID: 1101574974}
-    - target: {fileID: 114691400991941304, guid: 6bf584c4fd3be8b47af41885279630d6,
-        type: 2}
-      propertyPath: launchConst
-      value: 580
-      objectReference: {fileID: 0}
-    - target: {fileID: 114691400991941304, guid: 6bf584c4fd3be8b47af41885279630d6,
-        type: 2}
-      propertyPath: launchPow
-      value: 1.55
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6bf584c4fd3be8b47af41885279630d6, type: 2}
   m_IsPrefabParent: 0
