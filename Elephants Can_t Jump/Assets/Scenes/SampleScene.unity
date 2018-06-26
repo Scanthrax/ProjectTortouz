@@ -376,6 +376,11 @@ Transform:
   m_Father: {fileID: 393946033}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &347733773 stripped
+SpriteRenderer:
+  m_PrefabParentObject: {fileID: 212499979673956132, guid: 6bf584c4fd3be8b47af41885279630d6,
+    type: 2}
+  m_PrefabInternal: {fileID: 912542401}
 --- !u!1 &393946032
 GameObject:
   m_ObjectHideFlags: 0
@@ -1087,6 +1092,56 @@ Prefab:
       propertyPath: rightTentacle.mouseButton
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114691400991941304, guid: 6bf584c4fd3be8b47af41885279630d6,
+        type: 2}
+      propertyPath: leftTentacle.rot
+      value: 
+      objectReference: {fileID: 1432851493}
+    - target: {fileID: 114691400991941304, guid: 6bf584c4fd3be8b47af41885279630d6,
+        type: 2}
+      propertyPath: leftTentacle.rend
+      value: 
+      objectReference: {fileID: 1496578348}
+    - target: {fileID: 114691400991941304, guid: 6bf584c4fd3be8b47af41885279630d6,
+        type: 2}
+      propertyPath: rightTentacle.rot
+      value: 
+      objectReference: {fileID: 1490952727}
+    - target: {fileID: 114691400991941304, guid: 6bf584c4fd3be8b47af41885279630d6,
+        type: 2}
+      propertyPath: rightTentacle.rend
+      value: 
+      objectReference: {fileID: 347733773}
+    - target: {fileID: 114691400991941304, guid: 6bf584c4fd3be8b47af41885279630d6,
+        type: 2}
+      propertyPath: rightTentacle.state
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114691400991941304, guid: 6bf584c4fd3be8b47af41885279630d6,
+        type: 2}
+      propertyPath: leftTentacle.state
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114691400991941304, guid: 6bf584c4fd3be8b47af41885279630d6,
+        type: 2}
+      propertyPath: leftTentacle.key
+      value: 111
+      objectReference: {fileID: 0}
+    - target: {fileID: 114691400991941304, guid: 6bf584c4fd3be8b47af41885279630d6,
+        type: 2}
+      propertyPath: rightTentacle.key
+      value: 112
+      objectReference: {fileID: 0}
+    - target: {fileID: 114691400991941304, guid: 6bf584c4fd3be8b47af41885279630d6,
+        type: 2}
+      propertyPath: launchConst
+      value: 580
+      objectReference: {fileID: 0}
+    - target: {fileID: 114691400991941304, guid: 6bf584c4fd3be8b47af41885279630d6,
+        type: 2}
+      propertyPath: launchPow
+      value: 1.55
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6bf584c4fd3be8b47af41885279630d6, type: 2}
   m_IsPrefabParent: 0
@@ -1635,6 +1690,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 520359391}
+--- !u!4 &1432851493 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4912298113404276, guid: 6bf584c4fd3be8b47af41885279630d6,
+    type: 2}
+  m_PrefabInternal: {fileID: 912542401}
 --- !u!1001 &1437772938
 Prefab:
   m_ObjectHideFlags: 0
@@ -1694,6 +1754,11 @@ Transform:
   m_PrefabParentObject: {fileID: 4310964953143294, guid: d9e6382bd7a3f8b428b1d25efed0e43a,
     type: 2}
   m_PrefabInternal: {fileID: 1437772938}
+--- !u!4 &1490952727 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4510136607714612, guid: 6bf584c4fd3be8b47af41885279630d6,
+    type: 2}
+  m_PrefabInternal: {fileID: 912542401}
 --- !u!1001 &1492916589
 Prefab:
   m_ObjectHideFlags: 0
@@ -1744,6 +1809,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d9e6382bd7a3f8b428b1d25efed0e43a, type: 2}
   m_IsPrefabParent: 0
+--- !u!212 &1496578348 stripped
+SpriteRenderer:
+  m_PrefabParentObject: {fileID: 212391307654322874, guid: 6bf584c4fd3be8b47af41885279630d6,
+    type: 2}
+  m_PrefabInternal: {fileID: 912542401}
 --- !u!1001 &1741533576
 Prefab:
   m_ObjectHideFlags: 0

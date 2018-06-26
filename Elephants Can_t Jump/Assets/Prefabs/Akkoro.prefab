@@ -348,7 +348,7 @@ MonoBehaviour:
     rend: {fileID: 212391307654322874}
     rot: {fileID: 4912298113404276}
     key: 111
-    mouseButton: 0
+    mouseButton: 1
   rightTentacle:
     scale: 0
     state: 3
@@ -356,7 +356,7 @@ MonoBehaviour:
     rend: {fileID: 212499979673956132}
     rot: {fileID: 4510136607714612}
     key: 112
-    mouseButton: 1
+    mouseButton: 0
   rate: 0.03
   tentacleRange: 7
   anchorPositions: []

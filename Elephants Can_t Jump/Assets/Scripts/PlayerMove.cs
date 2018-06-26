@@ -114,7 +114,7 @@ public class PlayerMove : MonoBehaviour
     /// <summary>
     /// The rate at chich tentacles will expand/contract
     /// </summary>
-    public float rate = 0.01f;
+    public float rate = 0.02f;
     /// <summary>
     /// The "magic number" is multiplied with the tentacle distance in order to assign the appropriate scale for the tentacle (used to expand the tentacle) 
     /// </summary>
@@ -193,6 +193,7 @@ public class PlayerMove : MonoBehaviour
     /// used in Launch equation
     /// </summary>
     public float launchConst, launchPow;
+    // 580 1.55
 
     void Start()
     {
@@ -452,9 +453,26 @@ public class PlayerMove : MonoBehaviour
                 #region Expand the Anchor tentacle when in range of anchor & key is pressed
                 if (Input.GetKey(thisTentacle.key) || Input.GetMouseButton(thisTentacle.mouseButton))
                 {
-                    print("JERE");
+                    // there is only a single point
+                    if (anchorPositions.Count == 1)
+                    {
+                        // if the other tentacle is not anchored
+                        if (otherTentacle.anchorPos.HasValue)
+                        {
+                            if (otherTentacle.anchorPos != anchorPositions[0])
+                            {
+                                thisTentacle.anchorPos = anchorPositions[0];
+                                thisTentacle.state = Tentacles.Expanding;
+                            }
+                        }
+                        else
+                        {
+                            thisTentacle.anchorPos = anchorPositions[0];
+                            thisTentacle.state = Tentacles.Expanding;
+                        }
+                    }
                     // there are at least 2 anchorpoints
-                    if (anchorPositions.Count >= 2)
+                    else if (anchorPositions.Count >= 2)
                     {
                         // is the other tentacle attached?
                         if (otherTentacle.anchorPos.HasValue)
@@ -479,19 +497,7 @@ public class PlayerMove : MonoBehaviour
                             thisTentacle.state = Tentacles.Expanding;
                         }
                     }
-                    // there is only a single point
-                    if (anchorPositions.Count == 1)
-                    {
-                        // if the other tentacle is not anchored
-                        if (otherTentacle.anchorPos.HasValue)
-                        {
-                            if (otherTentacle.anchorPos != anchorPositions[0])
-                            {
-                                thisTentacle.anchorPos = anchorPositions[0];
-                                thisTentacle.state = Tentacles.Expanding;
-                            }
-                        }
-                    }
+
                 }
                 #endregion
 
@@ -582,7 +588,7 @@ public class PlayerMove : MonoBehaviour
             case Tentacles.Retracting:
 
                 #region retract Anchor tentacle
-                RetractTentacle(ref thisTentacle);
+                RetractTentacle(thisTentacle);
                 #endregion
 
                 break;
@@ -656,7 +662,7 @@ public class PlayerMove : MonoBehaviour
     /// </summary>
     /// <param name="tent"></param>
     /// <returns></returns>
-    void RetractTentacle(ref Tentacle tent)
+    void RetractTentacle(Tentacle tent)
     {
         #region Retract tentacle
         tent.scale -= rate;
