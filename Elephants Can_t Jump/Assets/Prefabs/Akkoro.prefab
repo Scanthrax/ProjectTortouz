@@ -335,7 +335,8 @@ MonoBehaviour:
   speed: 8
   gravScale: 7
   gripping: 0
-  anchor: {fileID: 0}
+  maxStamina: 120
+  stamina: 120
   launchDir: {fileID: 4657381206245176}
   attackCollider: {fileID: 61438670450407564}
   grounding: 0
@@ -347,6 +348,7 @@ MonoBehaviour:
     rend: {fileID: 212391307654322874}
     rot: {fileID: 4912298113404276}
     key: 111
+    mouseButton: 0
   rightTentacle:
     scale: 0
     state: 3
@@ -354,17 +356,11 @@ MonoBehaviour:
     rend: {fileID: 212499979673956132}
     rot: {fileID: 4510136607714612}
     key: 112
+    mouseButton: 1
   rate: 0.03
   tentacleRange: 7
-  launchState: 2
-  anchorPositions:
-  - {x: -2.6478646, y: -8.1, z: 0.171875}
-  maxStamina: 120
-  stamina: 120
+  anchorPositions: []
   control: 0
-  betweenAnchors: {fileID: 0}
-  xPoint: {fileID: 0}
-  oneTentacleAnchored: 1
   launchConst: 580
   launchPow: 1.55
 --- !u!212 &212391307654322874

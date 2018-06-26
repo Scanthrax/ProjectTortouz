@@ -18,17 +18,21 @@ public class PlayerMove : MonoBehaviour
     /// <summary>
     /// is Akkoro gripping?
     /// </summary>    
-    public bool gripping = true;
+    public bool gripping;
+    /// <summary>
+    /// Maximum amount of stamina Akkoro has for wallclimbing
+    /// </summary>
+    public int maxStamina = 120;
+    /// <summary>
+    /// Stamina is drained while Akkoro is climbing walls
+    /// </summary>
+    public int stamina;
     #endregion
     #region Objects & Components
     /// <summary>
-    /// The anchor that is currently in range; it is set to null if none are in range
+    /// The rigid body component for Akkoro
     /// </summary>
     [Header("Objects & Components")]
-    public GameObject anchor = null;
-    /// <summary>
-    /// The rigid body component
-    /// </summary>
     Rigidbody2D rb;
     /// <summary>
     /// The rotation of this transform will be used to calculate the launch direction of Akkoro
@@ -38,54 +42,58 @@ public class PlayerMove : MonoBehaviour
     /// Box Collider used for attacking
     /// </summary>
     public BoxCollider2D attackCollider;
+    /// <summary>
+    /// Akkoro's sprite renderer
+    /// </summary>
+    SpriteRenderer rend;
     #endregion
     #region Grounding
-        /// <summary>
-        /// Displays which surfaces Akkoro is being grounded to
-        /// </summary>
-        [Header("Grounding")]
-        public Grounding grounding;
-        /// <summary>
-        /// Range of the raycasts that project from Akkoro to all sides; used to determine grounding range
-        /// </summary>
-        float wallDist = 0.86f;
-        float wallDist2 = 1.2f;
+    /// <summary>
+    /// Displays which surfaces Akkoro is being grounded to
+    /// </summary>
+    [Header("Grounding")]
+    public Grounding grounding;
+    /// <summary>
+    /// Range of the raycasts that project from Akkoro to all sides; used to determine grounding range
+    /// </summary>
+    float wallDist = 0.86f;
+    float wallDist2 = 1.2f;
     /// <summary>
     /// Array of booleans used to identify which surfaces Akkoro is grounded to
     /// </summary>
     public bool[] raycastGrounding = new bool[8];
-        /// <summary>
-        /// Ints used to determine direction
-        /// </summary>
-        int left, right, up, down;
-        /// <summary>
-        /// Floats used to translate Akkoro
-        /// </summary>
-        float hor, vert;
-        /// <summary>
-        /// Integer value of layer Walls
-        /// </summary>
-        int walls;
+    /// <summary>
+    /// Ints used to determine direction
+    /// </summary>
+    int left, right, up, down;
+    /// <summary>
+    /// Floats used to translate Akkoro
+    /// </summary>
+    float hor, vert;
+    /// <summary>
+    /// Integer value of layer Walls
+    /// </summary>
+    int walls;
     /// <summary>
     /// Raycasts to pass into the DetermineGrounding function
     /// </summary>
     RaycastHit2D hitRight, hitLeft, hitTop, hitBottom, hitTR, hitTL, hitBR, hitBL;
-        /// <summary>
-        /// This function is used to calculate the grounding from the raycast. The RaycastHit param is the raycast to be checked; the Grounding param assigns which side the hit should be checking for.
-        /// </summary>
-        /// <param name="hit"></param>
-        /// <param name="ground"></param>
-        void DetermineGrounding(RaycastHit2D hit, Grounding ground)
-            {
-                if (hit.collider != null && hit.collider.gameObject.layer == walls)
-                {
-                    raycastGrounding[(int)ground] = true;
-                }
-                else
-                {
-                    raycastGrounding[(int)ground] = false;
-                }
-            }
+    /// <summary>
+    /// This function is used to calculate the grounding from the raycast. The RaycastHit param is the raycast to be checked; the Grounding param assigns which side the hit should be checking for.
+    /// </summary>
+    /// <param name="hit"></param>
+    /// <param name="ground"></param>
+    void DetermineGrounding(RaycastHit2D hit, Grounding ground)
+    {
+        if (hit.collider != null && hit.collider.gameObject.layer == walls)
+        {
+            raycastGrounding[(int)ground] = true;
+        }
+        else
+        {
+            raycastGrounding[(int)ground] = false;
+        }
+    }
     #endregion
     #region Tentacles
     /// <summary>
@@ -149,48 +157,44 @@ public class PlayerMove : MonoBehaviour
         /// The keycode that performs actions for this tentacle
         /// </summary>
         public KeyCode key;
+
+        public int mouseButton;
         /// <summary>
         /// Contructor
         /// </summary>
-        public Tentacle()
-        {
-            scale = 0f;
-            state = Tentacles.None;
-            dist = 0f;
-            rend = null;
-            rot = null;
-            anchorPos = null;
-            key = KeyCode.None;
-        }
+        //public Tentacle()
+        //{
+        //    scale = 0f;
+        //    state = Tentacles.None;
+        //    dist = 0f;
+        //    rend = null;
+        //    rot = null;
+        //    anchorPos = null;
+        //    key = KeyCode.None;
+        //}
     }
     #endregion
 
-
-    // states of launch
-    public Launch launchState = Launch.Launching;
-
-    // delay that determines how many frames should pass before Akkoro can be re-grounded
-    int launchDelay = 0;
-
-
-    Vector3 screenPos = Vector2.zero;
-    float l = 0f, d = 0f, X = 0f;
-    Vector3 startingPos = Vector3.zero;
-    float lerp = 0f, impulse = 0f;
-
+    /// <summary>
+    /// List of nearby anchor positions; Keeps track of which anchors are available for Akkoro to latch onto
+    /// </summary>
     public List<Vector3> anchorPositions = new List<Vector3>();
+    /// <summary>
+    /// Layer for anchor points
+    /// </summary>
     int anchorLayer;
 
-    bool isMoving = false;
-    public int maxStamina = 120;
-    public int stamina;
-    SpriteRenderer rend;
-    public Controlling control;
-    public Transform betweenAnchors, xPoint;
-    public bool oneTentacleAnchored = false;
 
+    /// <summary>
+    /// Used to determine which character(s) the player has control over
+    /// </summary>
+    public Controlling control;
+    /// <summary>
+    /// used in Launch equation
+    /// </summary>
     public float launchConst, launchPow;
-    void Start ()
+
+    void Start()
     {
         // assign the rigidbody component
         rb = GetComponent<Rigidbody2D>();
@@ -203,9 +207,9 @@ public class PlayerMove : MonoBehaviour
         rend = GetComponent<SpriteRenderer>();
         leftTentacle.anchorPos = null;
         rightTentacle.anchorPos = null;
-	}
+    }
 
-    void Update ()
+    void Update()
     {
         #region Order nearby anchorpoints by distance
         Functions.OrderByDistance(anchorPositions, transform.position);
@@ -213,17 +217,17 @@ public class PlayerMove : MonoBehaviour
 
         #region Holding spacebar enables grip
         if (Input.GetKey(Variables.wallGrip))
-            {
-                gripping = true;
-            }
-            else
-            {
-                gripping = false;
-            }
+        {
+            gripping = true;
+        }
+        else
+        {
+            gripping = false;
+        }
         #endregion
 
         #region Recover Stamina
-        if(raycastGrounding[(int)Grounding.Bottom])
+        if (raycastGrounding[(int)Grounding.Bottom])
         {
             stamina += 5;
         }
@@ -231,82 +235,82 @@ public class PlayerMove : MonoBehaviour
 
         #region Disable gravity if gripping & grounded to a wall
         if (gripping && grounding != Grounding.None && stamina > 0) EnableGravity(false);
-            else EnableGravity(true);
+        else EnableGravity(true);
         #endregion
 
         #region raycasting system
-            #region Set up raycasting for 4 directions
-                hitRight = Physics2D.Raycast(transform.position, Vector2.right, wallDist);
-                hitLeft = Physics2D.Raycast(transform.position, Vector2.left, wallDist);
-                hitBottom = Physics2D.Raycast(transform.position, Vector2.down, wallDist);
-                hitTop = Physics2D.Raycast(transform.position, Vector2.up, wallDist);
+        #region Set up raycasting for 4 directions
+        hitRight = Physics2D.Raycast(transform.position, Vector2.right, wallDist);
+        hitLeft = Physics2D.Raycast(transform.position, Vector2.left, wallDist);
+        hitBottom = Physics2D.Raycast(transform.position, Vector2.down, wallDist);
+        hitTop = Physics2D.Raycast(transform.position, Vector2.up, wallDist);
 
-                hitTR = Physics2D.Raycast(transform.position, new Vector2(1,1), wallDist2);
-                hitBR = Physics2D.Raycast(transform.position, new Vector2(1, -1), wallDist2);
-                hitBL = Physics2D.Raycast(transform.position, new Vector2(-1,-1), wallDist2);
-                hitTL = Physics2D.Raycast(transform.position, new Vector2(-1,1), wallDist2);
+        hitTR = Physics2D.Raycast(transform.position, new Vector2(1, 1), wallDist2);
+        hitBR = Physics2D.Raycast(transform.position, new Vector2(1, -1), wallDist2);
+        hitBL = Physics2D.Raycast(transform.position, new Vector2(-1, -1), wallDist2);
+        hitTL = Physics2D.Raycast(transform.position, new Vector2(-1, 1), wallDist2);
         #endregion
         #region Calculate the groundings for all directions
-                DetermineGrounding(hitRight,Grounding.Right);
-                DetermineGrounding(hitLeft,Grounding.Left);
-                DetermineGrounding(hitTop,Grounding.Top);
-                DetermineGrounding(hitBottom,Grounding.Bottom);
-                DetermineGrounding(hitTR, Grounding.TopRight);
-                DetermineGrounding(hitTL, Grounding.TopLeft);
-                DetermineGrounding(hitBL, Grounding.BottomLeft);
-                DetermineGrounding(hitBR, Grounding.BottomRight);
+        DetermineGrounding(hitRight, Grounding.Right);
+        DetermineGrounding(hitLeft, Grounding.Left);
+        DetermineGrounding(hitTop, Grounding.Top);
+        DetermineGrounding(hitBottom, Grounding.Bottom);
+        DetermineGrounding(hitTR, Grounding.TopRight);
+        DetermineGrounding(hitTL, Grounding.TopLeft);
+        DetermineGrounding(hitBL, Grounding.BottomLeft);
+        DetermineGrounding(hitBR, Grounding.BottomRight);
 
         #endregion
         #region Find out which walls Akkoro is currently grounded to
-                if (raycastGrounding[(int)Grounding.Bottom])
-                {
-                    if(raycastGrounding[(int)Grounding.Right])
-                    {
-                        grounding = Grounding.BottomRight;
-                    }
-                    else if(raycastGrounding[(int)Grounding.Left])
-                    {
-                        grounding = Grounding.BottomLeft;
-                    }
-                    else
-                    {
-                        grounding = Grounding.Bottom;
-                    }
-                }
-                else if(raycastGrounding[(int)Grounding.Top])
-                {
-                    if (raycastGrounding[(int)Grounding.Right])
-                    {
-                        grounding = Grounding.TopRight;
-                    }
-                    else if (raycastGrounding[(int)Grounding.Left])
-                    {
-                        grounding = Grounding.TopLeft;
-                    }
-                    else
-                    {
-                        grounding = Grounding.Top;
-                    }
-                }
-                else if(raycastGrounding[(int)Grounding.Left])
-                {
-                    grounding = Grounding.Left;
-                }
-                else if(raycastGrounding[(int)Grounding.Right])
-                {
-                    grounding = Grounding.Right;
-                }
-                else if(raycastGrounding[(int)Grounding.TopLeft] ||
-                        raycastGrounding[(int)Grounding.TopRight] ||
-                        raycastGrounding[(int)Grounding.BottomLeft] ||
-                        raycastGrounding[(int)Grounding.BottomRight])
-                {
-                    grounding = Grounding.Corner;
-                }
-                else
-                {
-                    grounding = Grounding.None;
-                }
+        if (raycastGrounding[(int)Grounding.Bottom])
+        {
+            if (raycastGrounding[(int)Grounding.Right])
+            {
+                grounding = Grounding.BottomRight;
+            }
+            else if (raycastGrounding[(int)Grounding.Left])
+            {
+                grounding = Grounding.BottomLeft;
+            }
+            else
+            {
+                grounding = Grounding.Bottom;
+            }
+        }
+        else if (raycastGrounding[(int)Grounding.Top])
+        {
+            if (raycastGrounding[(int)Grounding.Right])
+            {
+                grounding = Grounding.TopRight;
+            }
+            else if (raycastGrounding[(int)Grounding.Left])
+            {
+                grounding = Grounding.TopLeft;
+            }
+            else
+            {
+                grounding = Grounding.Top;
+            }
+        }
+        else if (raycastGrounding[(int)Grounding.Left])
+        {
+            grounding = Grounding.Left;
+        }
+        else if (raycastGrounding[(int)Grounding.Right])
+        {
+            grounding = Grounding.Right;
+        }
+        else if (raycastGrounding[(int)Grounding.TopLeft] ||
+                raycastGrounding[(int)Grounding.TopRight] ||
+                raycastGrounding[(int)Grounding.BottomLeft] ||
+                raycastGrounding[(int)Grounding.BottomRight])
+        {
+            grounding = Grounding.Corner;
+        }
+        else
+        {
+            grounding = Grounding.None;
+        }
         #endregion
         #endregion
 
@@ -325,10 +329,10 @@ public class PlayerMove : MonoBehaviour
             down = 0;
             left = Input.GetKey(KeyCode.A) ? -1 : 0;
             right = Input.GetKey(KeyCode.D) ? 1 : 0;
-            
+
         }
 
-        if(raycastGrounding[(int)Grounding.Left])
+        if (raycastGrounding[(int)Grounding.Left])
         {
             left = 0;
         }
@@ -343,7 +347,7 @@ public class PlayerMove : MonoBehaviour
         if (raycastGrounding[(int)Grounding.Bottom])
         {
             down = 0;
-            if(!raycastGrounding[(int)Grounding.Right] && !raycastGrounding[(int)Grounding.Left])
+            if (!raycastGrounding[(int)Grounding.Right] && !raycastGrounding[(int)Grounding.Left])
             {
                 up = 0;
             }
@@ -352,10 +356,10 @@ public class PlayerMove : MonoBehaviour
 
 
 
-            // horizontal movement with A & D
-            hor = (left + right) * speed * Time.deltaTime;
-            // vertical movement with W & S
-            vert = (up + down) * speed * Time.deltaTime;
+        // horizontal movement with A & D
+        hor = (left + right) * speed * Time.deltaTime;
+        // vertical movement with W & S
+        vert = (up + down) * speed * Time.deltaTime;
 
 
         if (hor < 0)
@@ -373,20 +377,13 @@ public class PlayerMove : MonoBehaviour
         //    vert = 0;
         //}
 
-        #region is Akkoro moving?
-        if (hor != 0 || vert != 0)
-        {
-            isMoving = true;
-        }
-        else isMoving = false;
-        #endregion
 
         // add force to Akkoro
         transform.Translate(new Vector2(hor, vert));
         #endregion
 
         #region Stickiness
-        if(grounding != Grounding.None && gripping && !raycastGrounding[(int)Grounding.Bottom] && Time.timeScale != 0f)
+        if (grounding != Grounding.None && gripping && !raycastGrounding[(int)Grounding.Bottom] && Time.timeScale != 0f)
         {
             print("I should be draining stamina!");
             stamina--;
@@ -425,9 +422,9 @@ public class PlayerMove : MonoBehaviour
         {
             attackCollider.enabled = true;
 
-            if(hor < 0)
+            if (hor < 0)
                 attackCollider.transform.eulerAngles = new Vector3(0, -180, 0);
-            else if(hor > 0) attackCollider.transform.eulerAngles = new Vector3(0, 0, 0);
+            else if (hor > 0) attackCollider.transform.eulerAngles = new Vector3(0, 0, 0);
         }
         else attackCollider.enabled = false;
         #endregion
@@ -453,8 +450,9 @@ public class PlayerMove : MonoBehaviour
                 #endregion
 
                 #region Expand the Anchor tentacle when in range of anchor & key is pressed
-                if (Input.GetKeyDown(thisTentacle.key))
+                if (Input.GetKey(thisTentacle.key) || Input.GetMouseButton(thisTentacle.mouseButton))
                 {
+                    print("JERE");
                     // there are at least 2 anchorpoints
                     if (anchorPositions.Count >= 2)
                     {
@@ -534,7 +532,7 @@ public class PlayerMove : MonoBehaviour
             case Tentacles.Anchored:
 
                 #region Press key to retract
-                if (!Input.GetKey(thisTentacle.key))
+                if (!Input.GetKey(thisTentacle.key) && !Input.GetMouseButton(thisTentacle.mouseButton))
                 {
                     thisTentacle.state = Tentacles.Retracting;
                     thisTentacle.anchorPos = null;
@@ -591,15 +589,18 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
- 
+    /// <summary>
+    /// Launch function
+    /// </summary>
     void Launching()
     {
+        /*
         switch (launchState)
         {
             case Launch.Grounded:
                 #region Launch if the player presses Q
-                    if (Input.GetKeyDown(Variables.launch) && rightTentacle.state == Tentacles.Anchored && leftTentacle.state == Tentacles.Anchored)
-                    {
+                if (Input.GetKeyDown(Variables.launch) && rightTentacle.state == Tentacles.Anchored && leftTentacle.state == Tentacles.Anchored)
+                {
                     //// delay sticking back to the surface you just launched from
                     //launchDelay = 0;
                     //// the player is now being launched
@@ -621,13 +622,13 @@ public class PlayerMove : MonoBehaviour
                     #endregion
                     rb.AddForce(launchDir.right * impulse);
                 }
-                    break;
-                #endregion
+                break;
+            #endregion
             case Launch.Contracting:
                 // increase lerp over time
                 lerp += 0.1f;
-                transform.position = Vector2.Lerp(startingPos,startingPos + (launchDir.right * X), lerp);
-                if(lerp >= 1f)
+                transform.position = Vector2.Lerp(startingPos, startingPos + (launchDir.right * X), lerp);
+                if (lerp >= 1f)
                 {
                     #region retract both tentacles
                     leftTentacle.state = Tentacles.Retracting;
@@ -641,12 +642,13 @@ public class PlayerMove : MonoBehaviour
                 break;
             case Launch.Launching:
                 launchDelay++;
-                if(grounding != Grounding.None && launchDelay > 10)
+                if (grounding != Grounding.None && launchDelay > 10)
                 {
                     launchState = Launch.Grounded;
                 }
                 break;
         }
+        */
     }
 
     /// <summary>
@@ -685,17 +687,19 @@ public class PlayerMove : MonoBehaviour
     /// <param name="enable"></param>
     void EnableGravity(bool enable)
     {
-        if(enable)  rb.gravityScale = gravScale;
-        else        rb.gravityScale = 0f;
+        if (enable) rb.gravityScale = gravScale;
+        else rb.gravityScale = 0f;
     }
 
     /// <summary>
-    /// Spring Equation
+    /// Super complicated spring equation
     /// </summary>
     /// <returns></returns>
     float SpringCalc()
     {
-        if(!rightTentacle.anchorPos.HasValue || !leftTentacle.anchorPos.HasValue)
+        return 0f;
+        /*
+        if (!rightTentacle.anchorPos.HasValue || !leftTentacle.anchorPos.HasValue)
         {
             print("NULL VALUE in spring calculations");
             return 0f;
@@ -712,17 +716,17 @@ public class PlayerMove : MonoBehaviour
         float x1 = leftTentacle.anchorPos.Value.x;
         float y1 = leftTentacle.anchorPos.Value.y;
 
-        
+
         // x & y are variables
         float xx = Mathf.Abs((a * (x0 - x1)) + (b * (y0 - y1)));
         float yy = Mathf.Sqrt(Mathf.Pow(a, 2) + Mathf.Pow(b, 2));
         // l = distance of anchor tentacle
-        l = rightTentacle.dist > leftTentacle.dist? rightTentacle.dist: leftTentacle.dist;
+        l = rightTentacle.dist > leftTentacle.dist ? rightTentacle.dist : leftTentacle.dist;
         // d = x / y is a variable of x / y
         d = xx / yy;
         // X gets stored for later use
         print("d: " + d);
-        
+
         Vector2 temp = betweenAnchors.position + (betweenAnchors.forward * d);
         xPoint.position = temp;
         xPoint.LookAt(transform);
@@ -731,12 +735,18 @@ public class PlayerMove : MonoBehaviour
         //X = Mathf.Sqrt(Mathf.Pow(l, 2) - Mathf.Pow(d, 2));
         //print(X);
         // this is the final result
-        return Mathf.Clamp(Mathf.Sqrt(k * ((Mathf.Pow(l, 2) - Mathf.Pow(d, 2)))) * 4300,0f,7800f);
+        return Mathf.Clamp(Mathf.Sqrt(k * ((Mathf.Pow(l, 2) - Mathf.Pow(d, 2)))) * 4300, 0f, 7800f);
+        */
     }
 
+    /// <summary>
+    /// Simplified launch calculation
+    /// </summary>
+    /// <returns></returns>
     float SpringCalc2()
     {
-        return Mathf.Pow((leftTentacle.dist + rightTentacle.dist) / 2f,launchPow)*launchConst;
+        // find the average distance, raise to a power & multiply result by a constant
+        return Mathf.Pow((leftTentacle.dist + rightTentacle.dist) / 2f, launchPow) * launchConst;
     }
 
     /// <summary>
@@ -748,8 +758,8 @@ public class PlayerMove : MonoBehaviour
     /// <returns></returns>
     Vector2 CirclePoint(Vector2 origin, float radius, float angle)
     {
-        float x = origin.x + (radius * Mathf.Cos(angle*Mathf.Deg2Rad));
-        float y = origin.y + (radius * Mathf.Sin(angle*Mathf.Deg2Rad));
+        float x = origin.x + (radius * Mathf.Cos(angle * Mathf.Deg2Rad));
+        float y = origin.y + (radius * Mathf.Sin(angle * Mathf.Deg2Rad));
         return new Vector2(x, y);
     }
 
@@ -763,22 +773,33 @@ public class PlayerMove : MonoBehaviour
         return (aimVector + anchorVector).normalized;
     }
 
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        #region Add anchorpoint to the list if Akkoro enters range
         if (collision.gameObject.layer == anchorLayer)
         {
-            if(!anchorPositions.Contains(collision.gameObject.transform.position))
+            if (!anchorPositions.Contains(collision.gameObject.transform.position))
                 anchorPositions.Add(collision.gameObject.transform.position);
         }
+        #endregion
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        #region Remove anchorpoint from the list if Akkoro leaves range
         if (collision.gameObject.layer == anchorLayer)
         {
             if (anchorPositions.Contains(collision.gameObject.transform.position))
                 anchorPositions.Remove(collision.gameObject.transform.position);
         }
+        #endregion
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        #region calculate collision impact
+        if (collision.relativeVelocity.magnitude > 40)
+            print("HIT at " + collision.relativeVelocity.magnitude);
+        #endregion
     }
 }
