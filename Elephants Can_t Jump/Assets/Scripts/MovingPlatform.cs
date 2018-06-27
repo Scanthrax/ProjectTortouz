@@ -17,6 +17,9 @@ public class MovingPlatform : MonoBehaviour
     void Start()
     {
         currentP = pointArr[pointSelection];
+
+        //Gizmos from nodes
+
 	}
 	
 	// Update is called once per frame
@@ -34,5 +37,14 @@ public class MovingPlatform : MonoBehaviour
             currentP = pointArr[pointSelection];
         }
 
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        for (int i = 0; i < (pointArr.Length - 1); i++)
+        {
+            Gizmos.DrawLine(pointArr[i].position, pointArr[i + 1].position);
+        }
     }
 }
