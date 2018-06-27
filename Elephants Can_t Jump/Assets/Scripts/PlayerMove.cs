@@ -195,6 +195,8 @@ public class PlayerMove : MonoBehaviour
     public float launchConst, launchPow;
     // 580 1.55
 
+    public bool switchTentacles;
+
     void Start()
     {
         // assign the rigidbody component
@@ -208,6 +210,7 @@ public class PlayerMove : MonoBehaviour
         rend = GetComponent<SpriteRenderer>();
         leftTentacle.anchorPos = null;
         rightTentacle.anchorPos = null;
+        switchTentacles = false;
     }
 
     void Update()
@@ -395,6 +398,14 @@ public class PlayerMove : MonoBehaviour
         #region Tentacle logic
         TentacleGrab(ref leftTentacle, ref rightTentacle);
         TentacleGrab(ref rightTentacle, ref leftTentacle);
+
+        if(leftTentacle.rot.rotation.z < rightTentacle.rot.rotation.z && switchTentacles)
+        {
+            print("switch tentacles please");
+            SwitchTentacle(ref leftTentacle, ref rightTentacle);
+
+            switchTentacles = false;
+        }
         #endregion
 
         #region Calculate launch direction
@@ -531,6 +542,13 @@ public class PlayerMove : MonoBehaviour
                     thisTentacle.scale = thisTentacle.dist * magicNumber;
                     // set state to Anchored
                     thisTentacle.state = Tentacles.Anchored;
+
+                    #region
+                    if (otherTentacle.state == Tentacles.Anchored)
+                    {
+                        switchTentacles = true;
+                    }
+                    #endregion
                 }
                 #endregion
 
@@ -806,6 +824,29 @@ public class PlayerMove : MonoBehaviour
         #region calculate collision impact
         if (collision.relativeVelocity.magnitude > 40)
             print("HIT at " + collision.relativeVelocity.magnitude);
+        #endregion
+    }
+
+    /// <summary>
+    /// Tentacles are switched so that the leftmost tentacle will release when the left button is released; rightmost tentacle with right button
+    /// </summary>
+    /// <param name="left">Left tentacle</param>
+    /// <param name="right">Right tentacle</param>
+    void SwitchTentacle(ref Tentacle left, ref Tentacle right)
+    {
+        #region switch keys & mouse buttons
+        var tempKey = left.key;
+        left.key = right.key;
+        right.key = tempKey;
+
+        var tempMB = left.mouseButton;
+        left.mouseButton = right.mouseButton;
+        right.mouseButton = tempMB;
+        #endregion
+        #region switch tentacles
+        var temp2 = left;
+        left = right;
+        right = temp2;
         #endregion
     }
 }
