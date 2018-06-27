@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CameraPoint
   - ButtonTrigger
+  - Platform
   layers:
   - Default
   - TransparentFX
