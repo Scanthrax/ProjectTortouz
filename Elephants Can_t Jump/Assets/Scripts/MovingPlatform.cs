@@ -4,41 +4,54 @@ using UnityEngine;
 
 public class MovingPlatform : MonoBehaviour
 {
-    public GameObject platform;
+    public bool canMove;
+    public GameObject ButtonSystem;
 
-    public float speed;
-
-    private Transform currentP;
-
-    public Transform[] pointArr;
-
+    public GameObject platform; //moving platform
+    public float speed;         //speed
+    private Transform currentP; 
+    public Transform[] pointArr;//array of points
     public int pointSelection;
+
     // Use this for initialization
     void Start()
     {
-        currentP = pointArr[pointSelection];
-
-        //Gizmos from nodes
+        currentP = pointArr[pointSelection]; //Start at the first point
 
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-        platform.transform.position = Vector3.MoveTowards(platform.transform.position, currentP.position, Time.deltaTime * speed);
-        if(platform.transform.position == currentP.position)
+        //if a button is assigned to the platform
+        if (ButtonSystem != null)
         {
-            pointSelection++;
-            if (pointSelection == pointArr.Length)
-            {
-                pointSelection = 0;
-            }
+            canMove = ButtonSystem.GetComponentInChildren<Button>().isPressed;
+        }
+        //if there is no button then platform is always moving
+        else
+        {
+            canMove = true;
+        }
 
-            currentP = pointArr[pointSelection];
+        if (canMove)
+        {
+            platform.transform.position = Vector3.MoveTowards(platform.transform.position, currentP.position, Time.deltaTime * speed); //move the platform towards the next point in the array
+            if (platform.transform.position == currentP.position) //once the platform arrives at the point
+            {
+                pointSelection++; //move to the next point
+                if (pointSelection == pointArr.Length)//if we arrive at the last point
+                {
+                    pointSelection = 0;//go back to the first point
+                }
+
+                currentP = pointArr[pointSelection]; // reset
+            }
         }
 
     }
 
+    //gizmos to help see the path of the platform
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

@@ -27,6 +27,10 @@ public class PlayerMove : MonoBehaviour
     /// Stamina is drained while Akkoro is climbing walls
     /// </summary>
     public int stamina;
+    /// <summary>
+    /// Platform code ||| Stores the parent of the character so it can be returned when the platform is exited.
+    /// </summary>
+    public Transform storeParent;
     #endregion
     #region Objects & Components
     /// <summary>
@@ -824,6 +828,26 @@ public class PlayerMove : MonoBehaviour
         #region calculate collision impact
         if (collision.relativeVelocity.magnitude > 40)
             print("HIT at " + collision.relativeVelocity.magnitude);
+        #endregion
+
+        #region Platform Movement
+        if (collision.transform.tag == "Platform")
+        {
+            storeParent = this.transform.parent;
+            Debug.Log("parentchange");
+            transform.parent = collision.transform;
+        }
+        #endregion
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        #region Platform Movement
+        if (collision.transform.tag == "Platform")
+        {
+            Debug.Log("parentchange");
+            transform.parent = storeParent;
+        }
         #endregion
     }
 
