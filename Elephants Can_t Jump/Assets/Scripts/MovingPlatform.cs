@@ -8,7 +8,7 @@ public class MovingPlatform : MonoBehaviour
 
     public float speed;
 
-    public Transform currentP;
+    private Transform currentP;
 
     public Transform[] pointArr;
 
