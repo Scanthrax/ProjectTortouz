@@ -20,13 +20,23 @@ public class AkkoroPenginMovement : MonoBehaviour {
 
     Animator anim;
 
+    public KeyCode launchPrep;
     public KeyCode launchButton;
-
+    public KeyCode detach;
+    
     public Transform aimLaunch;
 
     Camera cam;
 
-	void Start ()
+    public float launchForce;
+
+    #region Delegates
+    public delegate void StartSling();
+    public static event StartSling startSling;
+    #endregion
+
+
+    void Start ()
     {
         anim = GetComponent<Animator>();
         walls = LayerMask.NameToLayer("Walls");
@@ -63,10 +73,13 @@ public class AkkoroPenginMovement : MonoBehaviour {
         DetermineGrounding(hitBR, (Grounding)3);
         #endregion
 
+        #region Left & Right input
         // Can only move left & right
         left = Input.GetKey(KeyCode.A) ? -1 : 0;
         right = Input.GetKey(KeyCode.D) ? 1 : 0;
+        #endregion
 
+        #region stop at walls
         // stop at left wall
         if (raycastGrounding[0])
         {
@@ -77,21 +90,23 @@ public class AkkoroPenginMovement : MonoBehaviour {
         {
             right = 0;
         }
+        #endregion
 
         // horizontal movement
         hor = (left + right) * speed * Time.deltaTime;
 
         #region launch
-        if (Input.GetKey(launchButton))
+        if (Input.GetKey(launchPrep))
         {
             hor = 0f;
             print("should be preparing for launch!");
 
             aimLaunch.right = cam.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-            if (Input.GetKey(KeyCode.Q))
+
+            if (Input.GetKeyDown(launchButton))
             {
-                print("Launch!");
-                Controller.changeChar = true;
+                Controller.switchUnits(Controlling.Akkoro, aimLaunch.right.normalized * launchForce);
+                startSling();
             }
         }
         #endregion
@@ -125,9 +140,9 @@ public class AkkoroPenginMovement : MonoBehaviour {
         #endregion
 
         #region detach
-        if (Input.GetKeyDown(Variables.detach))
+        if (Input.GetKeyDown(detach))
         {
-            Controller.changeChar = true;
+            Controller.switchUnits(Controlling.Akkoro, Vector3.zero);
         }
         #endregion
 

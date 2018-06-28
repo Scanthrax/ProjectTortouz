@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 50715249494927388}
   - component: {fileID: 61195668425913694}
   - component: {fileID: 95513413825409424}
+  - component: {fileID: 114826663282009680}
   m_Layer: 11
   m_Name: Akkoro
   m_TagString: Player
@@ -158,7 +159,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1350421427341460}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.1, y: 2.6, z: 0.171875}
+  m_LocalPosition: {x: -10.6, y: -9.4, z: 0.171875}
   m_LocalScale: {x: 8.0553, y: 8.0553, z: 8.0553}
   m_Children:
   - {fileID: 4912298113404276}
@@ -337,8 +338,10 @@ MonoBehaviour:
   gripping: 0
   maxStamina: 120
   stamina: 120
+  storeParent: {fileID: 0}
   launchDir: {fileID: 4657381206245176}
   attackCollider: {fileID: 61438670450407564}
+  pengin: {fileID: 0}
   grounding: 0
   raycastGrounding: 0100000001010000
   leftTentacle:
@@ -364,6 +367,20 @@ MonoBehaviour:
   launchConst: 580
   launchPow: 1.55
   switchTentacles: 0
+  slingshot: 0
+  isSlinging: 0
+  goBack: 0
+--- !u!114 &114826663282009680
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1350421427341460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac3d46f4cc81abe42bc1a40740f0eafc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212391307654322874
 SpriteRenderer:
   m_ObjectHideFlags: 1

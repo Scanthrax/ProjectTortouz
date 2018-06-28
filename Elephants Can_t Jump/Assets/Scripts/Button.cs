@@ -5,7 +5,7 @@ using UnityEngine;
 public class Button : MonoBehaviour {
     public bool isPressed; //boolean used by other objects to see if button is pressed or not. USE THIS BOOL TO CHECK STATE OF BUTTON
 
-    private bool press; // press/release delay system
+    public bool press; // press/release delay system
     private bool release; // press/release delay system
     private bool moving; //bool to make sure the button is done moving before it can be pressed again
     public Transform StartP; //lerping point for button animation

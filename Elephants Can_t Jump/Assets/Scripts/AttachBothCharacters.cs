@@ -9,7 +9,7 @@ public class AttachBothCharacters : MonoBehaviour
     /// Layer for Akkoro
     /// </summary>
     int akkoro;
-    public KeyCode detach;
+    public KeyCode attach;
 
     private void Start()
     {
@@ -22,9 +22,9 @@ public class AttachBothCharacters : MonoBehaviour
         {
             if (collision.gameObject.layer == akkoro)
             {
-                if (Input.GetKeyDown(detach))
+                if (Input.GetKeyDown(attach))
                 {
-                    Controller.changeChar = true;
+                    Controller.switchUnits(Controlling.Both, Vector3.zero);
                 }
             }
         }

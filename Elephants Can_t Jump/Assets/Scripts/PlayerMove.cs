@@ -50,6 +50,7 @@ public class PlayerMove : MonoBehaviour
     /// Akkoro's sprite renderer
     /// </summary>
     SpriteRenderer rend;
+    public Transform pengin;
     #endregion
     #region Grounding
     /// <summary>
@@ -201,6 +202,13 @@ public class PlayerMove : MonoBehaviour
 
     public bool switchTentacles;
 
+    public Sling slingshot;
+
+    public bool isSlinging;
+    public bool goBack;
+    float lerp = 0f;
+    public int buttons;
+
     void Start()
     {
         // assign the rigidbody component
@@ -208,6 +216,7 @@ public class PlayerMove : MonoBehaviour
         // assign Wall layer to variable
         walls = LayerMask.NameToLayer("Walls");
         anchorLayer = LayerMask.NameToLayer("Anchor");
+        buttons = LayerMask.NameToLayer("Button");
         // make sure that raycasts don't detect the colliders that they start in
         Physics2D.queriesStartInColliders = false;
         stamina = maxStamina;
@@ -215,6 +224,8 @@ public class PlayerMove : MonoBehaviour
         leftTentacle.anchorPos = null;
         rightTentacle.anchorPos = null;
         switchTentacles = false;
+        slingshot = Sling.None;
+        AkkoroPenginMovement.startSling += StartSlingshot;
     }
 
     void Update()
@@ -447,6 +458,10 @@ public class PlayerMove : MonoBehaviour
 
         #region clamp stamina
         stamina = Mathf.Clamp(stamina, 0, maxStamina);
+        #endregion
+
+        #region go back to pengin
+        BackToPengin(transform.position, pengin.position);
         #endregion
     }
 
@@ -810,6 +825,12 @@ public class PlayerMove : MonoBehaviour
                 anchorPositions.Add(collision.gameObject.transform.position);
         }
         #endregion
+
+        if (collision.gameObject.layer == buttons)
+        {
+            collision.GetComponent<Button>().press = true;
+        }
+
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -836,6 +857,16 @@ public class PlayerMove : MonoBehaviour
             storeParent = this.transform.parent;
             Debug.Log("parentchange");
             transform.parent = collision.transform;
+        }
+        #endregion
+
+        #region check for wall collision (sling)
+        if (isSlinging && collision.gameObject.layer == walls)
+        {
+            print("impact has been made!");
+            goBack = true;
+            
+            isSlinging = false;
         }
         #endregion
     }
@@ -872,5 +903,26 @@ public class PlayerMove : MonoBehaviour
         left = right;
         right = temp2;
         #endregion
+    }
+
+    void StartSlingshot()
+    {
+        isSlinging = true;
+        print("should only trigger once!");
+    }
+
+    void BackToPengin(Vector3 currentPos, Vector3 penginPos)
+    {
+        if(goBack)
+        {
+            lerp += 0.05f;
+            transform.position = Vector2.Lerp(currentPos, penginPos, lerp);
+            if(lerp >= 1f)
+            {
+                lerp = 0f;
+                goBack = false;
+                Controller.switchUnits(Controlling.Both, Vector3.zero);
+            }
+        }
     }
 }
