@@ -20,12 +20,19 @@ public class AkkoroPenginMovement : MonoBehaviour {
 
     Animator anim;
 
+    public KeyCode launchButton;
+
+    public Transform aimLaunch;
+
+    Camera cam;
+
 	void Start ()
     {
         anim = GetComponent<Animator>();
         walls = LayerMask.NameToLayer("Walls");
         Physics2D.queriesStartInColliders = false;
         rend = GetComponent<SpriteRenderer>();
+        cam = Camera.main;
     }
 
     void DetermineGrounding(RaycastHit2D hit, Grounding ground)
@@ -74,6 +81,22 @@ public class AkkoroPenginMovement : MonoBehaviour {
         // horizontal movement
         hor = (left + right) * speed * Time.deltaTime;
 
+        #region launch
+        if (Input.GetKey(launchButton))
+        {
+            hor = 0f;
+            print("should be preparing for launch!");
+
+            aimLaunch.right = cam.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+            if (Input.GetKey(KeyCode.Q))
+            {
+                print("Launch!");
+                Controller.changeChar = true;
+            }
+        }
+        #endregion
+
+        #region face direction
         if (hor < 0)
         {
             rend.flipX = true;
@@ -82,24 +105,31 @@ public class AkkoroPenginMovement : MonoBehaviour {
         {
             rend.flipX = false;
         }
+        #endregion
 
+        #region set bool in animator
         if (hor == 0)
         {
             // we're not walking
             anim.SetBool("isWalking", false);
         }
         // otherwise we're walking
-        else anim.SetBool("isWalking", true);
-        
+        else
+        {
+            anim.SetBool("isWalking", true);
+        }
+        #endregion
 
-        // apply horizontal force
+        #region apply horizontal force
         transform.Translate(new Vector2(hor, 0));
+        #endregion
 
-
-        if(Input.GetKeyDown(Variables.detach))
+        #region detach
+        if (Input.GetKeyDown(Variables.detach))
         {
             Controller.changeChar = true;
         }
+        #endregion
 
     }
 }
