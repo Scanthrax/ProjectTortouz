@@ -20,12 +20,29 @@ public class AkkoroPenginMovement : MonoBehaviour {
 
     Animator anim;
 
-	void Start ()
+    public KeyCode launchPrep;
+    public KeyCode launchButton;
+    public KeyCode detach;
+    
+    public Transform aimLaunch;
+
+    Camera cam;
+
+    public float launchForce;
+
+    #region Delegates
+    public delegate void StartSling();
+    public static event StartSling startSling;
+    #endregion
+
+
+    void Start ()
     {
         anim = GetComponent<Animator>();
         walls = LayerMask.NameToLayer("Walls");
         Physics2D.queriesStartInColliders = false;
         rend = GetComponent<SpriteRenderer>();
+        cam = Camera.main;
     }
 
     void DetermineGrounding(RaycastHit2D hit, Grounding ground)
@@ -56,10 +73,13 @@ public class AkkoroPenginMovement : MonoBehaviour {
         DetermineGrounding(hitBR, (Grounding)3);
         #endregion
 
+        #region Left & Right input
         // Can only move left & right
         left = Input.GetKey(KeyCode.A) ? -1 : 0;
         right = Input.GetKey(KeyCode.D) ? 1 : 0;
+        #endregion
 
+        #region stop at walls
         // stop at left wall
         if (raycastGrounding[0])
         {
@@ -70,10 +90,28 @@ public class AkkoroPenginMovement : MonoBehaviour {
         {
             right = 0;
         }
+        #endregion
 
         // horizontal movement
         hor = (left + right) * speed * Time.deltaTime;
 
+        #region launch
+        if (Input.GetKey(launchPrep))
+        {
+            hor = 0f;
+            print("should be preparing for launch!");
+
+            aimLaunch.right = cam.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+
+            if (Input.GetKeyDown(launchButton))
+            {
+                Controller.switchUnits(Controlling.Akkoro, aimLaunch.right.normalized * launchForce);
+                startSling();
+            }
+        }
+        #endregion
+
+        #region face direction
         if (hor < 0)
         {
             rend.flipX = true;
@@ -82,24 +120,31 @@ public class AkkoroPenginMovement : MonoBehaviour {
         {
             rend.flipX = false;
         }
+        #endregion
 
+        #region set bool in animator
         if (hor == 0)
         {
             // we're not walking
             anim.SetBool("isWalking", false);
         }
         // otherwise we're walking
-        else anim.SetBool("isWalking", true);
-        
-
-        // apply horizontal force
-        transform.Translate(new Vector2(hor, 0));
-
-
-        if(Input.GetKeyDown(Variables.detach))
+        else
         {
-            Controller.changeChar = true;
+            anim.SetBool("isWalking", true);
         }
+        #endregion
+
+        #region apply horizontal force
+        transform.Translate(new Vector2(hor, 0));
+        #endregion
+
+        #region detach
+        if (Input.GetKeyDown(detach))
+        {
+            Controller.switchUnits(Controlling.Akkoro, Vector3.zero);
+        }
+        #endregion
 
     }
 }

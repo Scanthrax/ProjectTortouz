@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Button : MonoBehaviour {
-    public bool isPressed;
+    public bool isPressed; //boolean used by other objects to see if button is pressed or not. USE THIS BOOL TO CHECK STATE OF BUTTON
 
-    private bool press;
-    private bool release;
-    public Transform StartP;
-    public Transform EndP;
-    private float time1 = 0f;
-    public float speed1 = .5f;
-    private float time2 = 0f;
-    public float speed2 = .5f;
+    public bool press; // press/release delay system
+    private bool release; // press/release delay system
+    private bool moving; //bool to make sure the button is done moving before it can be pressed again
+    public Transform StartP; //lerping point for button animation
+    public Transform EndP; //lerping point for button animation
+    private float time1 = 0f; //Lerp time start to end
+    public float speed1 = .5f; //speed start to end
+    private float time2 = 0f; //Lerp time end to start
+    public float speed2 = .5f; //speed end to start
+
+    public KeyCode key; //use key from the inspector
 
     // Use this for initialization
     void Start () {
@@ -22,26 +25,35 @@ public class Button : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        //if button is pressed
         if(press == true)
         {
+            //lerping of button
             time1 += speed1 * Time.deltaTime;
             this.transform.position = Vector3.Lerp(this.transform.position, EndP.position, time1);
-            if(this.transform.position == EndP.position)
+            moving = true; //disable pressing
+            isPressed = true;
+            if (this.transform.position == EndP.position) //if button is done moving
             {
+                moving = false;
                 time1 = 0f;
-                isPressed = true;
                 press = false;
             }
 
         }
+
+        //if button is pressed a second time
         if (release == true)
         {
+            //lerping
             time2 += speed2 * Time.deltaTime;
             this.transform.position = Vector3.Lerp(this.transform.position, StartP.position, time2);
-            if (this.transform.position == StartP.position)
+            moving = true; //disable pressing
+            isPressed = false;
+            if (this.transform.position == StartP.position) //if button is done moving
             {
+                moving = false;
                 time2 = 0f;
-                isPressed = false;
                 release = false;
             }
 
@@ -51,10 +63,9 @@ public class Button : MonoBehaviour {
 
     private void OnTriggerStay2D(Collider2D other)
     {
-       if(other.CompareTag("Player"))
+       if(other.CompareTag("Player")) //check if the player is in the trigger
        {
-            Debug.Log("Collide");
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKeyDown(key) && !moving) //check if key is pressed and if button is done moving
             {
                 if (isPressed == false)
                 {

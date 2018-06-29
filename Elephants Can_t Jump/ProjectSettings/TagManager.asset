@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CameraPoint
   - ButtonTrigger
+  - Platform
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - Anchor
   - Akkoro
   - Pengin
-  - 
+  - Button
   - 
   - 
   - 
@@ -40,6 +41,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BehindWalls
+    uniqueID: 105516091
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

@@ -18,6 +18,8 @@ namespace Utility
     /// </summary>
     public enum Launch { Contracting, Launching, Grounded}
 
+    public enum Sling { Prep, Airborne, Back, None}
+
     public enum Controlling { Akkoro, Both}
 
 

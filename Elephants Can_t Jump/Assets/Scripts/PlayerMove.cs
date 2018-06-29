@@ -27,6 +27,10 @@ public class PlayerMove : MonoBehaviour
     /// Stamina is drained while Akkoro is climbing walls
     /// </summary>
     public int stamina;
+    /// <summary>
+    /// Platform code ||| Stores the parent of the character so it can be returned when the platform is exited.
+    /// </summary>
+    public Transform storeParent;
     #endregion
     #region Objects & Components
     /// <summary>
@@ -46,6 +50,7 @@ public class PlayerMove : MonoBehaviour
     /// Akkoro's sprite renderer
     /// </summary>
     SpriteRenderer rend;
+    public Transform pengin;
     #endregion
     #region Grounding
     /// <summary>
@@ -195,6 +200,15 @@ public class PlayerMove : MonoBehaviour
     public float launchConst, launchPow;
     // 580 1.55
 
+    public bool switchTentacles;
+
+    public Sling slingshot;
+
+    public bool isSlinging;
+    public bool goBack;
+    float lerp = 0f;
+    public int buttons;
+
     void Start()
     {
         // assign the rigidbody component
@@ -202,12 +216,16 @@ public class PlayerMove : MonoBehaviour
         // assign Wall layer to variable
         walls = LayerMask.NameToLayer("Walls");
         anchorLayer = LayerMask.NameToLayer("Anchor");
+        buttons = LayerMask.NameToLayer("Button");
         // make sure that raycasts don't detect the colliders that they start in
         Physics2D.queriesStartInColliders = false;
         stamina = maxStamina;
         rend = GetComponent<SpriteRenderer>();
         leftTentacle.anchorPos = null;
         rightTentacle.anchorPos = null;
+        switchTentacles = false;
+        slingshot = Sling.None;
+        AkkoroPenginMovement.startSling += StartSlingshot;
     }
 
     void Update()
@@ -395,6 +413,14 @@ public class PlayerMove : MonoBehaviour
         #region Tentacle logic
         TentacleGrab(ref leftTentacle, ref rightTentacle);
         TentacleGrab(ref rightTentacle, ref leftTentacle);
+
+        if(leftTentacle.rot.rotation.z < rightTentacle.rot.rotation.z && switchTentacles)
+        {
+            print("switch tentacles please");
+            SwitchTentacle(ref leftTentacle, ref rightTentacle);
+
+            switchTentacles = false;
+        }
         #endregion
 
         #region Calculate launch direction
@@ -432,6 +458,10 @@ public class PlayerMove : MonoBehaviour
 
         #region clamp stamina
         stamina = Mathf.Clamp(stamina, 0, maxStamina);
+        #endregion
+
+        #region go back to pengin
+        BackToPengin(transform.position, pengin.position);
         #endregion
     }
 
@@ -531,6 +561,13 @@ public class PlayerMove : MonoBehaviour
                     thisTentacle.scale = thisTentacle.dist * magicNumber;
                     // set state to Anchored
                     thisTentacle.state = Tentacles.Anchored;
+
+                    #region
+                    if (otherTentacle.state == Tentacles.Anchored)
+                    {
+                        switchTentacles = true;
+                    }
+                    #endregion
                 }
                 #endregion
 
@@ -788,6 +825,12 @@ public class PlayerMove : MonoBehaviour
                 anchorPositions.Add(collision.gameObject.transform.position);
         }
         #endregion
+
+        if (collision.gameObject.layer == buttons)
+        {
+            collision.GetComponent<Button>().press = true;
+        }
+
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -807,5 +850,79 @@ public class PlayerMove : MonoBehaviour
         if (collision.relativeVelocity.magnitude > 40)
             print("HIT at " + collision.relativeVelocity.magnitude);
         #endregion
+
+        #region Platform Movement
+        if (collision.transform.tag == "Platform")
+        {
+            storeParent = this.transform.parent;
+            Debug.Log("parentchange");
+            transform.parent = collision.transform;
+        }
+        #endregion
+
+        #region check for wall collision (sling)
+        if (isSlinging && collision.gameObject.layer == walls)
+        {
+            print("impact has been made!");
+            goBack = true;
+            
+            isSlinging = false;
+        }
+        #endregion
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        #region Platform Movement
+        if (collision.transform.tag == "Platform")
+        {
+            Debug.Log("parentchange");
+            transform.parent = storeParent;
+        }
+        #endregion
+    }
+
+    /// <summary>
+    /// Tentacles are switched so that the leftmost tentacle will release when the left button is released; rightmost tentacle with right button
+    /// </summary>
+    /// <param name="left">Left tentacle</param>
+    /// <param name="right">Right tentacle</param>
+    void SwitchTentacle(ref Tentacle left, ref Tentacle right)
+    {
+        #region switch keys & mouse buttons
+        var tempKey = left.key;
+        left.key = right.key;
+        right.key = tempKey;
+
+        var tempMB = left.mouseButton;
+        left.mouseButton = right.mouseButton;
+        right.mouseButton = tempMB;
+        #endregion
+        #region switch tentacles
+        var temp2 = left;
+        left = right;
+        right = temp2;
+        #endregion
+    }
+
+    void StartSlingshot()
+    {
+        isSlinging = true;
+        print("should only trigger once!");
+    }
+
+    void BackToPengin(Vector3 currentPos, Vector3 penginPos)
+    {
+        if(goBack)
+        {
+            lerp += 0.05f;
+            transform.position = Vector2.Lerp(currentPos, penginPos, lerp);
+            if(lerp >= 1f)
+            {
+                lerp = 0f;
+                goBack = false;
+                Controller.switchUnits(Controlling.Both, Vector3.zero);
+            }
+        }
     }
 }
