@@ -370,6 +370,7 @@ MonoBehaviour:
   slingshot: 0
   isSlinging: 0
   goBack: 0
+  buttons: 0
 --- !u!114 &114826663282009680
 MonoBehaviour:
   m_ObjectHideFlags: 1

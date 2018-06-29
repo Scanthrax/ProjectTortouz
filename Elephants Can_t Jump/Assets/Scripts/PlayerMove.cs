@@ -581,7 +581,11 @@ public class PlayerMove : MonoBehaviour
                     thisTentacle.anchorPos = null;
                     break;
                 }
-                if (Input.GetKeyDown(Variables.launch) && otherTentacle.state == Tentacles.Anchored)
+
+
+                #endregion
+
+                if (Input.GetKeyUp(Variables.launch) && otherTentacle.state == Tentacles.Anchored)
                 {
                     #region retract both tentacles
                     thisTentacle.state = Tentacles.Retracting;
@@ -589,8 +593,6 @@ public class PlayerMove : MonoBehaviour
                     #endregion
                     rb.AddForce(launchDir.right * SpringCalc2());
                 }
-
-                #endregion
 
                 #region Aim at anchor
                 thisTentacle.rot.right = thisTentacle.anchorPos.Value - transform.position;
