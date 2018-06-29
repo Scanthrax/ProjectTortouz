@@ -55,6 +55,8 @@ public class Controller : MonoBehaviour
 
                 units[0].SetActive(false);
                 units[1].SetActive(false);
+
+                Room.player = units[2].transform;
                 break;
             case Controlling.Akkoro:
 
@@ -71,6 +73,7 @@ public class Controller : MonoBehaviour
 
                 units[2].SetActive(false);
 
+                Room.player = units[1].transform;
                 break;
             default:
                 print("Shouldn't be here!");

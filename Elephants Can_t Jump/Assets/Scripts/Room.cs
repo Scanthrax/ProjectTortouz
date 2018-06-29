@@ -6,7 +6,7 @@ using Utility;
 public class Room : MonoBehaviour {
 
 
-    public Transform player;
+    public static Transform player;
 
     public delegate void RoomChange(Transform fromRoom, Transform toRoom);
     public static event RoomChange roomChange;
