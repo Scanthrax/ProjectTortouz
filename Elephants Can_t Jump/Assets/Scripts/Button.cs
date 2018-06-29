@@ -17,10 +17,12 @@ public class Button : MonoBehaviour {
 
     public KeyCode key; //use key from the inspector
 
+    SpriteRenderer spriteRend;
     // Use this for initialization
     void Start () {
         isPressed = false;
-	}
+        spriteRend = GetComponent<SpriteRenderer>();
+    }
 	
 	// Update is called once per frame
 	void Update ()
@@ -57,6 +59,15 @@ public class Button : MonoBehaviour {
                 release = false;
             }
 
+        }
+
+        if(isPressed)
+        {
+            spriteRend.color = Color.gray;
+        }
+        else
+        {
+            spriteRend.color = Color.red;
         }
 
     }

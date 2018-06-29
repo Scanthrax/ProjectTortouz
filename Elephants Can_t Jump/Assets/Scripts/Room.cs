@@ -18,6 +18,7 @@ public class Room : MonoBehaviour {
 
     void Update()
     {
+
         // if the player is outside the bounds of the room
         if (!(player.position.x < transform.position.x - Variables.horzExtent ||
             player.position.x > transform.position.x + Variables.horzExtent ||

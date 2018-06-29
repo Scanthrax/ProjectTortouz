@@ -226,6 +226,7 @@ public class PlayerMove : MonoBehaviour
         switchTentacles = false;
         slingshot = Sling.None;
         AkkoroPenginMovement.startSling += StartSlingshot;
+        gameObject.SetActive(false);
     }
 
     void Update()
