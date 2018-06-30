@@ -69,7 +69,10 @@ public class Controller : MonoBehaviour
                 units[0].gameObject.GetComponent<SpriteRenderer>().flipX = units[2].gameObject.GetComponent<SpriteRenderer>().flipX;
                 units[0].transform.position = units[2].transform.position;
 
-                if(launch != Vector3.zero) units[1].GetComponent<Rigidbody2D>().AddForce(launch);
+                if (launch != Vector3.zero)
+                {
+                    units[1].GetComponent<Rigidbody2D>().AddForce(launch);
+                }
 
                 units[2].SetActive(false);
 

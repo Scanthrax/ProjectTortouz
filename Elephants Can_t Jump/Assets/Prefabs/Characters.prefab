@@ -54,6 +54,7 @@ GameObject:
   - component: {fileID: 61135320957486012}
   - component: {fileID: 114545829870671070}
   - component: {fileID: 114131521586019680}
+  - component: {fileID: 114199327239443046}
   m_Layer: 0
   m_Name: Pengin
   m_TagString: Untagged
@@ -134,18 +135,18 @@ GameObject:
   - component: {fileID: 4642800030748050}
   - component: {fileID: 212210286683079048}
   - component: {fileID: 61240747929162106}
-  - component: {fileID: 114401214065234708}
   - component: {fileID: 50427634345997494}
   - component: {fileID: 95471913879140590}
   - component: {fileID: 114013576188689714}
   - component: {fileID: 114698358990182004}
+  - component: {fileID: 114998171948145886}
   m_Layer: 12
   m_Name: Akkoro + Pengin
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1785013114418978
 GameObject:
   m_ObjectHideFlags: 1
@@ -170,11 +171,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4109457827741622}
   - component: {fileID: 212660333563551926}
-  - component: {fileID: 114845360638582612}
   - component: {fileID: 50104747563079370}
   - component: {fileID: 61996477708561626}
   - component: {fileID: 95174897833269930}
   - component: {fileID: 114297196243785670}
+  - component: {fileID: 114019022999621170}
+  - component: {fileID: 114425698587137522}
   m_Layer: 11
   m_Name: Akkoro
   m_TagString: Player
@@ -537,6 +539,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac3d46f4cc81abe42bc1a40740f0eafc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114019022999621170
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1873152029941742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0528f6505f013334ead2394b26c2e0e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10
+  gravScale: 7
+  gripping: 0
+  maxStamina: 120
+  stamina: 0
+  storeParent: {fileID: 0}
+  launchDir: {fileID: 0}
+  attackCollider: {fileID: 0}
+  pengin: {fileID: 0}
+  grounding: 0
+  raycastGrounding: 0000000000000000
+  leftTentacle:
+    scale: 0
+    state: 0
+    dist: 0
+    rend: {fileID: 0}
+    rot: {fileID: 0}
+    key: 0
+    mouseButton: 0
+  rightTentacle:
+    scale: 0
+    state: 0
+    dist: 0
+    rend: {fileID: 0}
+    rot: {fileID: 0}
+    key: 0
+    mouseButton: 0
+  rate: 0.02
+  tentacleRange: 0
+  anchorPositions: []
+  control: 0
+  launchConst: 580
+  launchPow: 1.55
+  switchTentacles: 0
+  slingshot: 0
+  isSlinging: 0
+  goBack: 0
+  buttons: 0
 --- !u!114 &114131521586019680
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -546,6 +597,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac3d46f4cc81abe42bc1a40740f0eafc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114199327239443046
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1334150935222888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8df88a536d41f104b9bfa7a4321f79c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114226944250724492
@@ -570,23 +632,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac3d46f4cc81abe42bc1a40740f0eafc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114401214065234708
+--- !u!114 &114425698587137522
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1743802316652300}
+  m_GameObject: {fileID: 1873152029941742}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 209bed08a879c584f88821b854fdce95, type: 3}
+  m_Script: {fileID: 11500000, guid: 8df88a536d41f104b9bfa7a4321f79c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  raycastGrounding: 00000000
-  launchPrep: 32
-  launchButton: 113
-  detach: 101
-  aimLaunch: {fileID: 4222647460723264}
-  launchForce: 6000
 --- !u!114 &114545829870671070
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -610,46 +666,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8df88a536d41f104b9bfa7a4321f79c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114845360638582612
+--- !u!114 &114998171948145886
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1873152029941742}
+  m_GameObject: {fileID: 1743802316652300}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a439855230c60a4a92d73a10fb826e5, type: 3}
+  m_Script: {fileID: 11500000, guid: 0528f6505f013334ead2394b26c2e0e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 8
+  speed: 10
   gravScale: 7
   gripping: 0
   maxStamina: 120
-  stamina: 120
+  stamina: 0
   storeParent: {fileID: 0}
-  launchDir: {fileID: 4666766990878818}
-  attackCollider: {fileID: 61725389658725842}
-  pengin: {fileID: 4011677174690486}
+  launchDir: {fileID: 0}
+  attackCollider: {fileID: 0}
+  pengin: {fileID: 0}
   grounding: 0
-  raycastGrounding: 0100000001010000
+  raycastGrounding: 0000000000000000
   leftTentacle:
     scale: 0
-    state: 3
+    state: 0
     dist: 0
-    rend: {fileID: 212934424191500828}
-    rot: {fileID: 4907103699260238}
-    key: 111
-    mouseButton: 1
+    rend: {fileID: 0}
+    rot: {fileID: 0}
+    key: 0
+    mouseButton: 0
   rightTentacle:
     scale: 0
-    state: 3
+    state: 0
     dist: 0
-    rend: {fileID: 212365107626385344}
-    rot: {fileID: 4167568804158708}
-    key: 112
+    rend: {fileID: 0}
+    rot: {fileID: 0}
+    key: 0
     mouseButton: 0
-  rate: 0.03
-  tentacleRange: 7
+  rate: 0.02
+  tentacleRange: 0
   anchorPositions: []
   control: 0
   launchConst: 580

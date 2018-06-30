@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utility;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     #region Movement
     /// <summary>
@@ -61,8 +61,9 @@ public class PlayerMove : MonoBehaviour
     /// <summary>
     /// Range of the raycasts that project from Akkoro to all sides; used to determine grounding range
     /// </summary>
-    float wallDist = 0.86f;
-    float wallDist2 = 1.2f;
+    float wallDistVert = 0.86f;
+    float wallDistHor = 0.86f;
+    float wallDistDiag = 1.2f;
     /// <summary>
     /// Array of booleans used to identify which surfaces Akkoro is grounded to
     /// </summary>
@@ -197,7 +198,7 @@ public class PlayerMove : MonoBehaviour
     /// <summary>
     /// used in Launch equation
     /// </summary>
-    public float launchConst, launchPow;
+    public float launchConst = 580f, launchPow = 1.55f;
     // 580 1.55
 
     public bool switchTentacles;
@@ -208,6 +209,8 @@ public class PlayerMove : MonoBehaviour
     public bool goBack;
     float lerp = 0f;
     public int buttons;
+    Animator anim;
+    BoxCollider2D bc;
 
     void Start()
     {
@@ -225,8 +228,12 @@ public class PlayerMove : MonoBehaviour
         rightTentacle.anchorPos = null;
         switchTentacles = false;
         slingshot = Sling.None;
-        AkkoroPenginMovement.startSling += StartSlingshot;
-        gameObject.SetActive(false);
+        bc = GetComponent<BoxCollider2D>();
+        anim = GetComponent<Animator>();
+        wallDistHor = bc.size.x * transform.lossyScale.x * 0.6f;
+        wallDistVert = bc.size.y * transform.lossyScale.x * 0.6f;
+        wallDistDiag = Vector2.Distance(transform.position, transform.position + (new Vector3(bc.size.x, bc.size.y) * transform.lossyScale.x)) * 1.2f;
+        //gameObject.SetActive(false);
     }
 
     void Update()
@@ -260,15 +267,16 @@ public class PlayerMove : MonoBehaviour
 
         #region raycasting system
         #region Set up raycasting for 4 directions
-        hitRight = Physics2D.Raycast(transform.position, Vector2.right, wallDist);
-        hitLeft = Physics2D.Raycast(transform.position, Vector2.left, wallDist);
-        hitBottom = Physics2D.Raycast(transform.position, Vector2.down, wallDist);
-        hitTop = Physics2D.Raycast(transform.position, Vector2.up, wallDist);
+        hitRight = Physics2D.Raycast(transform.position, Vector2.right, wallDistHor);
+        hitLeft = Physics2D.Raycast(transform.position, Vector2.left, wallDistHor);
+        hitBottom = Physics2D.Raycast(transform.position, Vector2.down, wallDistVert);
+        hitTop = Physics2D.Raycast(transform.position, Vector2.up, wallDistVert);
 
-        hitTR = Physics2D.Raycast(transform.position, new Vector2(1, 1), wallDist2);
-        hitBR = Physics2D.Raycast(transform.position, new Vector2(1, -1), wallDist2);
-        hitBL = Physics2D.Raycast(transform.position, new Vector2(-1, -1), wallDist2);
-        hitTL = Physics2D.Raycast(transform.position, new Vector2(-1, 1), wallDist2);
+        
+        hitTR = Physics2D.Raycast(transform.position, new Vector2(1, 1), wallDistDiag);
+        hitBR = Physics2D.Raycast(transform.position, new Vector2(1, -1), wallDistDiag);
+        hitBL = Physics2D.Raycast(transform.position, new Vector2(-1, -1), wallDistDiag);
+        hitTL = Physics2D.Raycast(transform.position, new Vector2(-1, 1), wallDistDiag);
         #endregion
         #region Calculate the groundings for all directions
         DetermineGrounding(hitRight, Grounding.Right);
@@ -391,11 +399,18 @@ public class PlayerMove : MonoBehaviour
             rend.flipX = false;
         }
 
-        //if (launchState == Launch.Contracting || launchState == Launch.Launching)
-        //{
-        //    hor = 0;
-        //    vert = 0;
-        //}
+        #region set bool in animator
+        if (hor == 0)
+        {
+            // we're not walking
+            anim.SetBool("isWalking", false);
+        }
+        // otherwise we're walking
+        else
+        {
+            anim.SetBool("isWalking", true);
+        }
+        #endregion
 
 
         // add force to Akkoro
@@ -433,18 +448,7 @@ public class PlayerMove : MonoBehaviour
         }
         #endregion
 
-        #region unused
-        //if (leftTentacle.anchorPos.HasValue && rightTentacle.anchorPos.HasValue)
-        //{
-        //    Vector3 temp = leftTentacle.dist > rightTentacle.dist ?
-        //        leftTentacle.anchorPos.Value : rightTentacle.anchorPos.Value;
-        //    Vector3 temp2 = leftTentacle.dist < rightTentacle.dist ?
-        //        leftTentacle.anchorPos.Value : rightTentacle.anchorPos.Value;
-        //    betweenAnchors.position = temp;
-        //    betweenAnchors.LookAt(temp2);
-        //}
-        #endregion
-
+        /*
         #region attack the walls
         if (Input.GetKey(KeyCode.F))
         {
@@ -456,14 +460,17 @@ public class PlayerMove : MonoBehaviour
         }
         else attackCollider.enabled = false;
         #endregion
+        */
 
         #region clamp stamina
         stamina = Mathf.Clamp(stamina, 0, maxStamina);
         #endregion
 
+        /*
         #region go back to pengin
         BackToPengin(transform.position, pengin.position);
         #endregion
+        */
     }
 
     /// <summary>
@@ -636,68 +643,6 @@ public class PlayerMove : MonoBehaviour
     }
 
     /// <summary>
-    /// Launch function
-    /// </summary>
-    void Launching()
-    {
-        /*
-        switch (launchState)
-        {
-            case Launch.Grounded:
-                #region Launch if the player presses Q
-                if (Input.GetKeyDown(Variables.launch) && rightTentacle.state == Tentacles.Anchored && leftTentacle.state == Tentacles.Anchored)
-                {
-                    //// delay sticking back to the surface you just launched from
-                    //launchDelay = 0;
-                    //// the player is now being launched
-                    //launchState = Launch.Contracting;
-                    //// save impulse information
-                    //impulse = SpringCalc();
-                    ////print(impulse);
-                    //// set starting position to set up Lerp
-                    //startingPos = transform.position;
-                    //// reset lerp
-                    //lerp = 0f;
-
-                    launchDelay = 0;
-                    impulse = SpringCalc();
-                    launchState = Launch.Launching;
-                    #region retract both tentacles
-                    leftTentacle.state = Tentacles.Retracting;
-                    rightTentacle.state = Tentacles.Retracting;
-                    #endregion
-                    rb.AddForce(launchDir.right * impulse);
-                }
-                break;
-            #endregion
-            case Launch.Contracting:
-                // increase lerp over time
-                lerp += 0.1f;
-                transform.position = Vector2.Lerp(startingPos, startingPos + (launchDir.right * X), lerp);
-                if (lerp >= 1f)
-                {
-                    #region retract both tentacles
-                    leftTentacle.state = Tentacles.Retracting;
-                    rightTentacle.state = Tentacles.Retracting;
-                    #endregion
-                    launchState = Launch.Launching;
-                    lerp = 0f;
-                    // launch between both tentacles
-                    rb.AddForce(launchDir.right * impulse);
-                }
-                break;
-            case Launch.Launching:
-                launchDelay++;
-                if (grounding != Grounding.None && launchDelay > 10)
-                {
-                    launchState = Launch.Grounded;
-                }
-                break;
-        }
-        */
-    }
-
-    /// <summary>
     /// Retracts the tentacle that is sent into the function
     /// </summary>
     /// <param name="tent"></param>
@@ -854,15 +799,6 @@ public class PlayerMove : MonoBehaviour
             print("HIT at " + collision.relativeVelocity.magnitude);
         #endregion
 
-        #region Platform Movement
-        if (collision.transform.tag == "Platform")
-        {
-            storeParent = this.transform.parent;
-            Debug.Log("parentchange");
-            transform.parent = collision.transform;
-        }
-        #endregion
-
         #region check for wall collision (sling)
         if (isSlinging && collision.gameObject.layer == walls)
         {
@@ -870,17 +806,6 @@ public class PlayerMove : MonoBehaviour
             goBack = true;
             
             isSlinging = false;
-        }
-        #endregion
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        #region Platform Movement
-        if (collision.transform.tag == "Platform")
-        {
-            Debug.Log("parentchange");
-            transform.parent = storeParent;
         }
         #endregion
     }
@@ -906,12 +831,6 @@ public class PlayerMove : MonoBehaviour
         left = right;
         right = temp2;
         #endregion
-    }
-
-    void StartSlingshot()
-    {
-        isSlinging = true;
-        print("should only trigger once!");
     }
 
     void BackToPengin(Vector3 currentPos, Vector3 penginPos)
