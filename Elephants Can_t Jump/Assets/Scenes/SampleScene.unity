@@ -573,7 +573,9 @@ MonoBehaviour:
   launchButton: 113
   detach: 101
   aimLaunch: {fileID: 444857173}
-  launchForce: 6000
+  launchForce: 2200
+  TrajectoryPointPrefab: {fileID: 1864082679373210, guid: aa5523511a161064db47824b5e80db2d,
+    type: 2}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1680,7 +1682,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 5
+  m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 4
   m_Material: {fileID: 0}
@@ -1731,7 +1733,7 @@ MonoBehaviour:
   tentacleRange: 6
   anchorPositions: []
   control: 0
-  launchConst: 580
+  launchConst: 200
   launchPow: 1.55
   switchTentacles: 0
   slingshot: 0
