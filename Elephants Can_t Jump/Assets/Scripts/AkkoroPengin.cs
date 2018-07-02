@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utility;
 
-public class AkkoroPengin : MonoBehaviour {
-
-
-
+public class AkkoroPengin : MonoBehaviour
+{
     public KeyCode launchPrep;
     public KeyCode launchButton;
     public KeyCode detach;
