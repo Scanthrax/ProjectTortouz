@@ -128,7 +128,7 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// Maximum range of the tentacles
     /// </summary>
-    public float tentacleRange;
+    public float tentacleRange = 6f;
     /// <summary>
     /// The Tentacle class creates the two tentacles that Akkoro will use throughout the game
     /// </summary>
@@ -142,7 +142,7 @@ public class PlayerMovement : MonoBehaviour
         /// <summary>
         /// Current state of the tentacle
         /// </summary>
-        public Tentacles state;
+        public Tentacles state = Tentacles.None;
         /// <summary>
         /// Distance between Akkoro's origin & the end of the tentacle
         /// </summary>
@@ -150,11 +150,11 @@ public class PlayerMovement : MonoBehaviour
         /// <summary>
         /// Sprite renderer of the tentacle
         /// </summary>
-        public SpriteRenderer rend;
+        [HideInInspector]public SpriteRenderer rend;
         /// <summary>
         /// Rotation of the tentacle arm
         /// </summary>
-        public Transform rot;
+        [HideInInspector]public Transform rot;
         /// <summary>
         /// Anchor position of the tentacle; set to null of there is no position
         /// </summary>
@@ -214,6 +214,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+
+
         // assign the rigidbody component
         rb = GetComponent<Rigidbody2D>();
         // assign Wall layer to variable
@@ -480,6 +482,8 @@ public class PlayerMovement : MonoBehaviour
     /// <param name="otherTentacle">The other tentacle to take into consideration</param>
     void TentacleGrab(ref Tentacle thisTentacle, ref Tentacle otherTentacle)
     {
+
+
         switch (thisTentacle.state)
         {
             case Tentacles.None:
@@ -550,17 +554,26 @@ public class PlayerMovement : MonoBehaviour
                     thisTentacle.anchorPos = null;
                     break;
                 }
+                if(thisTentacle.anchorPos.HasValue)
+                {
+                    if(Vector2.Distance(transform.position, thisTentacle.anchorPos.Value) > tentacleRange)
+                    {
+                        print("Retracting & breaking connection");
+                        thisTentacle.state = Tentacles.Retracting;
+                        thisTentacle.anchorPos = null;
+                        break;
+                    }
+                }
                 #endregion
 
                 #region calculate distance
                 thisTentacle.rot.right = thisTentacle.anchorPos.Value - transform.position;
-                // find the distance from Akkoro to the anchor point
-                thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.Value, transform.position);
+                
                 #endregion
 
                 #region Update Tentacle length
                 thisTentacle.scale += rate;
-                UpdateTentacleLength(thisTentacle);
+                
                 #endregion
 
                 #region Set anchor when full distance to anchor is reached
@@ -568,19 +581,26 @@ public class PlayerMovement : MonoBehaviour
                 {
                     thisTentacle.scale = thisTentacle.dist * magicNumber;
                     // set state to Anchored
+                    UpdateTentacleLength(thisTentacle);
                     thisTentacle.state = Tentacles.Anchored;
 
                     #region
+                    /*
                     if (otherTentacle.state == Tentacles.Anchored)
                     {
                         switchTentacles = true;
                     }
+                    */
                     #endregion
                 }
                 #endregion
-
+                UpdateTentacleLength(thisTentacle);
                 break;
             case Tentacles.Anchored:
+
+                #region Aim at anchor
+                thisTentacle.rot.right = thisTentacle.anchorPos.Value - transform.position;
+                #endregion
 
                 #region Press key to retract
                 if (!Input.GetKey(thisTentacle.key) && !Input.GetMouseButton(thisTentacle.mouseButton))
@@ -589,8 +609,6 @@ public class PlayerMovement : MonoBehaviour
                     thisTentacle.anchorPos = null;
                     break;
                 }
-
-
                 #endregion
 
                 if (Input.GetKeyUp(Variables.launch) && otherTentacle.state == Tentacles.Anchored)
@@ -602,19 +620,18 @@ public class PlayerMovement : MonoBehaviour
                     rb.AddForce(launchDir.right * SpringCalc2());
                 }
 
-                #region Aim at anchor
-                thisTentacle.rot.right = thisTentacle.anchorPos.Value - transform.position;
-                #endregion
+                
 
                 #region Adjust tentacle based on distance
-                // find the distance from Akkoro to the anchor point
-                thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.Value, transform.position);
-                // adjust scale based on distance
                 thisTentacle.scale = magicNumber * thisTentacle.dist;
                 UpdateTentacleLength(thisTentacle);
                 #endregion
 
                 #region Keep Akkoro clamped between the range of the tentacles
+                #region tentacle distance
+                if (thisTentacle.anchorPos.HasValue)
+                    thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.Value, transform.position);
+                #endregion
                 if (thisTentacle.dist >= tentacleRange)
                 {
                     // find the point on the edge of the radius
@@ -631,6 +648,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 #endregion
 
+                UpdateTentacleLength(thisTentacle);
                 break;
             case Tentacles.Retracting:
 
@@ -640,6 +658,13 @@ public class PlayerMovement : MonoBehaviour
 
                 break;
         }
+
+        #region tentacle distance
+        if (thisTentacle.anchorPos.HasValue)
+            thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.Value, transform.position);
+        #endregion
+
+
     }
 
     /// <summary>

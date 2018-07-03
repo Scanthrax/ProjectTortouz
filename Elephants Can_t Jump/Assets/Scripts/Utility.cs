@@ -22,6 +22,9 @@ namespace Utility
 
     public enum Controlling { Akkoro, Both}
 
+    public interface LeftTentacle { }
+    public interface RightTentacle { }
+
 
     public static class Functions
     {
