@@ -13,20 +13,24 @@ public class CameraCenterpoints : MonoBehaviour {
     
     public GameObject player;
 
+    public delegate void RoomName();
+    public static event RoomName roomName;
+
     void Start ()
     {
         panCam = false;
         cam.transform.position = startRoom.position;
         Variables.room = startRoom;
+        cam = Camera.main;
         Room.roomChange += ChangeRoom;
+        
     }
 
 
 
     void ChangeRoom(Transform from, Transform to)
     {
-        print("should be changing room");
-
+        cam = Camera.main;
         // pause the game while room is changing
         if(Time.timeScale != 0f) Time.timeScale = 0f;
         // increment lerp
@@ -42,6 +46,7 @@ public class CameraCenterpoints : MonoBehaviour {
             cam.transform.position = to.position;
             // set static variable to destination room
             Variables.room = to;
+            roomName();
             // unpause the game
             Time.timeScale = 1f;
         }

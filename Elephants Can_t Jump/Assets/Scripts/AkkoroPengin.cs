@@ -26,6 +26,8 @@ public class AkkoroPengin : MonoBehaviour
     List<GameObject> trajectoryPoints;
     public GameObject TrajectoryPointPrefab;
 
+    public static bool prepLaunch;
+
     void Start()
     {
         Physics2D.queriesStartInColliders = false;
@@ -40,6 +42,7 @@ public class AkkoroPengin : MonoBehaviour
             trajectoryPoints.Insert(i, dot);
 
         }
+        prepLaunch = false;
     }
 
     private void OnEnable()
@@ -53,7 +56,7 @@ public class AkkoroPengin : MonoBehaviour
         if (Input.GetKey(launchPrep))
         {
             print("should be preparing for launch!");
-
+            prepLaunch = true;
             aimLaunch.right = cam.ScreenToWorldPoint(Input.mousePosition) - transform.position;
 
             #region trajectory
@@ -64,7 +67,7 @@ public class AkkoroPengin : MonoBehaviour
 
             #endregion
 
-            if (Input.GetKeyDown(launchButton))
+            if (Input.GetMouseButtonDown(0))
             {
                 Controller.switchUnits(Controlling.Akkoro, aimLaunch.right.normalized * launchForce);
                 BackToPengin.isSlinging = true;
@@ -74,6 +77,7 @@ public class AkkoroPengin : MonoBehaviour
         else
         {
             enablePoints(false);
+            prepLaunch = false;
         }
         #endregion
 

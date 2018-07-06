@@ -11,6 +11,23 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1350421427341460}
   m_IsPrefabParent: 1
+--- !u!1 &1166887314827890
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4135478984960474}
+  - component: {fileID: 61673140401419280}
+  - component: {fileID: 114217067010864582}
+  m_Layer: 0
+  m_Name: Attack collider (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1350421427341460
 GameObject:
   m_ObjectHideFlags: 0
@@ -20,11 +37,14 @@ GameObject:
   m_Component:
   - component: {fileID: 4373803838017900}
   - component: {fileID: 212592900356917874}
-  - component: {fileID: 114691400991941304}
   - component: {fileID: 50715249494927388}
   - component: {fileID: 61195668425913694}
   - component: {fileID: 95513413825409424}
   - component: {fileID: 114826663282009680}
+  - component: {fileID: 114141717028258170}
+  - component: {fileID: 114880821025405798}
+  - component: {fileID: 114148993060757298}
+  - component: {fileID: 114691400991941304}
   m_Layer: 11
   m_Name: Akkoro
   m_TagString: Player
@@ -40,6 +60,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4657381206245176}
+  - component: {fileID: 114213939774108084}
   m_Layer: 11
   m_Name: launch direction
   m_TagString: Untagged
@@ -56,6 +77,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4016465028756934}
   - component: {fileID: 212391307654322874}
+  - component: {fileID: 114932346516171776}
   m_Layer: 9
   m_Name: First Tentacle
   m_TagString: Untagged
@@ -72,25 +94,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4273989409083004}
   - component: {fileID: 212499979673956132}
+  - component: {fileID: 114184224415650742}
   m_Layer: 9
   m_Name: Second Tentacle
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &1764831846993224
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4999841016146876}
-  - component: {fileID: 61438670450407564}
-  - component: {fileID: 114499297802822126}
-  m_Layer: 11
-  m_Name: Attack collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -139,6 +145,19 @@ Transform:
   m_Father: {fileID: 4912298113404276}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4135478984960474
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1166887314827890}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4373803838017900}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4273989409083004
 Transform:
   m_ObjectHideFlags: 1
@@ -159,13 +178,13 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1350421427341460}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.6, y: -9.4, z: 0.171875}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 8.0553, y: 8.0553, z: 8.0553}
   m_Children:
   - {fileID: 4912298113404276}
   - {fileID: 4510136607714612}
   - {fileID: 4657381206245176}
-  - {fileID: 4999841016146876}
+  - {fileID: 4135478984960474}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -210,19 +229,6 @@ Transform:
   m_Father: {fileID: 4373803838017900}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4999841016146876
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1764831846993224}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4373803838017900}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &50715249494927388
 Rigidbody2D:
   serializedVersion: 4
@@ -235,7 +241,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 5
+  m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 4
   m_Material: {fileID: 0}
@@ -268,13 +274,13 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.18, y: 0.18}
   m_EdgeRadius: 0
---- !u!61 &61438670450407564
+--- !u!61 &61673140401419280
 BoxCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1764831846993224}
-  m_Enabled: 0
+  m_GameObject: {fileID: 1166887314827890}
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
@@ -311,17 +317,101 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114499297802822126
+--- !u!114 &114141717028258170
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1764831846993224}
+  m_GameObject: {fileID: 1350421427341460}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cd475ccb9edd5444b2e9ef271100932, type: 3}
+  m_Script: {fileID: 11500000, guid: 0528f6505f013334ead2394b26c2e0e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 10
+  gravScale: 7
+  gripping: 0
+  maxStamina: 120
+  stamina: 0
+  storeParent: {fileID: 0}
+  launchDir: {fileID: 0}
+  attackCollider: {fileID: 0}
+  pengin: {fileID: 0}
+  grounding: 0
+  raycastGrounding: 0000000000000000
+  leftTentacle:
+    scale: 0
+    state: 3
+    dist: 0
+    rend: {fileID: 212391307654322874}
+    rot: {fileID: 4912298113404276}
+    key: 111
+    mouseButton: 0
+  rightTentacle:
+    scale: 0
+    state: 3
+    dist: 0
+    rend: {fileID: 212499979673956132}
+    rot: {fileID: 4510136607714612}
+    key: 112
+    mouseButton: 1
+  rate: 0.02
+  tentacleRange: 6
+  anchorPositions: []
+  control: 0
+  launchConst: 255
+  launchPow: 1.55
+  switchTentacles: 0
+  slingshot: 0
+  isSlinging: 0
+  goBack: 0
+  buttons: 0
+--- !u!114 &114148993060757298
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1350421427341460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85545fd1b52e11f4882f706c8d97a15a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attach: 101
+--- !u!114 &114184224415650742
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1676600813157902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c1f0323c61b2bc46a6cad24c79cc7a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114213939774108084
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1371278790225146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0112113d042b825409f3cec4663150b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114217067010864582
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1166887314827890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85545fd1b52e11f4882f706c8d97a15a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attach: 101
 --- !u!114 &114691400991941304
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -333,44 +423,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a439855230c60a4a92d73a10fb826e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 8
-  gravScale: 7
-  gripping: 0
-  maxStamina: 120
-  stamina: 120
-  storeParent: {fileID: 0}
-  launchDir: {fileID: 4657381206245176}
-  attackCollider: {fileID: 61438670450407564}
   pengin: {fileID: 0}
-  grounding: 0
-  raycastGrounding: 0100000001010000
-  leftTentacle:
-    scale: 0
-    state: 3
-    dist: 0
-    rend: {fileID: 212391307654322874}
-    rot: {fileID: 4912298113404276}
-    key: 111
-    mouseButton: 1
-  rightTentacle:
-    scale: 0
-    state: 3
-    dist: 0
-    rend: {fileID: 212499979673956132}
-    rot: {fileID: 4510136607714612}
-    key: 112
-    mouseButton: 0
-  rate: 0.03
-  tentacleRange: 7
-  anchorPositions: []
-  control: 0
-  launchConst: 580
-  launchPow: 1.55
-  switchTentacles: 0
-  slingshot: 0
-  isSlinging: 0
   goBack: 0
-  buttons: 0
 --- !u!114 &114826663282009680
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -380,6 +434,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac3d46f4cc81abe42bc1a40740f0eafc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114880821025405798
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1350421427341460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8df88a536d41f104b9bfa7a4321f79c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114932346516171776
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1483699410166782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37282fdc67f534749aeaf8d9ec70af5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!212 &212391307654322874

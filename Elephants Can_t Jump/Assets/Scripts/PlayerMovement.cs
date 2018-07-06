@@ -41,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// The rotation of this transform will be used to calculate the launch direction of Akkoro
     /// </summary>
-    public Transform launchDir;
+    [HideInInspector]public Transform launchDir;
     /// <summary>
     /// Box Collider used for attacking
     /// </summary>
@@ -417,12 +417,17 @@ public class PlayerMovement : MonoBehaviour
 
         // add force to Akkoro
         transform.Translate(new Vector2(hor, vert));
+
+
+        if(grounding != Grounding.None && gripping)
+        {
+            rb.velocity = Vector2.zero;
+        }
         #endregion
 
         #region Stickiness
         if (grounding != Grounding.None && gripping && !raycastGrounding[(int)Grounding.Bottom] && Time.timeScale != 0f)
         {
-            print("I should be draining stamina!");
             stamina--;
         }
 
@@ -434,7 +439,6 @@ public class PlayerMovement : MonoBehaviour
 
         if(leftTentacle.rot.rotation.z < rightTentacle.rot.rotation.z && switchTentacles)
         {
-            print("switch tentacles please");
             SwitchTentacle(ref leftTentacle, ref rightTentacle);
 
             switchTentacles = false;
@@ -493,7 +497,7 @@ public class PlayerMovement : MonoBehaviour
                 #endregion
 
                 #region Expand the Anchor tentacle when in range of anchor & key is pressed
-                if (Input.GetKey(thisTentacle.key) || Input.GetMouseButton(thisTentacle.mouseButton))
+                if ((Input.GetKey(thisTentacle.key) || Input.GetMouseButton(thisTentacle.mouseButton)) && !AkkoroPengin.prepLaunch)
                 {
                     // there is only a single point
                     if (anchorPositions.Count == 1)
@@ -519,8 +523,6 @@ public class PlayerMovement : MonoBehaviour
                         // is the other tentacle attached?
                         if (otherTentacle.anchorPos.HasValue)
                         {
-                            print("other tentacle is attached");
-
                             if (otherTentacle.anchorPos == anchorPositions[0])
                             {
                                 thisTentacle.anchorPos = anchorPositions[1];
@@ -585,12 +587,12 @@ public class PlayerMovement : MonoBehaviour
                     thisTentacle.state = Tentacles.Anchored;
 
                     #region
-                    /*
+                    
                     if (otherTentacle.state == Tentacles.Anchored)
                     {
                         switchTentacles = true;
                     }
-                    */
+                    
                     #endregion
                 }
                 #endregion
@@ -611,7 +613,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 #endregion
 
-                if (Input.GetKeyUp(Variables.launch) && otherTentacle.state == Tentacles.Anchored)
+                if (Input.GetKey(Variables.launch) && otherTentacle.state == Tentacles.Anchored)
                 {
                     #region retract both tentacles
                     thisTentacle.state = Tentacles.Retracting;
@@ -821,7 +823,7 @@ public class PlayerMovement : MonoBehaviour
     {
         #region calculate collision impact
         if (collision.relativeVelocity.magnitude > 40)
-            print("HIT at " + collision.relativeVelocity.magnitude);
+            // we have a hit!
         #endregion
 
         #region check for wall collision (sling)

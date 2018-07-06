@@ -49,7 +49,7 @@ namespace Utility
         public static Transform room = null;
         public static KeyCode detach = KeyCode.T;
         public static KeyCode launch = KeyCode.Space;
-        public static KeyCode wallGrip = KeyCode.Space;
+        public static KeyCode wallGrip = KeyCode.LeftShift;
         public static Controlling controlling = Controlling.Akkoro;
 
     }

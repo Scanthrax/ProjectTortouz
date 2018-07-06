@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Utility;
+using UnityEngine.SceneManagement;
 
 public class Controller : MonoBehaviour
 {
@@ -39,6 +40,15 @@ public class Controller : MonoBehaviour
     //        changeChar = false;
     //    }
     //}
+
+    private void LateUpdate()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+    }
+
 
     public static void switchUnits(Controlling control, Vector3 launch)
     {

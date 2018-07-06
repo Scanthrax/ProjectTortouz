@@ -85,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4252309422623544}
   - component: {fileID: 212518146164971364}
+  - component: {fileID: 114519524015031154}
   m_Layer: 9
   m_Name: First Tentacle
   m_TagString: Untagged
@@ -201,6 +202,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4236524158882524}
+  - component: {fileID: 114075907808450222}
   m_Layer: 11
   m_Name: launch direction
   m_TagString: Untagged
@@ -241,6 +243,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4118331281952458}
   - component: {fileID: 212116093016208160}
+  - component: {fileID: 114242075005448436}
   m_Layer: 9
   m_Name: Second Tentacle
   m_TagString: Untagged
@@ -705,7 +708,7 @@ MonoBehaviour:
   maxStamina: 120
   stamina: 0
   storeParent: {fileID: 0}
-  launchDir: {fileID: 4236524158882524}
+  launchDir: {fileID: 0}
   attackCollider: {fileID: 0}
   pengin: {fileID: 0}
   grounding: 0
@@ -730,13 +733,24 @@ MonoBehaviour:
   tentacleRange: 6
   anchorPositions: []
   control: 0
-  launchConst: 200
+  launchConst: 255
   launchPow: 1.55
   switchTentacles: 0
   slingshot: 0
   isSlinging: 0
   goBack: 0
   buttons: 0
+--- !u!114 &114075907808450222
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1831722499921160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0112113d042b825409f3cec4663150b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114091213519114858
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -783,6 +797,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cd475ccb9edd5444b2e9ef271100932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114242075005448436
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1934382492035068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c1f0323c61b2bc46a6cad24c79cc7a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114297196243785670
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -821,6 +846,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8df88a536d41f104b9bfa7a4321f79c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114519524015031154
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1421411811325722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37282fdc67f534749aeaf8d9ec70af5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114698358990182004
