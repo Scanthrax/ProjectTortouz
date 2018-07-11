@@ -5,7 +5,7 @@ using UnityEngine;
 public class AttackWall : MonoBehaviour
 {
     BoxCollider2D bc;
-
+    public KeyCode key;
     private void Start()
     {
         bc = GetComponent<BoxCollider2D>();
@@ -23,7 +23,7 @@ public class AttackWall : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKey(KeyCode.Q))
+        if(Input.GetKey(key))
         {
             bc.enabled = true;
         }
