@@ -61,10 +61,7 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// Range of the raycasts that project from Akkoro to all sides; used to determine grounding range
     /// </summary>
-    public float wallDistVert = 0.86f;
-    public float wallDistHor = 0.86f;
-    public float wallDistDiag = 1.2f;
-    public float wallDistMult;
+    public float wallDist = 0.1f;
     /// <summary>
     /// Array of booleans used to identify which surfaces Akkoro is grounded to
     /// </summary>
@@ -84,21 +81,21 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// Raycasts to pass into the DetermineGrounding function
     /// </summary>
-    RaycastHit2D hitRight, hitLeft, hitTop, hitBottom, hitTR, hitTL, hitBR, hitBL;
+    RaycastHit2D hitTRDiag, hitTLDiag, hitBLDiag, hitBRDiag, hitTRU, hitTLU, hitLTL, hitLBL, hitBLD, hitBRD, hitRTR, hitRBR;
     /// <summary>
     /// This function is used to calculate the grounding from the raycast. The RaycastHit param is the raycast to be checked; the Grounding param assigns which side the hit should be checking for.
     /// </summary>
     /// <param name="hit"></param>
     /// <param name="ground"></param>
-    void DetermineGrounding(RaycastHit2D hit, Grounding ground)
+    void DetermineGrounding(RaycastHit2D hit, int i)
     {
         if (hit.collider != null && hit.collider.gameObject.layer == walls)
         {
-            raycastGrounding[(int)ground] = true;
+            raycastGrounding[i] = true;
         }
         else
         {
-            raycastGrounding[(int)ground] = false;
+            raycastGrounding[i] = false;
         }
     }
     #endregion
@@ -226,16 +223,13 @@ public class PlayerMovement : MonoBehaviour
         // make sure that raycasts don't detect the colliders that they start in
         Physics2D.queriesStartInColliders = false;
         stamina = maxStamina;
-        rend = GetComponent<SpriteRenderer>();
+        rend = GetComponentInChildren<SpriteRenderer>();
         leftTentacle.anchorPos = null;
         rightTentacle.anchorPos = null;
         switchTentacles = false;
         slingshot = Sling.None;
         bc = GetComponent<BoxCollider2D>();
         anim = GetComponent<Animator>();
-        wallDistHor = bc.size.x * transform.lossyScale.x * wallDistMult;
-        wallDistVert = bc.size.y * transform.lossyScale.x * wallDistMult;
-        wallDistDiag = Vector2.Distance(transform.position, transform.position + (new Vector3(bc.size.x, bc.size.y) * transform.lossyScale.x)) * 0.53f;
         //gameObject.SetActive(false);
     }
 
@@ -268,78 +262,85 @@ public class PlayerMovement : MonoBehaviour
 
         #region raycasting system
         #region Set up raycasting for 4 directions
-        hitRight = Physics2D.Raycast(transform.position, Vector2.right, wallDistHor);
-        hitLeft = Physics2D.Raycast(transform.position, Vector2.left, wallDistHor);
-        hitBottom = Physics2D.Raycast(transform.position, Vector2.down, wallDistVert);
-        hitTop = Physics2D.Raycast(transform.position, Vector2.up, wallDistVert);
 
-        
-        hitTR = Physics2D.Raycast(transform.position, new Vector2(1, 1), wallDistDiag);
-        hitBR = Physics2D.Raycast(transform.position, new Vector2(1, -1), wallDistDiag);
-        hitBL = Physics2D.Raycast(transform.position, new Vector2(-1, -1), wallDistDiag);
-        hitTL = Physics2D.Raycast(transform.position, new Vector2(-1, 1), wallDistDiag);
+        var offset = transform.position + new Vector3(bc.offset.x, bc.offset.y);
+        //diagonals
+        hitTRDiag = Physics2D.Raycast(offset + new Vector3(bc.size.x,bc.size.y) * 0.5f, Vector2.right + Vector2.up, wallDist);
+        hitTLDiag = Physics2D.Raycast(offset + new Vector3(-bc.size.x, bc.size.y * 0.5f), Vector2.left + Vector2.up, wallDist);
+        hitBLDiag = Physics2D.Raycast(offset + new Vector3(-bc.size.x, -bc.size.y) * 0.5f, Vector2.down + Vector2.left, wallDist);
+        hitBRDiag = Physics2D.Raycast(offset + new Vector3(bc.size.x, bc.size.y) * 0.5f, Vector2.down + Vector2.right, wallDist);
+
+        //tops
+        hitTRU = Physics2D.Raycast(offset + new Vector3(bc.size.x, bc.size.y) * 0.5f, Vector2.up, wallDist);
+        hitTLU = Physics2D.Raycast(offset + new Vector3(-bc.size.x, bc.size.y) * 0.5f, Vector2.up, wallDist);
+        //lefts
+        hitLTL = Physics2D.Raycast(offset + new Vector3(-bc.size.x, bc.size.y) * 0.5f, Vector2.left, wallDist);
+        hitLBL = Physics2D.Raycast(offset + new Vector3(-bc.size.x, -bc.size.y) * 0.5f, Vector2.left, wallDist);
+        //bottoms
+        hitBLD = Physics2D.Raycast(offset + new Vector3(-bc.size.x, -bc.size.y) * 0.5f, Vector2.down, wallDist);
+        hitBRD = Physics2D.Raycast(offset + new Vector3(bc.size.x, -bc.size.y) * 0.5f, Vector2.down, wallDist);
+        //rights
+        hitRTR = Physics2D.Raycast(offset + new Vector3(bc.size.x, bc.size.y) * 0.5f, Vector2.right, wallDist);
+        hitRBR = Physics2D.Raycast(offset + new Vector3(bc.size.x, -bc.size.y) * 0.5f, Vector2.right, wallDist);
+
+
         #endregion
         #region Calculate the groundings for all directions
-        DetermineGrounding(hitRight, Grounding.Right);
-        DetermineGrounding(hitLeft, Grounding.Left);
-        DetermineGrounding(hitTop, Grounding.Top);
-        DetermineGrounding(hitBottom, Grounding.Bottom);
-        DetermineGrounding(hitTR, Grounding.TopRight);
-        DetermineGrounding(hitTL, Grounding.TopLeft);
-        DetermineGrounding(hitBL, Grounding.BottomLeft);
-        DetermineGrounding(hitBR, Grounding.BottomRight);
-
+        DetermineGrounding(hitTRDiag,0);
+        DetermineGrounding(hitTLDiag, 1);
+        DetermineGrounding(hitBLDiag, 2);
+        DetermineGrounding(hitBRDiag, 3);
+        DetermineGrounding(hitTRU, 4);
+        DetermineGrounding(hitTLU, 5);
+        DetermineGrounding(hitLTL, 6);
+        DetermineGrounding(hitLBL, 7);
+        DetermineGrounding(hitBLD, 8);
+        DetermineGrounding(hitBRD, 9);
+        DetermineGrounding(hitRTR, 10);
+        DetermineGrounding(hitRBR, 11);
         #endregion
+
+
         #region Find out which walls Akkoro is currently grounded to
-        if (raycastGrounding[(int)Grounding.Bottom])
+
+        if (raycastGrounding[8]|| raycastGrounding[9])
         {
-            if (raycastGrounding[(int)Grounding.Right])
-            {
-                grounding = Grounding.BottomRight;
-            }
-            else if (raycastGrounding[(int)Grounding.Left])
-            {
-                grounding = Grounding.BottomLeft;
-            }
-            else
-            {
-                grounding = Grounding.Bottom;
-            }
+            grounding = Grounding.Bottom;
         }
-        else if (raycastGrounding[(int)Grounding.Top])
-        {
-            if (raycastGrounding[(int)Grounding.Right])
-            {
-                grounding = Grounding.TopRight;
-            }
-            else if (raycastGrounding[(int)Grounding.Left])
-            {
-                grounding = Grounding.TopLeft;
-            }
-            else
-            {
-                grounding = Grounding.Top;
-            }
-        }
-        else if (raycastGrounding[(int)Grounding.Left])
-        {
-            grounding = Grounding.Left;
-        }
-        else if (raycastGrounding[(int)Grounding.Right])
+        else if (raycastGrounding[10] || raycastGrounding[11])
         {
             grounding = Grounding.Right;
         }
-        else if (raycastGrounding[(int)Grounding.TopLeft] ||
-                raycastGrounding[(int)Grounding.TopRight] ||
-                raycastGrounding[(int)Grounding.BottomLeft] ||
-                raycastGrounding[(int)Grounding.BottomRight])
+        else if (raycastGrounding[4] || raycastGrounding[5])
         {
-            grounding = Grounding.Corner;
+            grounding = Grounding.Top;
+        }
+        else if (raycastGrounding[6] || raycastGrounding[7])
+        {
+            grounding = Grounding.Left;
+        }
+        else if(raycastGrounding[0])
+        {
+            grounding = Grounding.TopRight;
+        }
+        else if(raycastGrounding[1])
+        {
+            grounding = Grounding.TopLeft;
+        }
+        else if (raycastGrounding[2])
+        {
+            grounding = Grounding.BottomLeft;
+        }
+        else if (raycastGrounding[3])
+        {
+            grounding = Grounding.BottomRight;
         }
         else
         {
             grounding = Grounding.None;
         }
+
+        
         #endregion
         #endregion
 
@@ -371,22 +372,22 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-        if (raycastGrounding[(int)Grounding.Left])
+        if (raycastGrounding[6]||raycastGrounding[7])
         {
             left = 0;
         }
-        if (raycastGrounding[(int)Grounding.Right])
+        if (raycastGrounding[10] || raycastGrounding[11])
         {
             right = 0;
         }
-        if (raycastGrounding[(int)Grounding.Top])
+        if (raycastGrounding[4]|| raycastGrounding[5])
         {
             up = 0;
         }
-        if (raycastGrounding[(int)Grounding.Bottom])
+        if (raycastGrounding[8]|| raycastGrounding[9])
         {
             down = 0;
-            if (!raycastGrounding[(int)Grounding.Right] && !raycastGrounding[(int)Grounding.Left])
+            if (!(raycastGrounding[10] || raycastGrounding[11]) && !(raycastGrounding[6] || raycastGrounding[7]))
             {
                 up = 0;
             }
