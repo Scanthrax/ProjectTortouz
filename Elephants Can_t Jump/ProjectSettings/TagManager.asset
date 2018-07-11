@@ -41,9 +41,15 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 4227849013
+    locked: 0
   - name: BehindWalls
     uniqueID: 105516091
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Anchorpoints
+    uniqueID: 1484900461
     locked: 0

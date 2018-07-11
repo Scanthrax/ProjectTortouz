@@ -26,10 +26,12 @@ public class AkkoroPengin : MonoBehaviour
     List<GameObject> trajectoryPoints;
     public GameObject TrajectoryPointPrefab;
 
+    PlayerMovement playerMovement;
     public static bool prepLaunch;
 
     void Start()
     {
+        playerMovement = GetComponent<PlayerMovement>();
         Physics2D.queriesStartInColliders = false;
         cam = Camera.main;
 
@@ -53,7 +55,7 @@ public class AkkoroPengin : MonoBehaviour
     void Update ()
     {
         #region launch
-        if (Input.GetKey(launchPrep))
+        if (Input.GetKey(launchPrep) && playerMovement.raycastGrounding[(int)Grounding.Bottom] && (playerMovement.leftTentacle.state == Tentacles.None && playerMovement.rightTentacle.state == Tentacles.None))
         {
             print("should be preparing for launch!");
             prepLaunch = true;
@@ -61,13 +63,14 @@ public class AkkoroPengin : MonoBehaviour
 
             #region trajectory
 
+            
+            setTrajectoryPoints(transform.position, aimLaunch.right.normalized * (launchForce/155f));
             enablePoints(true);
-            setTrajectoryPoints(transform.position, aimLaunch.right.normalized * (launchForce/144));
 
 
             #endregion
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetKeyDown(launchButton))
             {
                 Controller.switchUnits(Controlling.Akkoro, aimLaunch.right.normalized * launchForce);
                 BackToPengin.isSlinging = true;

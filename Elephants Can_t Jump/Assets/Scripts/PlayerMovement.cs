@@ -61,9 +61,10 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// Range of the raycasts that project from Akkoro to all sides; used to determine grounding range
     /// </summary>
-    float wallDistVert = 0.86f;
-    float wallDistHor = 0.86f;
-    float wallDistDiag = 1.2f;
+    public float wallDistVert = 0.86f;
+    public float wallDistHor = 0.86f;
+    public float wallDistDiag = 1.2f;
+    public float wallDistMult;
     /// <summary>
     /// Array of booleans used to identify which surfaces Akkoro is grounded to
     /// </summary>
@@ -232,9 +233,9 @@ public class PlayerMovement : MonoBehaviour
         slingshot = Sling.None;
         bc = GetComponent<BoxCollider2D>();
         anim = GetComponent<Animator>();
-        wallDistHor = bc.size.x * transform.lossyScale.x * 0.6f;
-        wallDistVert = bc.size.y * transform.lossyScale.x * 0.6f;
-        wallDistDiag = Vector2.Distance(transform.position, transform.position + (new Vector3(bc.size.x, bc.size.y) * transform.lossyScale.x)) * 1.2f;
+        wallDistHor = bc.size.x * transform.lossyScale.x * wallDistMult;
+        wallDistVert = bc.size.y * transform.lossyScale.x * wallDistMult;
+        wallDistDiag = Vector2.Distance(transform.position, transform.position + (new Vector3(bc.size.x, bc.size.y) * transform.lossyScale.x)) * 0.53f;
         //gameObject.SetActive(false);
     }
 
@@ -243,6 +244,7 @@ public class PlayerMovement : MonoBehaviour
         #region Order nearby anchorpoints by distance
         Functions.OrderByDistance(anchorPositions, transform.position);
         #endregion
+
 
         #region Holding spacebar enables grip
         if (Input.GetKey(Variables.wallGrip))
@@ -262,10 +264,7 @@ public class PlayerMovement : MonoBehaviour
         }
         #endregion
 
-        #region Disable gravity if gripping & grounded to a wall
-        if (gripping && grounding != Grounding.None && stamina > 0) EnableGravity(false);
-        else EnableGravity(true);
-        #endregion
+
 
         #region raycasting system
         #region Set up raycasting for 4 directions
@@ -343,6 +342,16 @@ public class PlayerMovement : MonoBehaviour
         }
         #endregion
         #endregion
+
+        #region Disable gravity if gripping & grounded to a wall
+        if (gripping && grounding != Grounding.None && stamina > 0) EnableGravity(false);
+        else EnableGravity(true);
+        #endregion
+
+        if(grounding == Grounding.None)
+        {
+            anim.Play("Airborne");
+        }
 
         #region movement
         // The player will only be able to move on walls when gripping
