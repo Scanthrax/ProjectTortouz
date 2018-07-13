@@ -3,9 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - stay
-  - Bouncable
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -15,10 +13,10 @@ TagManager:
   - UI
   - 
   - 
-  - Walls
-  - Tentacle
-  - Anchor
-  - Akkoro
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
