@@ -62,6 +62,7 @@ public class PlayerMovement : MonoBehaviour
     /// Range of the raycasts that project from Akkoro to all sides; used to determine grounding range
     /// </summary>
     public float wallDist = 0.1f;
+    public float wallDistCorner = 0.15f;
     /// <summary>
     /// Array of booleans used to identify which surfaces Akkoro is grounded to
     /// </summary>
@@ -209,6 +210,8 @@ public class PlayerMovement : MonoBehaviour
     public int buttons;
     Animator anim;
     BoxCollider2D bc;
+    public Grounding onWall;
+    public float maxSpeed = 300f;
 
     void Start()
     {
@@ -239,7 +242,6 @@ public class PlayerMovement : MonoBehaviour
         Functions.OrderByDistance(anchorPositions, transform.position);
         #endregion
 
-
         #region Holding spacebar enables grip
         if (Input.GetKey(Variables.wallGrip))
         {
@@ -250,15 +252,6 @@ public class PlayerMovement : MonoBehaviour
             gripping = false;
         }
         #endregion
-
-        #region Recover Stamina
-        if (raycastGrounding[(int)Grounding.Bottom])
-        {
-            stamina += 5;
-        }
-        #endregion
-
-
 
         #region raycasting system
         #region Set up raycasting for 4 directions
@@ -299,10 +292,7 @@ public class PlayerMovement : MonoBehaviour
         DetermineGrounding(hitRTR, 10);
         DetermineGrounding(hitRBR, 11);
         #endregion
-
-
         #region Find out which walls Akkoro is currently grounded to
-
         if (raycastGrounding[8]|| raycastGrounding[9])
         {
             grounding = Grounding.Bottom;
@@ -349,10 +339,12 @@ public class PlayerMovement : MonoBehaviour
         else EnableGravity(true);
         #endregion
 
+        #region airborne
         if(grounding == Grounding.None)
         {
             anim.Play("Airborne");
         }
+        #endregion
 
         #region movement
         // The player will only be able to move on walls when gripping
@@ -360,18 +352,15 @@ public class PlayerMovement : MonoBehaviour
         {
             up = Input.GetKey(KeyCode.W) ? 1 : 0;
             down = Input.GetKey(KeyCode.S) ? -1 : 0;
-            left = Input.GetKey(KeyCode.A) ? -1 : 0;
-            right = Input.GetKey(KeyCode.D) ? 1 : 0;
         }
         else
         {
             up = 0;
             down = 0;
-            left = Input.GetKey(KeyCode.A) ? -1 : 0;
-            right = Input.GetKey(KeyCode.D) ? 1 : 0;
-
         }
-
+        left = Input.GetKey(KeyCode.A) ? -1 : 0;
+        right = Input.GetKey(KeyCode.D) ? 1 : 0;
+/*
         if (raycastGrounding[6]||raycastGrounding[7])
         {
             left = 0;
@@ -393,7 +382,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-
+        */
 
 
         // horizontal movement with A & D
@@ -404,12 +393,52 @@ public class PlayerMovement : MonoBehaviour
 
         if (hor < 0)
         {
-            rend.flipX = true;
+            if (rend.flipX != true)
+            {
+                rend.flipX = true;
+                bc.offset = new Vector2(-bc.offset.x, bc.offset.y);
+            }
         }
         else if (hor > 0)
         {
-            rend.flipX = false;
+            if (rend.flipX != false)
+            {
+                rend.flipX = false;
+                bc.offset = new Vector2(-bc.offset.x, bc.offset.y);
+            }
         }
+        
+
+
+        if(raycastGrounding[6]||raycastGrounding[7])
+        {
+            if (onWall == Grounding.Bottom)
+            {
+                bc.size = new Vector2(bc.size.y, bc.size.x);
+                bc.offset = new Vector2(bc.offset.y, bc.offset.x);
+                onWall = Grounding.Left;
+            }
+        }
+        else if(raycastGrounding[10] || raycastGrounding[11])
+        {
+            if (onWall == Grounding.Bottom)
+            {
+                bc.size = new Vector2(bc.size.y, bc.size.x);
+                bc.offset = new Vector2(bc.offset.y, bc.offset.x);
+                onWall = Grounding.Right;
+            }
+        }
+
+        if ( (raycastGrounding[8] && raycastGrounding[9]) )
+        {
+            if (onWall != Grounding.Bottom)
+            {
+                bc.size = new Vector2(bc.size.y, bc.size.x);
+                bc.offset = new Vector2(bc.offset.y, bc.offset.x);
+                onWall = Grounding.Bottom;
+            }
+        }
+
 
         #region set bool in animator
         if (hor == 0)
@@ -425,18 +454,15 @@ public class PlayerMovement : MonoBehaviour
         #endregion
 
 
-        // add force to Akkoro
-        transform.Translate(new Vector2(hor, vert));
 
-
-        if(grounding != Grounding.None && gripping)
+        if (grounding != Grounding.None && gripping)
         {
             rb.velocity = Vector2.zero;
         }
         #endregion
 
         #region Stickiness
-        if (grounding != Grounding.None && gripping && !raycastGrounding[(int)Grounding.Bottom] && Time.timeScale != 0f)
+        if (grounding != Grounding.None && gripping && !(raycastGrounding[8] || raycastGrounding[9]) && Time.timeScale != 0f)
         {
             stamina--;
         }
@@ -478,6 +504,13 @@ public class PlayerMovement : MonoBehaviour
         #endregion
         */
 
+        #region Recover Stamina
+        if (raycastGrounding[8] || raycastGrounding[9])
+        {
+            stamina += 5;
+        }
+        #endregion
+
         #region clamp stamina
         stamina = Mathf.Clamp(stamina, 0, maxStamina);
         #endregion
@@ -488,6 +521,30 @@ public class PlayerMovement : MonoBehaviour
         #endregion
         */
     }
+
+
+
+    private void FixedUpdate()
+    {
+
+        rb.AddForce(new Vector2(hor * 1000, vert * 1000));
+
+        if (hor == 0)
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+        }
+
+
+        if (rb.velocity.magnitude > maxSpeed)
+        {
+            rb.velocity = rb.velocity.normalized * maxSpeed;
+        }
+
+
+
+    }
+
+
 
     /// <summary>
     /// The logic that drives a given tentacle to grab anchorpoints; considers the behavior of the other tentacle
