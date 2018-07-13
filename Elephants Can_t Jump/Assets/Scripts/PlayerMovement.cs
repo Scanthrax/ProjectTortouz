@@ -335,7 +335,7 @@ public class PlayerMovement : MonoBehaviour
         #endregion
 
         #region Disable gravity if gripping & grounded to a wall
-        if (gripping && grounding != Grounding.None && stamina > 0) EnableGravity(false);
+        if (gripping && grounding != Grounding.None) EnableGravity(false);
         else EnableGravity(true);
         #endregion
 
@@ -505,7 +505,7 @@ public class PlayerMovement : MonoBehaviour
         */
 
         #region Recover Stamina
-        if (raycastGrounding[8] || raycastGrounding[9])
+        if ((raycastGrounding[8] || raycastGrounding[9]) && !gripping)
         {
             stamina += 5;
         }
