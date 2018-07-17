@@ -10,11 +10,11 @@ public class PlayerMovement : MonoBehaviour
     /// Movement speed
     /// </summary>
     [Header("Movement")]
-    public float speed = 10f;
+    public float speed = 2f;
     /// <summary>
     /// Scales the intensity of the gravity
     /// </summary>
-    public float gravScale = 10f;
+    public float gravScale = 5f;
     /// <summary>
     /// is Akkoro gripping?
     /// </summary>    
@@ -64,8 +64,8 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// Range of the raycasts that project from Akkoro to all sides; used to determine grounding range
     /// </summary>
-    public float wallDist = 0.1f;
-    public float wallDistCorner = 0.15f;
+    public float wallDist = 0.2f;
+    public float wallDistCorner = 0.2f;
     /// <summary>
     /// Array of booleans used to identify which surfaces Akkoro is grounded to
     /// </summary>
@@ -201,7 +201,6 @@ public class PlayerMovement : MonoBehaviour
     /// used in Launch equation
     /// </summary>
     public float launchConst = 580f, launchPow = 1.55f;
-    // 580 1.55
 
     public bool switchTentacles;
 
@@ -218,7 +217,9 @@ public class PlayerMovement : MonoBehaviour
     public Room room;
     public bool isSliding;
     PhysicsMaterial2D pmLR = null, pmTB = null;
-
+    Movement movement;
+    bool launch;
+    int groundTimer;
 
     void FindCurrentRoom()
     {
@@ -244,6 +245,8 @@ public class PlayerMovement : MonoBehaviour
         bc = GetComponent<BoxCollider2D>();
         anim = GetComponent<Animator>();
         //gameObject.SetActive(false);
+        movement = Movement.Ground;
+        
     }
 
     void Update()
@@ -365,27 +368,9 @@ public class PlayerMovement : MonoBehaviour
         #endregion
         #endregion
 
-        /*
-        if (hit.collider != null && hit.collider.gameObject.layer == walls)
-        {
-            if (i == 6 || i == 7 || i == 10 || i == 11)
-            {
-                pmLR = hit.collider.GetComponent<BoxCollider2D>().sharedMaterial;
-            }
-
-            if (i == 8 || i == 9)
-            {
-                pmTB = hit.collider.GetComponent<BoxCollider2D>().sharedMaterial;
-            }
-            raycastGrounding[i] = true;
-        }
-        */
-
-
-
         #region Disable gravity if gripping & grounded to a wall
-        if (gripping && grounding == Grounding.Grounded) EnableGravity(false);
-        else EnableGravity(true);
+        //if (gripping && grounding == Grounding.Grounded) EnableGravity(false);
+        //else EnableGravity(true);
         #endregion
 
         #region airborne
@@ -416,13 +401,7 @@ public class PlayerMovement : MonoBehaviour
         // vertical movement with W & S
         vert = (up + down) * speed * Time.deltaTime;
 
-        if(groundingTB == Grounding.Bottom)
-        {
-            if(groundingLR == Grounding.None)
-            {
-                vert = 0f;
-            }
-        }
+
             
         
         if (hor < 0)
@@ -443,37 +422,6 @@ public class PlayerMovement : MonoBehaviour
         }
         
 
-        /*
-        if(raycastGrounding[6]||raycastGrounding[7])
-        {
-            if (onWall == Grounding.Bottom)
-            {
-                bc.size = new Vector2(bc.size.y, bc.size.x);
-                bc.offset = new Vector2(bc.offset.y, bc.offset.x);
-                onWall = Grounding.Left;
-            }
-        }
-        else if(raycastGrounding[10] || raycastGrounding[11])
-        {
-            if (onWall == Grounding.Bottom)
-            {
-                bc.size = new Vector2(bc.size.y, bc.size.x);
-                bc.offset = new Vector2(bc.offset.y, bc.offset.x);
-                onWall = Grounding.Right;
-            }
-        }
-
-        if ( (raycastGrounding[8] && raycastGrounding[9]) )
-        {
-            if (onWall != Grounding.Bottom)
-            {
-                bc.size = new Vector2(bc.size.y, bc.size.x);
-                bc.offset = new Vector2(bc.offset.y, bc.offset.x);
-                onWall = Grounding.Bottom;
-            }
-        }
-        */
-
         #region set bool in animator
         if (hor == 0)
         {
@@ -489,10 +437,6 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-        if (grounding != Grounding.None && gripping)
-        {
-            rb.velocity = Vector2.zero;
-        }
         #endregion
 
         #region Stickiness
@@ -501,6 +445,15 @@ public class PlayerMovement : MonoBehaviour
             stamina--;
         }
 
+        #endregion
+
+        #region Calculate launch direction
+        // if both tentacles are anchored, set the launch direction
+        if (rightTentacle.state == Tentacles.Anchored && leftTentacle.state == Tentacles.Anchored)
+        {
+            // Visualize launch direction through gameobject transform
+            launchDir.right = CalculateLaunchDirection();
+        }
         #endregion
 
         #region Tentacle logic
@@ -515,14 +468,7 @@ public class PlayerMovement : MonoBehaviour
         }
         #endregion
 
-        #region Calculate launch direction
-        // if both tentacles are anchored, set the launch direction
-        if (rightTentacle.state == Tentacles.Anchored && leftTentacle.state == Tentacles.Anchored)
-        {
-            // Visualize launch direction through gameobject transform
-            launchDir.right = CalculateLaunchDirection();
-        }
-        #endregion
+
 
         /*
         #region attack the walls
@@ -554,6 +500,8 @@ public class PlayerMovement : MonoBehaviour
         BackToPengin(transform.position, pengin.position);
         #endregion
         */
+
+        
     }
 
 
@@ -563,22 +511,36 @@ public class PlayerMovement : MonoBehaviour
 
         rb.AddForce(new Vector2(hor * 1000, vert * 1000));
 
-
-
-
-
-
-        if (hor == 0)
+        if (launch)
         {
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            rb.AddForce(launchDir.right * SpringCalc2());
+            launch = false;
+        }
+
+        if (movement == Movement.Ground)
+        {
+            if (hor == 0)
+            {
+                rb.velocity = new Vector2(0, rb.velocity.y);
+            }
+            if (rb.velocity.magnitude > maxSpeed)
+            {
+                rb.velocity = rb.velocity.normalized * maxSpeed;
+            }
         }
 
 
-        if (rb.velocity.magnitude > maxSpeed)
+        if (groundTimer < 5)
         {
-            rb.velocity = rb.velocity.normalized * maxSpeed;
+            groundTimer++;
         }
-
+        else
+        {
+            if (groundingTB == Grounding.Bottom)
+            {
+                movement = Movement.Ground;
+            }
+        }
 
 
     }
@@ -725,7 +687,9 @@ public class PlayerMovement : MonoBehaviour
                     thisTentacle.state = Tentacles.Retracting;
                     otherTentacle.state = Tentacles.Retracting;
                     #endregion
-                    rb.AddForce(launchDir.right * SpringCalc2());
+                    launch = true;
+                    groundTimer = 0;
+                    movement = Movement.Airborne;
                 }
 
                 
@@ -801,9 +765,15 @@ public class PlayerMovement : MonoBehaviour
     /// <param name="tent"></param>
     void UpdateTentacleLength(Tentacle tent)
     {
-        tent.rend.transform.localPosition = new Vector3(tent.scale, 0f, 0f);
-        tent.rend.size = new Vector2(2 * tent.scale, tent.rend.size.y);
+        tent.rend.transform.localPosition = new Vector3(tent.scale * 8, 0f, 0f);
+        tent.rend.size = new Vector2(16 * tent.scale, tent.rend.size.y);
     }
+
+    // 2.8442
+    // 5.688429
+
+
+
 
     /// <summary>
     /// Used to determine when gravity should be enabled or disabled

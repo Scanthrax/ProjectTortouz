@@ -22,6 +22,9 @@ namespace Utility
 
     public enum Controlling { Akkoro, Both}
 
+    public enum Movement { Ground, Wallclimb, Airborne}
+
+
     public interface LeftTentacle { }
     public interface RightTentacle { }
 
