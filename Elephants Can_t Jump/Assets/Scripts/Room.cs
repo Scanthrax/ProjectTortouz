@@ -6,16 +6,21 @@ using Utility;
 public class Room : MonoBehaviour {
 
 
-    public static Transform player;
-
-    public delegate void RoomChange(Transform fromRoom, Transform toRoom);
+    public Transform player;
+    public delegate void RoomChange(Room fromRoom, Room toRoom);
     public static event RoomChange roomChange;
+    Room thisRoom;
 
-    private void Awake()
+    void Awake()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        
+        thisRoom = GetComponent<Room>();
     }
-
+    private void Start()
+    {
+        player = CameraCenterpoints.player.transform;
+        player.GetComponent<PlayerMovement>().room = thisRoom;
+    }
     void Update()
     {
 
@@ -26,9 +31,9 @@ public class Room : MonoBehaviour {
             player.position.y > transform.position.y + Variables.vertExtent ))
         {
             // if new room is entered, change rooms
-            if(Variables.room != transform)
+            if(player.GetComponent<PlayerMovement>().room != thisRoom)
             {
-                roomChange(Variables.room, transform);
+                roomChange(player.GetComponent<PlayerMovement>().room, thisRoom);
             }
         }
     }

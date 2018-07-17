@@ -265,7 +265,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.378, y: 0.242}
+    oldSize: {x: 3.1369295, y: 2.0082989}
     newSize: {x: 2.2666667, y: 0.64285713}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -338,9 +338,11 @@ MonoBehaviour:
   attackCollider: {fileID: 0}
   pengin: {fileID: 0}
   grounding: 0
-  wallDistVert: 0.7
-  wallDistHor: 0.7
-  wallDistDiag: 1
+  groundingLR: 0
+  groundingTB: 0
+  groundingCorners: 0
+  wallDist: 0.1
+  wallDistCorner: 0.15
   raycastGrounding: 0000000000000000
   leftTentacle:
     scale: 0
@@ -369,6 +371,10 @@ MonoBehaviour:
   isSlinging: 0
   goBack: 0
   buttons: 0
+  onWall: 0
+  maxSpeed: 300
+  room: {fileID: 0}
+  isSliding: 0
 --- !u!114 &114148993060757298
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -501,7 +507,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 0, y: 0.06366854}
+  m_Size: {x: 0.016, y: 0.0053333333}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -546,7 +552,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 0, y: 0.06366854}
+  m_Size: {x: 0.016, y: 0.0053333333}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// Scales the intensity of the gravity
     /// </summary>
-    public float gravScale = 7f;
+    public float gravScale = 10f;
     /// <summary>
     /// is Akkoro gripping?
     /// </summary>    
@@ -58,6 +58,9 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     [Header("Grounding")]
     public Grounding grounding;
+    public Grounding groundingLR;
+    public Grounding groundingTB;
+    public Grounding groundingCorners;
     /// <summary>
     /// Range of the raycasts that project from Akkoro to all sides; used to determine grounding range
     /// </summary>
@@ -212,11 +215,18 @@ public class PlayerMovement : MonoBehaviour
     BoxCollider2D bc;
     public Grounding onWall;
     public float maxSpeed = 300f;
+    public Room room;
+    public bool isSliding;
+    PhysicsMaterial2D pmLR = null, pmTB = null;
+
+
+    void FindCurrentRoom()
+    {
+           
+    }
 
     void Start()
     {
-
-
         // assign the rigidbody component
         rb = GetComponent<Rigidbody2D>();
         // assign Wall layer to variable
@@ -257,11 +267,12 @@ public class PlayerMovement : MonoBehaviour
         #region Set up raycasting for 4 directions
 
         var offset = transform.position + new Vector3(bc.offset.x, bc.offset.y);
+
         //diagonals
-        hitTRDiag = Physics2D.Raycast(offset + new Vector3(bc.size.x,bc.size.y) * 0.5f, Vector2.right + Vector2.up, wallDist);
-        hitTLDiag = Physics2D.Raycast(offset + new Vector3(-bc.size.x, bc.size.y * 0.5f), Vector2.left + Vector2.up, wallDist);
-        hitBLDiag = Physics2D.Raycast(offset + new Vector3(-bc.size.x, -bc.size.y) * 0.5f, Vector2.down + Vector2.left, wallDist);
-        hitBRDiag = Physics2D.Raycast(offset + new Vector3(bc.size.x, bc.size.y) * 0.5f, Vector2.down + Vector2.right, wallDist);
+        hitTRDiag = Physics2D.Raycast(offset + new Vector3(bc.size.x,bc.size.y) * 0.5f, Vector2.right + Vector2.up, wallDistCorner);
+        hitTLDiag = Physics2D.Raycast(offset + new Vector3(-bc.size.x, bc.size.y * 0.5f), Vector2.left + Vector2.up, wallDistCorner);
+        hitBLDiag = Physics2D.Raycast(offset + new Vector3(-bc.size.x, -bc.size.y) * 0.5f, Vector2.down + Vector2.left, wallDistCorner);
+        hitBRDiag = Physics2D.Raycast(offset + new Vector3(bc.size.x, bc.size.y) * 0.5f, Vector2.down + Vector2.right, wallDistCorner);
 
         //tops
         hitTRU = Physics2D.Raycast(offset + new Vector3(bc.size.x, bc.size.y) * 0.5f, Vector2.up, wallDist);
@@ -293,62 +304,100 @@ public class PlayerMovement : MonoBehaviour
         DetermineGrounding(hitRBR, 11);
         #endregion
         #region Find out which walls Akkoro is currently grounded to
-        if (raycastGrounding[8]|| raycastGrounding[9])
+        
+        if (raycastGrounding[10] || raycastGrounding[11])
         {
-            grounding = Grounding.Bottom;
-        }
-        else if (raycastGrounding[10] || raycastGrounding[11])
-        {
-            grounding = Grounding.Right;
-        }
-        else if (raycastGrounding[4] || raycastGrounding[5])
-        {
-            grounding = Grounding.Top;
+            groundingLR = Grounding.Right;
         }
         else if (raycastGrounding[6] || raycastGrounding[7])
         {
-            grounding = Grounding.Left;
+            groundingLR = Grounding.Left;
         }
-        else if(raycastGrounding[0])
+        else
         {
-            grounding = Grounding.TopRight;
+            groundingLR = Grounding.None;
+        }
+
+        if (raycastGrounding[4] || raycastGrounding[5])
+        {
+            groundingTB = Grounding.Top;
+        }
+        else if (raycastGrounding[8] || raycastGrounding[9])
+        {
+            groundingTB = Grounding.Bottom;
+        }
+        else
+        {
+            groundingTB = Grounding.None;
+        }
+
+        if(raycastGrounding[0])
+        {
+            groundingCorners = Grounding.TopRight;
         }
         else if(raycastGrounding[1])
         {
-            grounding = Grounding.TopLeft;
+            groundingCorners = Grounding.TopLeft;
         }
         else if (raycastGrounding[2])
         {
-            grounding = Grounding.BottomLeft;
+            groundingCorners = Grounding.BottomLeft;
         }
         else if (raycastGrounding[3])
         {
-            grounding = Grounding.BottomRight;
+            groundingCorners = Grounding.BottomRight;
+        }
+        else
+        {
+            groundingCorners = Grounding.None;
+        }
+
+        if(groundingLR != Grounding.None || groundingTB != Grounding.None || groundingCorners != Grounding.None)
+        {
+            grounding = Grounding.Grounded;
         }
         else
         {
             grounding = Grounding.None;
         }
 
-        
+
         #endregion
         #endregion
 
+        /*
+        if (hit.collider != null && hit.collider.gameObject.layer == walls)
+        {
+            if (i == 6 || i == 7 || i == 10 || i == 11)
+            {
+                pmLR = hit.collider.GetComponent<BoxCollider2D>().sharedMaterial;
+            }
+
+            if (i == 8 || i == 9)
+            {
+                pmTB = hit.collider.GetComponent<BoxCollider2D>().sharedMaterial;
+            }
+            raycastGrounding[i] = true;
+        }
+        */
+
+
+
         #region Disable gravity if gripping & grounded to a wall
-        if (gripping && grounding != Grounding.None) EnableGravity(false);
+        if (gripping && grounding == Grounding.Grounded) EnableGravity(false);
         else EnableGravity(true);
         #endregion
 
         #region airborne
         if(grounding == Grounding.None)
         {
-            anim.Play("Airborne");
+            //anim.Play("Airborne");
         }
         #endregion
 
         #region movement
         // The player will only be able to move on walls when gripping
-        if (gripping && grounding != Grounding.None && stamina > 0)
+        if (gripping && grounding == Grounding.Grounded && stamina > 0)
         {
             up = Input.GetKey(KeyCode.W) ? 1 : 0;
             down = Input.GetKey(KeyCode.S) ? -1 : 0;
@@ -360,29 +409,6 @@ public class PlayerMovement : MonoBehaviour
         }
         left = Input.GetKey(KeyCode.A) ? -1 : 0;
         right = Input.GetKey(KeyCode.D) ? 1 : 0;
-/*
-        if (raycastGrounding[6]||raycastGrounding[7])
-        {
-            left = 0;
-        }
-        if (raycastGrounding[10] || raycastGrounding[11])
-        {
-            right = 0;
-        }
-        if (raycastGrounding[4]|| raycastGrounding[5])
-        {
-            up = 0;
-        }
-        if (raycastGrounding[8]|| raycastGrounding[9])
-        {
-            down = 0;
-            if (!(raycastGrounding[10] || raycastGrounding[11]) && !(raycastGrounding[6] || raycastGrounding[7]))
-            {
-                up = 0;
-            }
-        }
-
-        */
 
 
         // horizontal movement with A & D
@@ -390,7 +416,15 @@ public class PlayerMovement : MonoBehaviour
         // vertical movement with W & S
         vert = (up + down) * speed * Time.deltaTime;
 
-
+        if(groundingTB == Grounding.Bottom)
+        {
+            if(groundingLR == Grounding.None)
+            {
+                vert = 0f;
+            }
+        }
+            
+        
         if (hor < 0)
         {
             if (rend.flipX != true)
@@ -409,7 +443,7 @@ public class PlayerMovement : MonoBehaviour
         }
         
 
-
+        /*
         if(raycastGrounding[6]||raycastGrounding[7])
         {
             if (onWall == Grounding.Bottom)
@@ -438,7 +472,7 @@ public class PlayerMovement : MonoBehaviour
                 onWall = Grounding.Bottom;
             }
         }
-
+        */
 
         #region set bool in animator
         if (hor == 0)
@@ -528,6 +562,11 @@ public class PlayerMovement : MonoBehaviour
     {
 
         rb.AddForce(new Vector2(hor * 1000, vert * 1000));
+
+
+
+
+
 
         if (hor == 0)
         {

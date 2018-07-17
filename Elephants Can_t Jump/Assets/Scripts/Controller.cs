@@ -22,25 +22,6 @@ public class Controller : MonoBehaviour
         units = publicUnits;
     }
 
-    //private void LateUpdate()
-    //{
-    //    if(changeChar)
-    //    {
-    //        switch(Variables.controlling)
-    //        {
-    //            case Controlling.Akkoro:
-    //                attachCharacters(Controlling.Both);
-    //                Variables.controlling = Controlling.Both;
-    //                break;
-    //            case Controlling.Both:
-    //                attachCharacters(Controlling.Akkoro);
-    //                Variables.controlling = Controlling.Akkoro;
-    //                break;
-    //        }
-    //        changeChar = false;
-    //    }
-    //}
-
     private void LateUpdate()
     {
         if(Input.GetKeyDown(KeyCode.Escape))
@@ -66,7 +47,6 @@ public class Controller : MonoBehaviour
                 units[0].SetActive(false);
                 units[1].SetActive(false);
 
-                Room.player = units[2].transform;
                 break;
             case Controlling.Akkoro:
 
@@ -85,8 +65,6 @@ public class Controller : MonoBehaviour
                 }
 
                 units[2].SetActive(false);
-
-                Room.player = units[1].transform;
                 break;
             default:
                 print("Shouldn't be here!");
