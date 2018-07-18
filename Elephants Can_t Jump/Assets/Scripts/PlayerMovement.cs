@@ -85,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// Raycasts to pass into the DetermineGrounding function
     /// </summary>
-    RaycastHit2D hitTRDiag, hitTLDiag, hitBLDiag, hitBRDiag, hitTRU, hitTLU, hitLTL, hitLBL, hitBLD, hitBRD, hitRTR, hitRBR;
+    RaycastHit2D hitTRDiag, hitTLDiag, hitBLDiag, hitBRDiag, hitTRU, hitTLU, hitLTL, hitLBL, hitBLD, hitBRD, hitRTR, hitRBR, hitL, hitR, hitT, hitB;
     /// <summary>
     /// This function is used to calculate the grounding from the raycast. The RaycastHit param is the raycast to be checked; the Grounding param assigns which side the hit should be checking for.
     /// </summary>
@@ -263,11 +263,12 @@ public class PlayerMovement : MonoBehaviour
         #endregion
 
         #region raycasting system
+
         #region Set up raycasting for 4 directions
 
         var offset = transform.position + new Vector3(bc.offset.x, bc.offset.y);
 
-
+        
         
         //diagonals
         hitTRDiag = Physics2D.Raycast(offset + new Vector3(bc.size.x,bc.size.y) * 0.5f, Vector2.right + Vector2.up, wallDistCorner);
@@ -287,9 +288,17 @@ public class PlayerMovement : MonoBehaviour
         //rights
         hitRTR = Physics2D.Raycast(offset + new Vector3(bc.size.x, bc.size.y) * 0.5f, Vector2.right, wallDist);
         hitRBR = Physics2D.Raycast(offset + new Vector3(bc.size.x, -bc.size.y) * 0.5f, Vector2.right, wallDist);
+        
 
 
+        hitB = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y), new Vector2(bc.size.x, bc.size.y), 0f, Vector2.right);
+        if(hitB.collider != null)
+        {
+            if(hitB.collider.gameObject.layer == walls)
+                print("we've hit the ground!");
+        }
         #endregion
+
         #region Calculate the groundings for all directions
         DetermineGrounding(hitTRDiag,0);
         DetermineGrounding(hitTLDiag, 1);
