@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// Maximum amount of stamina Akkoro has for wallclimbing
     /// </summary>
-    public int maxStamina = 120;
+    public int maxStamina = 20;
     /// <summary>
     /// Stamina is drained while Akkoro is climbing walls
     /// </summary>
@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// Floats used to translate Akkoro
     /// </summary>
-    float hor, vert;
+    public float hor, vert;
     /// <summary>
     /// Integer value of layer Walls
     /// </summary>
@@ -167,6 +167,8 @@ public class PlayerMovement : MonoBehaviour
         public KeyCode key;
 
         public int mouseButton;
+
+        public bool clampTent;
         /// <summary>
         /// Contructor
         /// </summary>
@@ -180,6 +182,8 @@ public class PlayerMovement : MonoBehaviour
         //    anchorPos = null;
         //    key = KeyCode.None;
         //}
+
+
     }
     #endregion
 
@@ -217,9 +221,12 @@ public class PlayerMovement : MonoBehaviour
     public Room room;
     public bool isSliding;
     PhysicsMaterial2D pmLR = null, pmTB = null;
-    Movement movement;
+    public Movement movement;
     bool launch;
     int groundTimer;
+    bool clampTentacles;
+    public int faceDir;
+    
 
     void FindCurrentRoom()
     {
@@ -246,7 +253,7 @@ public class PlayerMovement : MonoBehaviour
         anim = GetComponent<Animator>();
         //gameObject.SetActive(false);
         movement = Movement.Ground;
-        
+        faceDir = 1;
     }
 
     void Update()
@@ -255,22 +262,13 @@ public class PlayerMovement : MonoBehaviour
         Functions.OrderByDistance(anchorPositions, transform.position);
         #endregion
 
-        #region Holding spacebar enables grip
-        if (Input.GetKey(Variables.wallGrip))
-        {
-            gripping = true;
-        }
-        else
-        {
-            gripping = false;
-        }
-        #endregion
-
         #region raycasting system
         #region Set up raycasting for 4 directions
 
         var offset = transform.position + new Vector3(bc.offset.x, bc.offset.y);
 
+
+        
         //diagonals
         hitTRDiag = Physics2D.Raycast(offset + new Vector3(bc.size.x,bc.size.y) * 0.5f, Vector2.right + Vector2.up, wallDistCorner);
         hitTLDiag = Physics2D.Raycast(offset + new Vector3(-bc.size.x, bc.size.y * 0.5f), Vector2.left + Vector2.up, wallDistCorner);
@@ -395,6 +393,13 @@ public class PlayerMovement : MonoBehaviour
         left = Input.GetKey(KeyCode.A) ? -1 : 0;
         right = Input.GetKey(KeyCode.D) ? 1 : 0;
 
+        if(stamina <= 0)
+        {
+            if(groundingLR == Grounding.Left)
+            {
+                left = 0;
+            }
+        }
 
         // horizontal movement with A & D
         hor = (left + right) * speed * Time.deltaTime;
@@ -402,25 +407,38 @@ public class PlayerMovement : MonoBehaviour
         vert = (up + down) * speed * Time.deltaTime;
 
 
-            
-        
-        if (hor < 0)
+        var i = (left + right);
+        if (i != 0)
         {
-            if (rend.flipX != true)
+            if (i != faceDir)
             {
-                rend.flipX = true;
-                bc.offset = new Vector2(-bc.offset.x, bc.offset.y);
-            }
-        }
-        else if (hor > 0)
-        {
-            if (rend.flipX != false)
-            {
-                rend.flipX = false;
+                faceDir = i;
+                rend.flipX = !rend.flipX;
                 bc.offset = new Vector2(-bc.offset.x, bc.offset.y);
             }
         }
         
+
+        #region Holding spacebar enables grip
+        if (Input.GetKey(Variables.wallGrip))
+        {
+            if (groundingLR != Grounding.None || groundingTB == Grounding.Top)
+            {
+                gripping = true;
+                if (groundingTB != Grounding.Bottom)
+                {
+                    movement = Movement.Wallclimb;
+                    print(movement);
+                }
+            }
+            else gripping = false;
+        }
+        else
+        {
+            gripping = false;
+        }
+        #endregion
+
 
         #region set bool in animator
         if (hor == 0)
@@ -438,6 +456,11 @@ public class PlayerMovement : MonoBehaviour
 
 
         #endregion
+
+        if(grounding == Grounding.None)
+        {
+            movement = Movement.Airborne;
+        }
 
         #region Stickiness
         if (grounding != Grounding.None && gripping && !(raycastGrounding[8] || raycastGrounding[9]) && Time.timeScale != 0f)
@@ -501,6 +524,12 @@ public class PlayerMovement : MonoBehaviour
         #endregion
         */
 
+        if (movement == Movement.Wallclimb)
+        {
+            EnableGravity(false);
+        }
+        else
+            EnableGravity(true);
         
     }
 
@@ -508,8 +537,15 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (movement == Movement.Airborne)
+        {
+            rb.AddForce(new Vector2(hor * 1000f * 0.25f, 0f));
+        }
+        else
+        {
+            rb.AddForce(new Vector2(hor * 1000, vert * 1000));
+        }
 
-        rb.AddForce(new Vector2(hor * 1000, vert * 1000));
 
         if (launch)
         {
@@ -517,11 +553,15 @@ public class PlayerMovement : MonoBehaviour
             launch = false;
         }
 
-        if (movement == Movement.Ground)
+        if (movement != Movement.Airborne)
         {
             if (hor == 0)
             {
-                rb.velocity = new Vector2(0, rb.velocity.y);
+                rb.velocity = new Vector2(0f, rb.velocity.y);
+            }
+            if(vert == 0)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, 0f);
             }
             if (rb.velocity.magnitude > maxSpeed)
             {
@@ -530,7 +570,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        if (groundTimer < 5)
+        if (groundTimer < 10)
         {
             groundTimer++;
         }
@@ -542,6 +582,16 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
+        if (leftTentacle.clampTent)
+        {
+            ClampTentacles(leftTentacle);
+            leftTentacle.clampTent = false;
+        }
+        else if (rightTentacle.clampTent)
+        {
+            ClampTentacles(rightTentacle);
+            rightTentacle.clampTent = false;
+        }
 
     }
 
@@ -706,17 +756,7 @@ public class PlayerMovement : MonoBehaviour
                 #endregion
                 if (thisTentacle.dist >= tentacleRange)
                 {
-                    // find the point on the edge of the radius
-                    Vector2 circlePoint = CirclePoint(thisTentacle.anchorPos.Value, tentacleRange, (Vector2.SignedAngle(Vector2.right, thisTentacle.rot.right * -1)));
-                    // Only adjust the x value of the transform when on ceiling or ground
-                    if (grounding == Grounding.Bottom || grounding == Grounding.Top)
-                        transform.position = new Vector2(circlePoint.x, transform.position.y);
-                    // Only adjust the y value of the transform when on walls
-                    else if (grounding == Grounding.Left || grounding == Grounding.Right)
-                        transform.position = new Vector2(transform.position.x, circlePoint.y);
-                    //Adjust both x & y during any other case
-                    else
-                        transform.position = new Vector2(circlePoint.x, circlePoint.y);
+                    thisTentacle.clampTent = true;
                 }
                 #endregion
 
@@ -774,6 +814,20 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+    void ClampTentacles(Tentacle tent)
+    {
+        // find the point on the edge of the radius
+        Vector2 circlePoint = CirclePoint(tent.anchorPos.Value, tentacleRange, (Vector2.SignedAngle(Vector2.right, tent.rot.right * -1)));
+        // Only adjust the x value of the transform when on ceiling or ground
+        if (groundingTB != Grounding.None)
+            transform.position = new Vector2(circlePoint.x, transform.position.y);
+        // Only adjust the y value of the transform when on walls
+        else if (groundingLR != Grounding.None)
+            transform.position = new Vector2(transform.position.x, circlePoint.y);
+        //Adjust both x & y during any other case
+        else
+            transform.position = new Vector2(circlePoint.x, circlePoint.y);
+    }
 
     /// <summary>
     /// Used to determine when gravity should be enabled or disabled
