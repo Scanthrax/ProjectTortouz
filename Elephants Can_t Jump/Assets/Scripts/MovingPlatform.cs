@@ -12,12 +12,13 @@ public class MovingPlatform : MonoBehaviour
     private Transform currentP; 
     public Transform[] pointArr;//array of points
     public int pointSelection;
+    int delay;
 
     // Use this for initialization
     void Start()
     {
         currentP = pointArr[pointSelection]; //Start at the first point
-
+        delay = 0;
 	}
 	
 	// Update is called once per frame
@@ -39,13 +40,22 @@ public class MovingPlatform : MonoBehaviour
             platform.transform.position = Vector3.MoveTowards(platform.transform.position, currentP.position, Time.deltaTime * speed); //move the platform towards the next point in the array
             if (platform.transform.position == currentP.position) //once the platform arrives at the point
             {
-                pointSelection++; //move to the next point
-                if (pointSelection == pointArr.Length)//if we arrive at the last point
+                if(delay < 60)
                 {
-                    pointSelection = 0;//go back to the first point
+                    delay++;
                 }
 
-                currentP = pointArr[pointSelection]; // reset
+                else
+                {
+                    pointSelection++; //move to the next point
+                    if (pointSelection == pointArr.Length)//if we arrive at the last point
+                    {
+                        pointSelection = 0;//go back to the first point
+                    }
+
+                    currentP = pointArr[pointSelection]; // reset
+                    delay = 0;
+                }
             }
         }
 

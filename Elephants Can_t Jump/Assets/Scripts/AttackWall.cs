@@ -7,10 +7,13 @@ public class AttackWall : MonoBehaviour
     BoxCollider2D bc;
     public KeyCode key;
     PlayerMovement pm;
+    Animator anim;
+
     private void Start()
     {
         pm = GetComponentInParent<PlayerMovement>();
         bc = GetComponent<BoxCollider2D>();
+        anim = GetComponentInParent<Animator>();
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -22,6 +25,7 @@ public class AttackWall : MonoBehaviour
         }
     }
 
+    //attackCollider.transform.eulerAngles = new Vector3(0, -180, 0);
 
     private void Update()
     {
@@ -36,4 +40,5 @@ public class AttackWall : MonoBehaviour
             bc.enabled = false;
         }
     }
+
 }
