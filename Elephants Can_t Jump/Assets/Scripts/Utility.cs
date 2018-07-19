@@ -12,7 +12,7 @@ namespace Utility
     /// <summary>
     /// The various ways the characters can be grounded
     /// </summary>
-    public enum Grounding { Bottom, Right, Left, Top, BottomLeft, BottomRight, TopRight, TopLeft, Corner, None, Grounded}
+    public enum Grounding { Bottom, Right, Left, Top, BottomLeft, BottomRight, TopRight, TopLeft, Corner, None, Grounded, Both}
     /// <summary>
     /// The different states of launch
     /// </summary>

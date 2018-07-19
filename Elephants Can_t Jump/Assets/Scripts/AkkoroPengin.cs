@@ -55,7 +55,7 @@ public class AkkoroPengin : MonoBehaviour
     void Update ()
     {
         #region launch
-        if (Input.GetKey(launchPrep) && playerMovement.raycastGrounding[(int)Grounding.Bottom] && (playerMovement.leftTentacle.state == Tentacles.None && playerMovement.rightTentacle.state == Tentacles.None))
+        if (Input.GetKey(launchPrep) && false && (playerMovement.leftTentacle.state == Tentacles.None && playerMovement.rightTentacle.state == Tentacles.None))
         {
             print("should be preparing for launch!");
             prepLaunch = true;

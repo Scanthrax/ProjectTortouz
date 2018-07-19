@@ -60,16 +60,8 @@ public class PlayerMovement : MonoBehaviour
     public Grounding grounding;
     public Grounding groundingLR;
     public Grounding groundingTB;
-    public Grounding groundingCorners;
-    /// <summary>
-    /// Range of the raycasts that project from Akkoro to all sides; used to determine grounding range
-    /// </summary>
-    public float wallDist = 0.2f;
-    public float wallDistCorner = 0.2f;
-    /// <summary>
-    /// Array of booleans used to identify which surfaces Akkoro is grounded to
-    /// </summary>
-    public bool[] raycastGrounding = new bool[8];
+
+
     /// <summary>
     /// Ints used to determine direction
     /// </summary>
@@ -82,26 +74,7 @@ public class PlayerMovement : MonoBehaviour
     /// Integer value of layer Walls
     /// </summary>
     int walls;
-    /// <summary>
-    /// Raycasts to pass into the DetermineGrounding function
-    /// </summary>
-    public RaycastHit2D hitTRDiag, hitTLDiag, hitBLDiag, hitBRDiag, hitTRU, hitTLU, hitLTL, hitLBL, hitBLD, hitBRD, hitRTR, hitRBR, hitL, hitR, hitT, hitB;
-    /// <summary>
-    /// This function is used to calculate the grounding from the raycast. The RaycastHit param is the raycast to be checked; the Grounding param assigns which side the hit should be checking for.
-    /// </summary>
-    /// <param name="hit"></param>
-    /// <param name="ground"></param>
-    void DetermineGrounding(RaycastHit2D hit, int i)
-    {
-        if (hit.collider != null && hit.collider.gameObject.layer == walls)
-        {
-            raycastGrounding[i] = true;
-        }
-        else
-        {
-            raycastGrounding[i] = false;
-        }
-    }
+    
     #endregion
     #region Tentacles
     /// <summary>
@@ -300,11 +273,11 @@ public class PlayerMovement : MonoBehaviour
             groundingLR = Grounding.None;
         }
 
-        if(groundingTB == Grounding.None)
+        if (groundingTB == Grounding.None)
         {
             movement = Movement.Airborne;
         }
-        else if(groundingTB == Grounding.Bottom)
+        else if (groundingTB == Grounding.Bottom)
         {
             movement = Movement.Ground;
         }
@@ -378,16 +351,56 @@ public class PlayerMovement : MonoBehaviour
 
 
         #region set bool in animator
-        if (hor == 0)
+        if (hor != 0 || vert != 0)
         {
             // we're not walking
-            anim.SetBool("isWalking", false);
+            anim.SetBool("isWalking", true);
         }
         // otherwise we're walking
         else
         {
-            anim.SetBool("isWalking", true);
+            anim.SetBool("isWalking", false);
         }
+
+        if(movement == Movement.Airborne)
+        {
+            anim.SetBool("inAir", true);
+        }
+        else
+        {
+            anim.SetBool("inAir", false);
+        }
+
+        if(movement == Movement.Wallclimb)
+        {
+            anim.SetBool("onWall", true);
+        }
+        else
+        {
+            anim.SetBool("onWall", false);
+        }
+
+        if (movement == Movement.Wallclimb)
+        {
+            if (vert < 0)
+            {
+                rend.flipY = true;
+            }
+            else if (vert > 0)
+            {
+                rend.flipY = false;
+            }
+        }
+        else
+        {
+            rend.flipY = false;
+        }
+        if(groundingTB == Grounding.Top)
+        {
+            anim.SetBool("onCeil", true);
+        }
+
+        
         #endregion
 
 
@@ -395,7 +408,7 @@ public class PlayerMovement : MonoBehaviour
         #endregion
 
         #region Stickiness
-        if (grounding != Grounding.None && gripping && !(raycastGrounding[8] || raycastGrounding[9]) && Time.timeScale != 0f)
+        if (false)
         {
             stamina--;
         }
@@ -424,7 +437,7 @@ public class PlayerMovement : MonoBehaviour
         #endregion
 
         #region Recover Stamina
-        if ((raycastGrounding[8] || raycastGrounding[9]) && !gripping)
+        if (false)
         {
             stamina += 5;
         }
@@ -449,12 +462,8 @@ public class PlayerMovement : MonoBehaviour
         {
             EnableGravity(true);
         }
-        
 
-        if(gripping && vert != 0)
-        {
-            anim.Play("Wallwalk");
-        }
+
     }
 
 
