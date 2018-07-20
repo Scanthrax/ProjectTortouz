@@ -764,6 +764,11 @@ MonoBehaviour:
   - {fileID: 1026872909}
   - {fileID: 228274289}
   pointSelection: 1
+--- !u!61 &1329525369 stripped
+BoxCollider2D:
+  m_PrefabParentObject: {fileID: 61046259341498312, guid: f6c41853ae2a68f458798385d92300c8,
+    type: 2}
+  m_PrefabInternal: {fileID: 1495493783}
 --- !u!1001 &1384367085
 Prefab:
   m_ObjectHideFlags: 0
@@ -924,7 +929,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4560336647356960, guid: f6c41853ae2a68f458798385d92300c8, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -4
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 4560336647356960, guid: f6c41853ae2a68f458798385d92300c8, type: 2}
       propertyPath: m_LocalPosition.z
@@ -950,6 +955,46 @@ Prefab:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 212888213432692378, guid: f6c41853ae2a68f458798385d92300c8,
+        type: 2}
+      propertyPath: m_SortingLayerID
+      value: -1475997179
+      objectReference: {fileID: 0}
+    - target: {fileID: 212888213432692378, guid: f6c41853ae2a68f458798385d92300c8,
+        type: 2}
+      propertyPath: m_SortingLayer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 61413780588833244, guid: f6c41853ae2a68f458798385d92300c8,
+        type: 2}
+      propertyPath: m_Size.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 61920035563550264, guid: f6c41853ae2a68f458798385d92300c8,
+        type: 2}
+      propertyPath: m_Size.x
+      value: 1.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 61490137852489966, guid: f6c41853ae2a68f458798385d92300c8,
+        type: 2}
+      propertyPath: m_Size.x
+      value: 1.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 61383572130595802, guid: f6c41853ae2a68f458798385d92300c8,
+        type: 2}
+      propertyPath: m_Offset.x
+      value: -1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 61706743231401290, guid: f6c41853ae2a68f458798385d92300c8,
+        type: 2}
+      propertyPath: m_Offset.x
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114698259439454970, guid: f6c41853ae2a68f458798385d92300c8,
+        type: 2}
+      propertyPath: wallbreakCol
+      value: 
+      objectReference: {fileID: 1329525369}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f6c41853ae2a68f458798385d92300c8, type: 2}
   m_IsPrefabParent: 0

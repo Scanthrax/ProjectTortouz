@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Utility;
 
 public class AttackWall : MonoBehaviour
 {
@@ -31,13 +32,9 @@ public class AttackWall : MonoBehaviour
     {
         bc.offset = new Vector2(pm.faceDir*Mathf.Abs(bc.offset.x), bc.offset.y);
 
-        if(Input.GetKey(key))
+        if(Input.GetKeyDown(key) && pm.movement == Movement.Ground)
         {
-            bc.enabled = true;
-        }
-        else
-        {
-            bc.enabled = false;
+            anim.SetTrigger("Wallbreak");
         }
     }
 
