@@ -371,13 +371,22 @@ public class PlayerMovement : MonoBehaviour
             anim.SetBool("inAir", false);
         }
 
-        if(movement == Movement.Wallclimb)
+        if(groundingTB != Grounding.Bottom && groundingLR != Grounding.None)
         {
             anim.SetBool("onWall", true);
         }
         else
         {
             anim.SetBool("onWall", false);
+        }
+
+        if (groundingTB == Grounding.Top)
+        {
+            anim.SetBool("onCeil", true);
+        }
+        else
+        {
+            anim.SetBool("onCeil", false);
         }
 
         if (movement == Movement.Wallclimb)
@@ -395,10 +404,7 @@ public class PlayerMovement : MonoBehaviour
         {
             rend.flipY = false;
         }
-        if(groundingTB == Grounding.Top)
-        {
-            anim.SetBool("onCeil", true);
-        }
+        
 
         
         #endregion
