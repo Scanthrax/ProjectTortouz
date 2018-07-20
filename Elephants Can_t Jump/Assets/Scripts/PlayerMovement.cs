@@ -330,9 +330,9 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // horizontal movement with A & D
-        hor = (left + right) * speed * Time.deltaTime;
+        hor = (left + right) * speed;
         // vertical movement with W & S
-        vert = (up + down) * speed * Time.deltaTime;
+        vert = (up + down) * speed;
 
 
         var i = (left + right);
@@ -472,11 +472,14 @@ public class PlayerMovement : MonoBehaviour
     {
         if (movement == Movement.Airborne)
         {
-            rb.AddForce(new Vector2(hor * 1000f * 0.25f, 0f));
+            rb.AddForce(new Vector2(hor * 100f * 0.25f, 0f));
+
+           
         }
         else
         {
-            rb.AddForce(new Vector2(hor * 1000, vert * 1000));
+            rb.AddForce(new Vector2( hor * 100, vert * 100));
+            print(hor * 100);
         }
 
 
