@@ -201,6 +201,7 @@ public class PlayerMovement : MonoBehaviour
     public int faceDir;
     public bool[] groundingBoxes = new bool[4];
     public BoxCollider2D wallbreakCol;
+    bool wallbreaking;
 
     void FindCurrentRoom()
     {
@@ -238,6 +239,14 @@ public class PlayerMovement : MonoBehaviour
     public void disableAttack()
     {
         wallbreakCol.enabled = false;
+    }
+    public void enableWallBreak()
+    {
+        wallbreaking = true;
+    }
+    public void disableWallBreak()
+    {
+        wallbreaking = false;
     }
 
     void Update()
@@ -347,7 +356,10 @@ public class PlayerMovement : MonoBehaviour
         }
         
 
-        
+        if(wallbreaking)
+        {
+            hor = 0f;
+        }
 
 
         #region set bool in animator
