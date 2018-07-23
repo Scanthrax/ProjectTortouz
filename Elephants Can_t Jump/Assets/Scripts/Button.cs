@@ -27,13 +27,20 @@ public class Button : MonoBehaviour, IBreakable
 	
     public void Break(int damage)
     {
-        if(!isPressed)
+        
+        if (!moving)
         {
-            press = true;
-        }
-        else
-        {
-            release = true;
+            
+            if (!isPressed && !press)
+            {
+                press = true;
+                print("push");
+            }
+            else if(isPressed && !release)
+            {
+                release = true;
+                print("pull");
+            }
         }
     }
 
