@@ -202,6 +202,7 @@ public class PlayerMovement : MonoBehaviour
     public bool[] groundingBoxes = new bool[4];
     public BoxCollider2D wallbreakCol;
     public bool wallbreaking;
+    public Sprite[] anchorSprites;
 
     void FindCurrentRoom()
     {
@@ -835,7 +836,10 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.layer == anchorLayer)
         {
             if (!anchorPositions.Contains(collision.gameObject.transform.position))
+            {
                 anchorPositions.Add(collision.gameObject.transform.position);
+                collision.gameObject.GetComponent<SpriteRenderer>().sprite = anchorSprites[1];
+            }
         }
         #endregion
 
@@ -849,7 +853,10 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.layer == anchorLayer)
         {
             if (anchorPositions.Contains(collision.gameObject.transform.position))
+            {
                 anchorPositions.Remove(collision.gameObject.transform.position);
+                collision.gameObject.GetComponent<SpriteRenderer>().sprite = anchorSprites[0];
+            }
         }
         #endregion
     }
