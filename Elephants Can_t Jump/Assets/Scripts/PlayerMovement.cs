@@ -201,7 +201,7 @@ public class PlayerMovement : MonoBehaviour
     public int faceDir;
     public bool[] groundingBoxes = new bool[4];
     public BoxCollider2D wallbreakCol;
-    bool wallbreaking;
+    public bool wallbreaking;
 
     void FindCurrentRoom()
     {
@@ -839,10 +839,7 @@ public class PlayerMovement : MonoBehaviour
         }
         #endregion
 
-        if (collision.gameObject.layer == buttons)
-        {
-            collision.GetComponent<Button>().press = true;
-        }
+        
 
     }
 

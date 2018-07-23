@@ -32,7 +32,7 @@ public class AttackWall : MonoBehaviour
     {
         bc.offset = new Vector2(pm.faceDir*Mathf.Abs(bc.offset.x), bc.offset.y);
 
-        if(Input.GetKeyDown(key) && pm.movement == Movement.Ground)
+        if(Input.GetKeyDown(key) && pm.movement == Movement.Ground && !pm.wallbreaking)
         {
             anim.SetTrigger("Wallbreak");
         }

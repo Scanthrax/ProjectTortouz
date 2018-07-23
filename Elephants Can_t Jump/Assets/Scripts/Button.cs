@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Button : MonoBehaviour {
+public class Button : MonoBehaviour, IBreakable
+{
     public bool isPressed; //boolean used by other objects to see if button is pressed or not. USE THIS BOOL TO CHECK STATE OF BUTTON
 
     public bool press; // press/release delay system
@@ -11,9 +12,9 @@ public class Button : MonoBehaviour {
     public Transform StartP; //lerping point for button animation
     public Transform EndP; //lerping point for button animation
     private float time1 = 0f; //Lerp time start to end
-    public float speed1 = .5f; //speed start to end
+    public float speed1 = 1f; //speed start to end
     private float time2 = 0f; //Lerp time end to start
-    public float speed2 = .5f; //speed end to start
+    public float speed2 = 1f; //speed end to start
 
     public KeyCode key; //use key from the inspector
 
@@ -24,6 +25,18 @@ public class Button : MonoBehaviour {
         spriteRend = GetComponent<SpriteRenderer>();
     }
 	
+    public void Break(int damage)
+    {
+        if(!isPressed)
+        {
+            press = true;
+        }
+        else
+        {
+            release = true;
+        }
+    }
+
 	// Update is called once per frame
 	void Update ()
     {
@@ -72,6 +85,7 @@ public class Button : MonoBehaviour {
 
     }
 
+    /*
     private void OnTriggerStay2D(Collider2D other)
     {
        if(other.CompareTag("Player")) //check if the player is in the trigger
@@ -92,4 +106,5 @@ public class Button : MonoBehaviour {
         
        }
     }
+    */
 }
