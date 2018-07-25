@@ -83,11 +83,11 @@ public class Button : MonoBehaviour, IBreakable
 
         if(isPressed)
         {
-            spriteRend.color = Color.gray;
+            //spriteRend.color = Color.gray;
         }
         else
         {
-            spriteRend.color = Color.red;
+            //spriteRend.color = Color.red;
         }
 
     }

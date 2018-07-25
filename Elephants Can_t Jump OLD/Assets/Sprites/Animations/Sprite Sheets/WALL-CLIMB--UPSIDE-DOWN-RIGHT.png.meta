@@ -1,0 +1,305 @@
+fileFormatVersion: 2
+guid: cfe1794caf1e26947b7d5faa458dc88a
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: WALL-CLIMB--UPSIDE-DOWN-RIGHT_0
+    21300002: WALL-CLIMB--UPSIDE-DOWN-RIGHT_1
+    21300004: WALL-CLIMB--UPSIDE-DOWN-RIGHT_2
+    21300006: WALL-CLIMB--UPSIDE-DOWN-RIGHT_3
+    21300008: WALL-CLIMB--UPSIDE-DOWN-RIGHT_4
+    21300010: WALL-CLIMB--UPSIDE-DOWN-RIGHT_5
+    21300012: WALL-CLIMB--UPSIDE-DOWN-RIGHT_6
+    21300014: WALL-CLIMB--UPSIDE-DOWN-RIGHT_7
+    21300016: WALL-CLIMB--UPSIDE-DOWN-RIGHT_8
+    21300018: WALL-CLIMB--UPSIDE-DOWN-RIGHT_9
+  externalObjects: {}
+  serializedVersion: 5
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 119.8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 2
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: WALL-CLIMB--UPSIDE-DOWN-RIGHT_0
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 351
+        width: 440
+        height: 295
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9cfa1ce1b91adf148a6baa3f95a5bf41
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WALL-CLIMB--UPSIDE-DOWN-RIGHT_1
+      rect:
+        serializedVersion: 2
+        x: 570
+        y: 351
+        width: 441
+        height: 295
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d3abb69df2efd64d806077dc3e76f7c
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WALL-CLIMB--UPSIDE-DOWN-RIGHT_2
+      rect:
+        serializedVersion: 2
+        x: 1048
+        y: 357
+        width: 475
+        height: 286
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8cc8e249daef4604fbe242dc2499e34b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WALL-CLIMB--UPSIDE-DOWN-RIGHT_3
+      rect:
+        serializedVersion: 2
+        x: 1562
+        y: 357
+        width: 477
+        height: 287
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0defaf6971d546644beb2184d774b637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WALL-CLIMB--UPSIDE-DOWN-RIGHT_4
+      rect:
+        serializedVersion: 2
+        x: 2107
+        y: 369
+        width: 433
+        height: 275
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e7e3fa3afe7be84fab25efb6225c617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WALL-CLIMB--UPSIDE-DOWN-RIGHT_5
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 25
+        width: 445
+        height: 287
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 092d9d77eea9ccf4a9b3208eb1883807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WALL-CLIMB--UPSIDE-DOWN-RIGHT_6
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 21
+        width: 456
+        height: 291
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d666ccc0e696924a857a10dc4045a3b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WALL-CLIMB--UPSIDE-DOWN-RIGHT_7
+      rect:
+        serializedVersion: 2
+        x: 1111
+        y: 0
+        width: 419
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6dde571bf7d2aca439c75329788519f5
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WALL-CLIMB--UPSIDE-DOWN-RIGHT_8
+      rect:
+        serializedVersion: 2
+        x: 1604
+        y: 15
+        width: 441
+        height: 302
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12066a66acd99cf4a877915fbba81520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WALL-CLIMB--UPSIDE-DOWN-RIGHT_9
+      rect:
+        serializedVersion: 2
+        x: 2093
+        y: 15
+        width: 467
+        height: 294
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 163dd81887b4a6a409b7f32314c029a4
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: f8265bbb4c357c24a8f01335dc15ed2a
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

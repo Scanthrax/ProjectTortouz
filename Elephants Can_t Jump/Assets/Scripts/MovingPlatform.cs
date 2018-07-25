@@ -13,6 +13,7 @@ public class MovingPlatform : MonoBehaviour
     public Transform[] pointArr;//array of points
     public int pointSelection;
     int delay;
+    public Button button;
 
     // Use this for initialization
     void Start()
@@ -27,7 +28,7 @@ public class MovingPlatform : MonoBehaviour
         //if a button is assigned to the platform
         if (ButtonSystem != null)
         {
-            canMove = ButtonSystem.GetComponentInChildren<Button>().isPressed;
+            canMove = button.isPressed;
         }
         //if there is no button then platform is always moving
         else
