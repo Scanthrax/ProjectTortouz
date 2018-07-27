@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Button : MonoBehaviour, IBreakable
 {
+
     public bool isPressed; //boolean used by other objects to see if button is pressed or not. USE THIS BOOL TO CHECK STATE OF BUTTON
 
     public bool press; // press/release delay system
@@ -15,6 +16,7 @@ public class Button : MonoBehaviour, IBreakable
     public float speed1 = 1f; //speed start to end
     private float time2 = 0f; //Lerp time end to start
     public float speed2 = 1f; //speed end to start
+
 
     public KeyCode key; //use key from the inspector
 
@@ -41,6 +43,10 @@ public class Button : MonoBehaviour, IBreakable
                 release = true;
                 print("pull");
             }
+        }
+        else
+        {
+            print("is moving!");
         }
     }
 
@@ -83,11 +89,11 @@ public class Button : MonoBehaviour, IBreakable
 
         if(isPressed)
         {
-            spriteRend.color = Color.gray;
+            //spriteRend.color = Color.gray;
         }
         else
         {
-            spriteRend.color = Color.red;
+            //spriteRend.color = Color.red;
         }
 
     }
