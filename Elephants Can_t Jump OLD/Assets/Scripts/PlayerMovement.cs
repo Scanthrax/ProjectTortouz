@@ -133,7 +133,7 @@ public class PlayerMovement : MonoBehaviour
         /// <summary>
         /// Anchor position of the tentacle; set to null of there is no position
         /// </summary>
-        public Vector3? anchorPos;
+        public Transform anchorPos;
         /// <summary>
         /// The keycode that performs actions for this tentacle
         /// </summary>
@@ -163,7 +163,7 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// List of nearby anchor positions; Keeps track of which anchors are available for Akkoro to latch onto
     /// </summary>
-    public List<Vector3> anchorPositions = new List<Vector3>();
+    public List<Transform> anchorPositions = new List<Transform>();
     /// <summary>
     /// Layer for anchor points
     /// </summary>
@@ -203,6 +203,9 @@ public class PlayerMovement : MonoBehaviour
     public BoxCollider2D wallbreakCol;
     public bool wallbreaking;
     public Sprite[] anchorSprites;
+    RaycastHit2D[] hits = new RaycastHit2D[10];
+    int droppable;
+
 
     void FindCurrentRoom()
     {
@@ -230,6 +233,7 @@ public class PlayerMovement : MonoBehaviour
         //gameObject.SetActive(false);
         movement = Movement.Ground;
         faceDir = 1;
+        droppable = LayerMask.NameToLayer("Droppable");
     }
 
 
@@ -240,6 +244,17 @@ public class PlayerMovement : MonoBehaviour
     public void disableAttack()
     {
         wallbreakCol.enabled = false;
+    }
+    public void enableSlam()
+    {
+         var i = Physics2D.OverlapCircleAll(transform.position, 10f);
+        foreach(Collider2D hit in i)
+        {
+            if(hit.gameObject.layer == droppable)
+            {
+                hit.GetComponent<Rigidbody2D>().gravityScale = 1;
+            }
+        }
     }
     public void enableWallBreak()
     {
@@ -339,13 +354,16 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
+        int i = (left + right);
+        int j = (up + down);
+
         // horizontal movement with A & D
         hor = (left + right) * speed;
         // vertical movement with W & S
         vert = (up + down) * speed;
 
 
-        var i = (left + right);
+        
         if (i != 0)
         {
             if (i != faceDir)
@@ -364,18 +382,25 @@ public class PlayerMovement : MonoBehaviour
 
 
         #region set bool in animator
-        if (hor != 0 || vert != 0)
+        if (i != 0)
         {
-            // we're not walking
-            anim.SetBool("isWalking", true);
+            anim.SetBool("walkHor",true);
         }
-        // otherwise we're walking
         else
         {
-            anim.SetBool("isWalking", false);
+            anim.SetBool("walkHor", false);
+        }
+        
+        if (j != 0)
+        {
+            anim.SetBool("walkVert", true);
+        }
+        else
+        {
+            anim.SetBool("walkVert", false);
         }
 
-        if(movement == Movement.Airborne)
+        if (movement == Movement.Airborne)
         {
             anim.SetBool("inAir", true);
         }
@@ -384,7 +409,7 @@ public class PlayerMovement : MonoBehaviour
             anim.SetBool("inAir", false);
         }
 
-        if(groundingTB != Grounding.Bottom && groundingLR != Grounding.None)
+        if(groundingTB != Grounding.Bottom && groundingLR != Grounding.None && gripping)
         {
             anim.SetBool("onWall", true);
         }
@@ -402,6 +427,14 @@ public class PlayerMovement : MonoBehaviour
             anim.SetBool("onCeil", false);
         }
 
+        if(groundingTB == Grounding.Bottom)
+        {
+            anim.SetBool("onGround", true);
+        }
+        else
+        {
+            anim.SetBool("onGround", false);
+        }
         if (movement == Movement.Wallclimb)
         {
             if (vert < 0)
@@ -576,7 +609,7 @@ public class PlayerMovement : MonoBehaviour
                     if (anchorPositions.Count == 1)
                     {
                         // if the other tentacle is not anchored
-                        if (otherTentacle.anchorPos.HasValue)
+                        if (otherTentacle.anchorPos != null)
                         {
                             if (otherTentacle.anchorPos != anchorPositions[0])
                             {
@@ -594,7 +627,7 @@ public class PlayerMovement : MonoBehaviour
                     else if (anchorPositions.Count >= 2)
                     {
                         // is the other tentacle attached?
-                        if (otherTentacle.anchorPos.HasValue)
+                        if (otherTentacle.anchorPos != null)
                         {
                             if (otherTentacle.anchorPos == anchorPositions[0])
                             {
@@ -629,9 +662,9 @@ public class PlayerMovement : MonoBehaviour
                     thisTentacle.anchorPos = null;
                     break;
                 }
-                if(thisTentacle.anchorPos.HasValue)
+                if(thisTentacle.anchorPos != null)
                 {
-                    if(Vector2.Distance(transform.position, thisTentacle.anchorPos.Value) > tentacleRange)
+                    if(Vector2.Distance(transform.position, thisTentacle.anchorPos.position) > tentacleRange)
                     {
                         print("Retracting & breaking connection");
                         thisTentacle.state = Tentacles.Retracting;
@@ -642,7 +675,7 @@ public class PlayerMovement : MonoBehaviour
                 #endregion
 
                 #region calculate distance
-                thisTentacle.rot.right = thisTentacle.anchorPos.Value - transform.position;
+                thisTentacle.rot.right = thisTentacle.anchorPos.position - transform.position;
                 
                 #endregion
 
@@ -674,7 +707,7 @@ public class PlayerMovement : MonoBehaviour
             case Tentacles.Anchored:
 
                 #region Aim at anchor
-                thisTentacle.rot.right = thisTentacle.anchorPos.Value - transform.position;
+                thisTentacle.rot.right = thisTentacle.anchorPos.position - transform.position;
                 #endregion
 
                 #region Press key to retract
@@ -706,8 +739,8 @@ public class PlayerMovement : MonoBehaviour
 
                 #region Keep Akkoro clamped between the range of the tentacles
                 #region tentacle distance
-                if (thisTentacle.anchorPos.HasValue)
-                    thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.Value, transform.position);
+                if (thisTentacle.anchorPos != null)
+                    thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.position, transform.position);
                 #endregion
                 if (thisTentacle.dist >= tentacleRange)
                 {
@@ -727,12 +760,39 @@ public class PlayerMovement : MonoBehaviour
         }
 
         #region tentacle distance
-        if (thisTentacle.anchorPos.HasValue)
-            thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.Value, transform.position);
+        if (thisTentacle.anchorPos != null)
+            thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.position, transform.position);
         #endregion
 
+        
+        // for each anchor nearby
+        foreach (Transform trans in anchorPositions)
+        {
+            // linecast from A+P to anchorpoint
+            var j = Physics2D.LinecastAll(transform.position, trans.position);
 
+            // for each object hit with linecast
+            foreach (RaycastHit2D hit in j)
+            {
+                // if I hit a wall...
+                if (hit.transform.gameObject.layer == walls)
+                {
+                    print("there is a wall in the way!");
+                    // if this tentacle is targeting the anchorpoint, retract it
+                    if (thisTentacle.anchorPos == trans)
+                    {
+                        thisTentacle.state = Tentacles.Retracting;
+                        thisTentacle.anchorPos = null;
+                    }
+                    // dim the anchorpoint
+                    trans.GetComponent<SpriteRenderer>().sprite = anchorSprites[0];
+                    break;
+                }
+            }
+        }
     }
+        
+
 
     /// <summary>
     /// Retracts the tentacle that is sent into the function
@@ -772,7 +832,7 @@ public class PlayerMovement : MonoBehaviour
     void ClampTentacles(Tentacle tent)
     {
         // find the point on the edge of the radius
-        Vector2 circlePoint = CirclePoint(tent.anchorPos.Value, tentacleRange, (Vector2.SignedAngle(Vector2.right, tent.rot.right * -1)));
+        Vector2 circlePoint = CirclePoint(tent.anchorPos.position, tentacleRange, (Vector2.SignedAngle(Vector2.right, tent.rot.right * -1)));
         // Only adjust the x value of the transform when on ceiling or ground
         if (groundingTB != Grounding.None)
             transform.position = new Vector2(circlePoint.x, transform.position.y);
@@ -830,14 +890,14 @@ public class PlayerMovement : MonoBehaviour
         return (aimVector + anchorVector).normalized;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         #region Add anchorpoint to the list if Akkoro enters range
         if (collision.gameObject.layer == anchorLayer)
         {
-            if (!anchorPositions.Contains(collision.gameObject.transform.position))
+            if (!anchorPositions.Contains(collision.gameObject.transform))
             {
-                anchorPositions.Add(collision.gameObject.transform.position);
+                anchorPositions.Add(collision.gameObject.transform);
                 collision.gameObject.GetComponent<SpriteRenderer>().sprite = anchorSprites[1];
             }
         }
@@ -852,9 +912,9 @@ public class PlayerMovement : MonoBehaviour
         #region Remove anchorpoint from the list if Akkoro leaves range
         if (collision.gameObject.layer == anchorLayer)
         {
-            if (anchorPositions.Contains(collision.gameObject.transform.position))
+            if (anchorPositions.Contains(collision.gameObject.transform))
             {
-                anchorPositions.Remove(collision.gameObject.transform.position);
+                anchorPositions.Remove(collision.gameObject.transform);
                 collision.gameObject.GetComponent<SpriteRenderer>().sprite = anchorSprites[0];
             }
         }

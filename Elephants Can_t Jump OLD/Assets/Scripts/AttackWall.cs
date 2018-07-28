@@ -15,6 +15,8 @@ public class AttackWall : MonoBehaviour
         pm = GetComponentInParent<PlayerMovement>();
         bc = GetComponent<BoxCollider2D>();
         anim = GetComponentInParent<Animator>();
+        bc.enabled = false;
+
     }
 
     private void OnTriggerStay2D(Collider2D collision)

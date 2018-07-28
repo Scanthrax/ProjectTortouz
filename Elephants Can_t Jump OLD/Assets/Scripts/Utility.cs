@@ -31,15 +31,15 @@ namespace Utility
 
     public static class Functions
     {
-        public static void OrderByDistance(List<Vector3> list, Vector3 origin)
+        public static void OrderByDistance(List<Transform> list, Vector3 origin)
         {
             // we only need to sort the order if there are more than 2 units in the list
             if (list.Count > 1)
             {
                 // sorting algorithm
-                list.Sort(delegate (Vector3 c1, Vector3 c2)
+                list.Sort(delegate (Transform c1, Transform c2)
                 {
-                    return Vector2.Distance(origin, c1).CompareTo((Vector2.Distance(origin, c2)));
+                    return Vector2.Distance(origin, c1.position).CompareTo((Vector2.Distance(origin, c2.position)));
                 });
             }
         }
