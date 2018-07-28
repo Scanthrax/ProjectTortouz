@@ -97,24 +97,24 @@ public class Button : MonoBehaviour, IBreakable
 
     }
     
-    private void OnTriggerStay2D(Collider2D other)
-    {
-       if(other.CompareTag("Player")) //check if the player is in the trigger
-       {
-            if (Input.GetKeyDown(key) && !moving) //check if key is pressed and if button is done moving
-            {
-                if (isPressed == false)
-                {
-                    Debug.Log("pressing");
-                    press = true;
-                }
-                else if (isPressed == true)
-                {
-                    Debug.Log("de-pressing");
-                    release = true;
-                }
-            }
+    //private void OnTriggerStay2D(Collider2D other)
+    //{
+    //   if(other.CompareTag("Player")) //check if the player is in the trigger
+    //   {
+    //        if (Input.GetKeyDown(key) && !moving) //check if key is pressed and if button is done moving
+    //        {
+    //            if (isPressed == false)
+    //            {
+    //                Debug.Log("pressing");
+    //                press = true;
+    //            }
+    //            else if (isPressed == true)
+    //            {
+    //                Debug.Log("de-pressing");
+    //                release = true;
+    //            }
+    //        }
         
-       }
-    }
+    //   }
+    //}
 }
