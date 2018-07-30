@@ -7,14 +7,15 @@ public class BackgroundRegister : MonoBehaviour
     private GameObject Player;
     public GameObject Light;
     private bool start;
-    public float interval = 1;
+    public float interval;
+    public bool shoot;
 
 
     // Use this for initialization
     void Start ()
     {
         start = false;
-
+        shoot = false;
 	}
 	
 	// Update is called once per frame
@@ -27,7 +28,7 @@ public class BackgroundRegister : MonoBehaviour
     {
         if(collision.CompareTag("Player"))
         {
-            StartCoroutine("cntdwn");
+            StartCoroutine(cntdwn());
         }
     }
 
@@ -35,12 +36,15 @@ public class BackgroundRegister : MonoBehaviour
     {
         Debug.Log("Red");
         Light.GetComponent<lightControl>().TurnRed();
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(interval);
         Debug.Log("Yellow");
         Light.GetComponent<lightControl>().TurnYellow();
-        yield return new WaitForSeconds(.1f);
+        yield return new WaitForSeconds(interval);
         Debug.Log("Green");
         Light.GetComponent<lightControl>().TurnGreen();
-        yield return new WaitForSeconds(.1f);
+        yield return new WaitForSeconds(interval);
+        shoot = true;
     }
+
+
 }
