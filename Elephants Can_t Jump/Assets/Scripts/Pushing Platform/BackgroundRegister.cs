@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BackgroundRegister : MonoBehaviour
 {
+    private Coroutine lastRoutine;
+
     private GameObject Player;
     public GameObject Light;
     private bool start;
@@ -28,21 +30,31 @@ public class BackgroundRegister : MonoBehaviour
     {
         if(collision.CompareTag("Player"))
         {
-            StartCoroutine(cntdwn());
+            lastRoutine = StartCoroutine(cntdwn());
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            Light.GetComponent<lightControl>().TurnGray();
+            StopCoroutine(lastRoutine);
         }
     }
 
     IEnumerator cntdwn()
     {
-        Debug.Log("Red");
+        //red
         Light.GetComponent<lightControl>().TurnRed();
         yield return new WaitForSeconds(interval);
-        Debug.Log("Yellow");
+        //yellow
         Light.GetComponent<lightControl>().TurnYellow();
         yield return new WaitForSeconds(interval);
-        Debug.Log("Green");
+        //green
         Light.GetComponent<lightControl>().TurnGreen();
         yield return new WaitForSeconds(interval);
+        //shoot
         shoot = true;
     }
 
