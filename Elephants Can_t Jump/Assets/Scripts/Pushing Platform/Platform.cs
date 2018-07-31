@@ -4,29 +4,26 @@ using UnityEngine;
 
 public class Platform : MonoBehaviour {
 
-    public GameObject Background;
-    private GameObject Player;
-    private bool shoot;
-    private Rigidbody2D RB;
-    Vector3 direction;
-    public Transform StartP;
-    public Transform EndP;
-
-    public float force;
-
-    //Lerp
-    public float ForwardSpeed;
-    public float BackwardSpeed;
-    private float time1;
-    private float time2;
-
+    public GameObject Background; //shoot variable
+    private GameObject Player; //player to be pushed
+    private bool shoot; //variable from background
+    Vector3 direction; //direction of launch
+    public float force; //force of launch
+    
+    //platform movement
+    public Transform StartP; //Start point of platform
+    public Transform EndP; //End point of platform
+    public float ForwardSpeed; //speed of launch
+    public float BackwardSpeed; //speed of retraction
     private bool isAtStart;
     private bool isAtEnd;
+    private bool movingBack;
+
 	// Use this for initialization
 	void Start ()
     {
+        movingBack = false;
         isAtStart = true;
-        RB = this.GetComponent<Rigidbody2D>();
         shoot = false;
         direction = -(this.transform.right).normalized;
 	}
@@ -37,9 +34,9 @@ public class Platform : MonoBehaviour {
         shoot = Background.GetComponent<BackgroundRegister>().shoot;
         if (shoot)
         {
+            //move forward
             if (isAtStart)
             {
-                Debug.Log("MovingtoEnd");
                 this.transform.position = Vector3.MoveTowards(this.transform.position, EndP.position, ForwardSpeed);
                 if (this.transform.position == EndP.position)
                 {
@@ -47,12 +44,14 @@ public class Platform : MonoBehaviour {
                     isAtEnd = true;
                 }
             }
+            //move back
             if (isAtEnd)
             {
-                Debug.Log("MovingtoStart");
+                movingBack = true;
                 this.transform.position = Vector3.MoveTowards(this.transform.position, StartP.position, BackwardSpeed);
                 if (this.transform.position == StartP.position)
                 {
+                    movingBack = false;
                     isAtEnd = false;
                     isAtStart = true;
                     Background.GetComponent<BackgroundRegister>().shoot = false;
@@ -63,20 +62,19 @@ public class Platform : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (shoot)
+        if (shoot && !movingBack)
         {
-            Player = collision.transform.gameObject;
             if (collision.transform.CompareTag("Player"))
             {
-                launch();
-                Debug.Log("Collided");
+                Player = collision.transform.gameObject; //store player
+                launch(); //launch player
             }
         }
     }
 
+    //method to launch player
     void launch()
     {
-        Debug.Log("FLY!");
         Player.GetComponent<Rigidbody2D>().AddForce(new Vector2(direction.x, 0.5f) * force);
     }
 }

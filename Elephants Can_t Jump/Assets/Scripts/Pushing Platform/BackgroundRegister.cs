@@ -4,19 +4,15 @@ using UnityEngine;
 
 public class BackgroundRegister : MonoBehaviour
 {
-    private Coroutine lastRoutine;
-
-    private GameObject Player;
-    public GameObject Light;
-    private bool start;
-    public float interval;
-    public bool shoot;
+    private Coroutine lastRoutine; //keeps track of coroutine
+    public GameObject Light; //Light object
+    public float interval; //time between change of lights from red to yellow to green
+    public bool shoot; //keeps track of when platform shoots
 
 
     // Use this for initialization
     void Start ()
     {
-        start = false;
         shoot = false;
 	}
 	
@@ -28,6 +24,7 @@ public class BackgroundRegister : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //start countdown when player is on platform
         if(collision.CompareTag("Player"))
         {
             lastRoutine = StartCoroutine(cntdwn());
@@ -36,6 +33,7 @@ public class BackgroundRegister : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        //stops everything if the player exits area
         if (collision.CompareTag("Player"))
         {
             Light.GetComponent<lightControl>().TurnGray();

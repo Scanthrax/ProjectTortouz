@@ -7,8 +7,7 @@ public class lightControl : MonoBehaviour {
     public Material Red;
     public Material Yellow;
     public Material Green;
-
-    public Material Current;
+    private Material Current;
 
     // Use this for initialization
     void Start () {
