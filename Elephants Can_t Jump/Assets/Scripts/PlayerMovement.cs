@@ -251,6 +251,19 @@ public class PlayerMovement : MonoBehaviour
     {
         wallbreaking = false;
     }
+    public void GroundSlam()
+    {
+        print("SLAM");
+        var t = Physics2D.OverlapCircleAll(transform.position, 10);
+        foreach(Collider2D hit in t)
+        {
+            if (hit.gameObject.layer == LayerMask.NameToLayer("Droppable"))
+            {
+                print("should be falling");
+                hit.GetComponent<Rigidbody2D>().gravityScale = 3f;
+            }
+        }
+    }
 
     void Update()
     {
