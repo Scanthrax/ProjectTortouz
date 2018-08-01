@@ -201,7 +201,7 @@ public class PlayerMovement : MonoBehaviour
     public int faceDir;
     public bool[] groundingBoxes = new bool[4];
     public BoxCollider2D wallbreakCol;
-    public bool wallbreaking;
+    public bool action;
     public Sprite[] anchorSprites;
     RaycastHit2D[] hits = new RaycastHit2D[10];
 
@@ -239,11 +239,11 @@ public class PlayerMovement : MonoBehaviour
     }
     public void enableWallBreak()
     {
-        wallbreaking = true;
+        action = true;
     }
     public void disableWallBreak()
     {
-        wallbreaking = false;
+        action = false;
     }
     public void GroundSlam()
     {
@@ -372,7 +372,7 @@ public class PlayerMovement : MonoBehaviour
         }
         
 
-        if(wallbreaking)
+        if(action)
         {
             hor = 0f;
         }

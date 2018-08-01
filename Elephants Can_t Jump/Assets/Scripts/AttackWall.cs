@@ -5,16 +5,15 @@ using Utility;
 
 public class AttackWall : MonoBehaviour
 {
-    BoxCollider2D bc;
+    public BoxCollider2D bc;
     public KeyCode key;
     PlayerMovement pm;
     Animator anim;
 
     private void Start()
     {
-        pm = GetComponentInParent<PlayerMovement>();
-        bc = GetComponent<BoxCollider2D>();
-        anim = GetComponentInParent<Animator>();
+        pm = GetComponent<PlayerMovement>();
+        anim = GetComponent<Animator>();
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -32,7 +31,7 @@ public class AttackWall : MonoBehaviour
     {
         bc.offset = new Vector2(pm.faceDir*Mathf.Abs(bc.offset.x), bc.offset.y);
 
-        if(Input.GetKeyDown(key) && pm.movement == Movement.Ground && !pm.wallbreaking)
+        if(Input.GetKeyDown(key) && pm.movement == Movement.Ground && !pm.action)
         {
             anim.SetTrigger("Wallbreak");
         }

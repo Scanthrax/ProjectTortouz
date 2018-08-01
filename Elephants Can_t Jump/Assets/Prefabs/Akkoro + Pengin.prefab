@@ -93,6 +93,8 @@ GameObject:
   - component: {fileID: 95168030629470890}
   - component: {fileID: 114514674732120722}
   - component: {fileID: 114698259439454970}
+  - component: {fileID: 114280987555013236}
+  - component: {fileID: 114552181649917616}
   m_Layer: 0
   m_Name: Akkoro + Pengin
   m_TagString: Player
@@ -126,7 +128,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4761295133525228}
   - component: {fileID: 61046259341498312}
-  - component: {fileID: 114658917877520046}
   m_Layer: 0
   m_Name: Attack Collider
   m_TagString: Untagged
@@ -301,7 +302,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1230566603385340}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16.5, y: -9, z: 0}
+  m_LocalPosition: {x: -18, y: -9.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4158357771969938}
@@ -408,7 +409,7 @@ CircleCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1225240882286364}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
@@ -423,7 +424,7 @@ CircleCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1498310102376974}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
@@ -624,6 +625,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerMovement: {fileID: 114698259439454970}
   i: 1
+--- !u!114 &114280987555013236
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1230566603385340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cd475ccb9edd5444b2e9ef271100932, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bc: {fileID: 61046259341498312}
+  key: 101
 --- !u!114 &114293385325526146
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -683,18 +697,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac3d46f4cc81abe42bc1a40740f0eafc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114658917877520046
+--- !u!114 &114552181649917616
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1388811711347726}
+  m_GameObject: {fileID: 1230566603385340}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cd475ccb9edd5444b2e9ef271100932, type: 3}
+  m_Script: {fileID: 11500000, guid: 773309ea4c23cd34cb1929fe192152d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  key: 101
+  key: 120
 --- !u!114 &114698259439454970
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -759,7 +773,7 @@ MonoBehaviour:
   faceDir: 0
   groundingBoxes: 00000000
   wallbreakCol: {fileID: 61046259341498312}
-  wallbreaking: 0
+  action: 0
   anchorSprites:
   - {fileID: 21300000, guid: d5a23393c1b0d89409dc6e99632133af, type: 3}
   - {fileID: 21300000, guid: dcd59d2462e201544894e4382dd920b1, type: 3}
