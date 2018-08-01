@@ -205,12 +205,6 @@ public class PlayerMovement : MonoBehaviour
     public Sprite[] anchorSprites;
     RaycastHit2D[] hits = new RaycastHit2D[10];
 
-
-    void FindCurrentRoom()
-    {
-           
-    }
-
     void Start()
     {
         // assign the rigidbody component
@@ -234,7 +228,7 @@ public class PlayerMovement : MonoBehaviour
         faceDir = 1;
     }
 
-
+    #region anim functions
     public void enableAttack()
     {
         wallbreakCol.enabled = true;
@@ -253,17 +247,22 @@ public class PlayerMovement : MonoBehaviour
     }
     public void GroundSlam()
     {
-        print("SLAM");
-        var t = Physics2D.OverlapCircleAll(transform.position, 10);
-        foreach(Collider2D hit in t)
+        // find all items within 10 unit radius
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 10);
+        // go through each item
+        foreach(Collider2D hit in colliders)
         {
-            if (hit.gameObject.layer == LayerMask.NameToLayer("Droppable"))
+            // can the item be dropped? i.e. does the item have the Droppable component?
+            Droppable canBeDropped = hit.GetComponent<Droppable>();
+            // item can be dropped if the variable has a value other than null
+            if (canBeDropped != null)
             {
-                print("should be falling");
+                // set gravity for droppable object
                 hit.GetComponent<Rigidbody2D>().gravityScale = 3f;
             }
         }
     }
+    #endregion
 
     void Update()
     {
@@ -285,6 +284,7 @@ public class PlayerMovement : MonoBehaviour
         {
             groundingTB = Grounding.None;
         }
+
         if(groundingBoxes[1])
         {
             groundingLR = Grounding.Left;
@@ -298,7 +298,7 @@ public class PlayerMovement : MonoBehaviour
             groundingLR = Grounding.None;
         }
 
-        if (groundingTB == Grounding.None)
+        if (groundingTB != Grounding.Bottom)
         {
             movement = Movement.Airborne;
         }
@@ -314,10 +314,7 @@ public class PlayerMovement : MonoBehaviour
             if (groundingLR != Grounding.None || groundingTB == Grounding.Top)
             {
                 gripping = true;
-                if (grounding != Grounding.Bottom)
-                {
-                    movement = Movement.Wallclimb;
-                }
+                movement = Movement.Wallclimb;
             }
             else gripping = false;
         }
@@ -381,24 +378,28 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        #region set bool in animator
-        if (i != 0)
-        {
-            anim.SetBool("walkHor",true);
-        }
-        else
+        if( (groundingLR == Grounding.Left && i == -1) || (groundingLR == Grounding.Right && i == 1) || i == 0)
         {
             anim.SetBool("walkHor", false);
         }
-        
-        if (j != 0)
+        else if (i != 0)
         {
-            anim.SetBool("walkVert", true);
+            anim.SetBool("walkHor", true);
         }
-        else
+
+        print(j);
+        if ((groundingTB == Grounding.Top && j == 1) || (groundingTB == Grounding.Bottom && j == -1) || j == 0)
         {
             anim.SetBool("walkVert", false);
         }
+        else if (j != 0)
+        {
+            anim.SetBool("walkVert", true);
+        }
+
+        #region set bool in animator
+
+
 
         if (movement == Movement.Airborne)
         {
@@ -435,6 +436,7 @@ public class PlayerMovement : MonoBehaviour
         {
             anim.SetBool("onGround", false);
         }
+
         if (movement == Movement.Wallclimb)
         {
             if (vert < 0)
@@ -522,48 +524,52 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // only move horizontally at reduced rate while airborne
         if (movement == Movement.Airborne)
         {
             rb.AddForce(new Vector2(hor * 100f * 0.25f, 0f));
-
-           
         }
+        // otherwise move vertically & horizontally
         else
         {
             rb.AddForce(new Vector2( hor * 100, vert * 100));
-            print(hor * 100);
         }
 
-
+        // launch
         if (launch)
         {
             rb.AddForce(launchDir.right * SpringCalc2());
             launch = false;
         }
 
+        // while grounded to any surface
         if (movement != Movement.Airborne)
         {
+            // set horizontal velocity to 0
             if (hor == 0)
             {
                 rb.velocity = new Vector2(0f, rb.velocity.y);
             }
+            // set vertical velocity to 0
             if(vert == 0)
             {
                 rb.velocity = new Vector2(rb.velocity.x, 0f);
             }
+            // make sure we do not exceed max speed
             if (rb.velocity.magnitude > maxSpeed)
             {
                 rb.velocity = rb.velocity.normalized * maxSpeed;
             }
         }
 
-
+        // give a small window of time where we cannot ground ourselves, used immediately when launching
         if (groundTimer < 10)
         {
             groundTimer++;
         }
         else
         {
+            // detect when we hit the ground
             if (groundingTB == Grounding.Bottom && movement == Movement.Airborne)
             {
                 movement = Movement.Ground;
@@ -787,6 +793,11 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+
+        if(thisTentacle.dist > 7f)
+        {
+            thisTentacle.state = Tentacles.Retracting;
+        }
     }
         
 
@@ -807,6 +818,7 @@ public class PlayerMovement : MonoBehaviour
             tent.scale = 0f;
             tent.state = Tentacles.None;
             tent.dist = 0f;
+            tent.anchorPos = null;
         }
         UpdateTentacleLength(tent);
     }
