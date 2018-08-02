@@ -529,6 +529,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        #region movement
         // only move horizontally at reduced rate while airborne
         if (movement == Movement.Airborne)
         {
@@ -539,13 +540,7 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.AddForce(new Vector2( hor * 100, vert * 100));
         }
-
-        // launch
-        if (launch)
-        {
-            rb.AddForce(launchDir.right * SpringCalc2());
-            launch = false;
-        }
+        #endregion
 
         // while grounded to any surface
         if (movement != Movement.Airborne)
@@ -556,7 +551,7 @@ public class PlayerMovement : MonoBehaviour
                 rb.velocity = new Vector2(0f, rb.velocity.y);
             }
             // set vertical velocity to 0
-            if(vert == 0)
+            if (vert == 0)
             {
                 rb.velocity = new Vector2(rb.velocity.x, 0f);
             }
@@ -566,6 +561,29 @@ public class PlayerMovement : MonoBehaviour
                 rb.velocity = rb.velocity.normalized * maxSpeed;
             }
         }
+
+        #region Clamp tentacles
+        //if (!launch)
+        //{
+        //    if (leftTentacle.clampTent)
+        //    {
+        //        ClampTentacles(leftTentacle);
+        //    }
+        //    if (rightTentacle.clampTent)
+        //    {
+        //        ClampTentacles(rightTentacle);
+        //    }
+        //}
+        #endregion
+
+        // launch
+        if (launch)
+        {
+            rb.AddForce(launchDir.right * SpringCalc2());
+            launch = false;
+        }
+
+
 
         // give a small window of time where we cannot ground ourselves, used immediately when launching
         if (groundTimer < 10)
@@ -581,17 +599,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if (leftTentacle.clampTent)
-        {
-            ClampTentacles(leftTentacle);
-            leftTentacle.clampTent = false;
-        }
-        else if (rightTentacle.clampTent)
-        {
-            ClampTentacles(rightTentacle);
-            rightTentacle.clampTent = false;
-        }
-
+        
     }
 
 
@@ -603,7 +611,6 @@ public class PlayerMovement : MonoBehaviour
     /// <param name="otherTentacle">The other tentacle to take into consideration</param>
     void TentacleGrab(ref Tentacle thisTentacle, ref Tentacle otherTentacle)
     {
-
 
         switch (thisTentacle.state)
         {
@@ -739,6 +746,8 @@ public class PlayerMovement : MonoBehaviour
                     launch = true;
                     groundTimer = 0;
                     movement = Movement.Airborne;
+                    //thisTentacle.clampTent = false;
+                    //otherTentacle.clampTent = false;
                 }
 
                 
@@ -753,10 +762,8 @@ public class PlayerMovement : MonoBehaviour
                 if (thisTentacle.anchorPos != null)
                     thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.position, transform.position);
                 #endregion
-                if (thisTentacle.dist >= tentacleRange)
-                {
-                    thisTentacle.clampTent = true;
-                }
+
+                ClampTentacles(thisTentacle);
                 #endregion
 
                 UpdateTentacleLength(thisTentacle);
@@ -799,10 +806,10 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if(thisTentacle.dist > 7f)
-        {
-            thisTentacle.state = Tentacles.Retracting;
-        }
+        //if(thisTentacle.dist > 7f)
+        //{
+        //    thisTentacle.state = Tentacles.Retracting;
+        //}
     }
         
 
@@ -845,17 +852,37 @@ public class PlayerMovement : MonoBehaviour
 
     void ClampTentacles(Tentacle tent)
     {
-        // find the point on the edge of the radius
-        Vector2 circlePoint = CirclePoint(tent.anchorPos.position, tentacleRange, (Vector2.SignedAngle(Vector2.right, tent.rot.right * -1)));
-        // Only adjust the x value of the transform when on ceiling or ground
-        if (groundingTB != Grounding.None)
-            transform.position = new Vector2(circlePoint.x, transform.position.y);
-        // Only adjust the y value of the transform when on walls
-        else if (groundingLR != Grounding.None)
-            transform.position = new Vector2(transform.position.x, circlePoint.y);
-        //Adjust both x & y during any other case
-        else
-            transform.position = new Vector2(circlePoint.x, circlePoint.y);
+        //// find the point on the edge of the radius
+        //Vector2 circlePoint = CirclePoint(tent.anchorPos.position, tentacleRange, (Vector2.SignedAngle(Vector2.right, tent.rot.right * -1)));
+
+        //if (groundingTB == Grounding.None && groundingLR == Grounding.None)
+        //{
+        //    transform.position = new Vector2(circlePoint.x, circlePoint.y);
+        //    rb.velocity = Vector2.zero;
+        //}
+        //// Only adjust the x value of the transform when on ceiling or ground
+        //else if (groundingTB != Grounding.None)
+        //{
+        //    transform.position = new Vector2(circlePoint.x, transform.position.y);
+        //    //rb.velocity = new Vector2(0f, rb.velocity.y);
+        //}
+        //// Only adjust the y value of the transform when on walls
+        //else if (groundingLR != Grounding.None)
+        //{
+        //    transform.position = new Vector2(transform.position.x, circlePoint.y);
+        //    rb.velocity = new Vector2(rb.velocity.x, 0f);
+        //}
+        ////Adjust both x & y during any other case
+        //else
+        //{
+        //    transform.position = new Vector2(circlePoint.x, circlePoint.y);
+        //    rb.velocity = Vector2.zero;
+        //}
+
+
+        var allowedPos = transform.position - tent.anchorPos.position;
+        allowedPos = Vector2.ClampMagnitude(allowedPos, tentacleRange);
+        transform.position = new Vector2(tent.anchorPos.position.x + allowedPos.x, tent.anchorPos.position.y + allowedPos.y);
     }
 
     /// <summary>
