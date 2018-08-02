@@ -13,8 +13,7 @@ public class Room : MonoBehaviour {
 
     void Awake()
     {
-        
-        thisRoom = GetComponent<Room>();
+        thisRoom = this;
     }
     private void Start()
     {

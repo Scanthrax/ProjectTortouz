@@ -12,8 +12,8 @@ public class AttackWall : MonoBehaviour
 
     private void Start()
     {
-        pm = GetComponent<PlayerMovement>();
-        anim = GetComponent<Animator>();
+        pm = GetComponentInParent<PlayerMovement>();
+        anim = GetComponentInParent<Animator>();
     }
 
     private void OnTriggerStay2D(Collider2D collision)

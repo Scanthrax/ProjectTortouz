@@ -11,7 +11,6 @@ public class CameraCenterpoints : MonoBehaviour {
     public static GameObject player;
 
     float lerp;
-    public bool panCam;
     
 
     public delegate void RoomName();
@@ -24,7 +23,6 @@ public class CameraCenterpoints : MonoBehaviour {
 
     void Start ()
     {
-        panCam = false;
         cam = Camera.main;
         cam.transform.position = player.GetComponent<PlayerMovement>().room.transform.position;
         
@@ -51,7 +49,6 @@ public class CameraCenterpoints : MonoBehaviour {
             cam.transform.position = to.transform.position;
             // set static variable to destination room
             Variables.room = to.transform;
-            //roomName();
             // unpause the game
             Time.timeScale = 1f;
             player.GetComponent<PlayerMovement>().room = to;
