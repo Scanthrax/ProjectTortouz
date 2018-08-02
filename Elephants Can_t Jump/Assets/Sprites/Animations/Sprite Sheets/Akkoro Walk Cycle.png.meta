@@ -1,21 +1,21 @@
 fileFormatVersion: 2
-guid: bfde3b1c7c287064aa7b11c1468e2637
+guid: dffd616214badf94dbcfd26eb0b2577e
 TextureImporter:
   fileIDToRecycleName:
-    21300000: akkoro-walk-1_0
-    21300002: akkoro-walk-1_1
-    21300004: akkoro-walk-1_2
-    21300006: akkoro-walk-1_3
-    21300008: akkoro-walk-1_4
-    21300010: akkoro-walk-1_5
-    21300012: akkoro-walk-1_6
-    21300014: akkoro-walk-1_7
-    21300016: akkoro-walk-1_8
-    21300018: akkoro-walk-1_9
-    21300020: akkoro-walk-1_10
-    21300022: akkoro-walk-1_11
-    21300024: akkoro-walk-1_12
-    21300026: akkoro-walk-1_13
+    21300000: Akkoro Walk Cycle_0
+    21300002: Akkoro Walk Cycle_1
+    21300004: Akkoro Walk Cycle_2
+    21300006: Akkoro Walk Cycle_3
+    21300008: Akkoro Walk Cycle_4
+    21300010: Akkoro Walk Cycle_5
+    21300012: Akkoro Walk Cycle_6
+    21300014: Akkoro Walk Cycle_7
+    21300016: Akkoro Walk Cycle_8
+    21300018: Akkoro Walk Cycle_9
+    21300020: Akkoro Walk Cycle_10
+    21300022: Akkoro Walk Cycle_11
+    21300024: Akkoro Walk Cycle_12
+    21300026: Akkoro Walk Cycle_13
   externalObjects: {}
   serializedVersion: 5
   mipmaps:
@@ -55,9 +55,9 @@ TextureImporter:
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 9
-  spritePivot: {x: 1, y: 0.75}
-  spritePixelsToUnits: 675
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 110
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -96,281 +96,281 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: akkoro-walk-1_0
+      name: Akkoro Walk Cycle_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 540
+        width: 538
+        height: 270
+      alignment: 9
+      pivot: {x: 0.43, y: 0.52}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9842469d0280c654190f94d22a61e1a9
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Akkoro Walk Cycle_1
+      rect:
+        serializedVersion: 2
+        x: 538
+        y: 540
+        width: 538
+        height: 270
+      alignment: 9
+      pivot: {x: 0.43, y: 0.52}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67296f2657dec854891c1365d8836324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Akkoro Walk Cycle_2
+      rect:
+        serializedVersion: 2
+        x: 1076
+        y: 540
+        width: 538
+        height: 270
+      alignment: 9
+      pivot: {x: 0.43, y: 0.52}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cca312f61f13c4441add55d69e733a21
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Akkoro Walk Cycle_3
+      rect:
+        serializedVersion: 2
+        x: 1614
+        y: 540
+        width: 538
+        height: 270
+      alignment: 9
+      pivot: {x: 0.43, y: 0.52}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 20df5bc5ea13fda4fb13fceb42871151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Akkoro Walk Cycle_4
+      rect:
+        serializedVersion: 2
+        x: 2152
+        y: 540
+        width: 538
+        height: 270
+      alignment: 9
+      pivot: {x: 0.43, y: 0.52}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b4c2777a65ed774a974060919106406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Akkoro Walk Cycle_5
       rect:
         serializedVersion: 2
         x: 0
         y: 270
-        width: 952
+        width: 538
         height: 270
       alignment: 9
-      pivot: {x: 0.235, y: 0.555}
+      pivot: {x: 0.43, y: 0.52}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3e045089511610a4dbfae59c84680567
+      spriteID: fc667cb97dd35674da5c100456376bfd
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: akkoro-walk-1_1
+      name: Akkoro Walk Cycle_6
       rect:
         serializedVersion: 2
-        x: 952
+        x: 538
         y: 270
-        width: 952
+        width: 538
         height: 270
       alignment: 9
-      pivot: {x: 0.235, y: 0.555}
+      pivot: {x: 0.43, y: 0.52}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1e0750a27cb77cb4c92d6c1190120e90
+      spriteID: a0fe60efb027dba4aa51055122086346
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: akkoro-walk-1_2
+      name: Akkoro Walk Cycle_7
       rect:
         serializedVersion: 2
-        x: 1904
+        x: 1076
         y: 270
-        width: 952
+        width: 538
         height: 270
       alignment: 9
-      pivot: {x: 0.235, y: 0.555}
+      pivot: {x: 0.43, y: 0.52}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a16735da04a145a459d6bd2407110a1a
+      spriteID: 50c84762b0011064cad62e3f15dc4622
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: akkoro-walk-1_3
+      name: Akkoro Walk Cycle_8
       rect:
         serializedVersion: 2
-        x: 2856
+        x: 1614
         y: 270
-        width: 952
+        width: 538
         height: 270
       alignment: 9
-      pivot: {x: 0.235, y: 0.555}
+      pivot: {x: 0.43, y: 0.52}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a9b4ff54bdc1d3d4494b2d20f22a66a5
+      spriteID: 97d74201c1bf89e44935934d7c25d1e1
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: akkoro-walk-1_4
+      name: Akkoro Walk Cycle_9
       rect:
         serializedVersion: 2
-        x: 3808
+        x: 2152
         y: 270
-        width: 952
+        width: 538
         height: 270
       alignment: 9
-      pivot: {x: 0.235, y: 0.555}
+      pivot: {x: 0.43, y: 0.52}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 912dc8a1481ed894a817dc0028812bc6
+      spriteID: 52dd2b32730d6f646ac28e11e8afa543
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: akkoro-walk-1_5
-      rect:
-        serializedVersion: 2
-        x: 4760
-        y: 270
-        width: 952
-        height: 270
-      alignment: 9
-      pivot: {x: 0.235, y: 0.555}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0b61446abf9ef504ea0362f1e1eff040
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: akkoro-walk-1_6
-      rect:
-        serializedVersion: 2
-        x: 5712
-        y: 270
-        width: 952
-        height: 270
-      alignment: 9
-      pivot: {x: 0.235, y: 0.555}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ebdab8c83c89a44408b60f42b56ba215
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: akkoro-walk-1_7
+      name: Akkoro Walk Cycle_10
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 952
+        width: 538
         height: 270
       alignment: 9
-      pivot: {x: 0.235, y: 0.555}
+      pivot: {x: 0.43, y: 0.52}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a8b169dad82e65e4bb70ca3ca58f2e50
+      spriteID: ec0193de2f91cf94b9df19db200229a4
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: akkoro-walk-1_8
+      name: Akkoro Walk Cycle_11
       rect:
         serializedVersion: 2
-        x: 952
+        x: 538
         y: 0
-        width: 952
+        width: 538
         height: 270
       alignment: 9
-      pivot: {x: 0.235, y: 0.555}
+      pivot: {x: 0.43, y: 0.52}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fe87032f33ab5664aaeeec927431e559
+      spriteID: df4d3ab2d87ee63448eb07159338cbe5
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: akkoro-walk-1_9
+      name: Akkoro Walk Cycle_12
       rect:
         serializedVersion: 2
-        x: 1904
+        x: 1076
         y: 0
-        width: 952
+        width: 538
         height: 270
       alignment: 9
-      pivot: {x: 0.235, y: 0.555}
+      pivot: {x: 0.43, y: 0.52}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e1ddaefd3cab056458cc97f694210b36
+      spriteID: 2f89ef795f844b44883a32aa12224578
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: akkoro-walk-1_10
+      name: Akkoro Walk Cycle_13
       rect:
         serializedVersion: 2
-        x: 2856
+        x: 1614
         y: 0
-        width: 952
+        width: 538
         height: 270
       alignment: 9
-      pivot: {x: 0.235, y: 0.555}
+      pivot: {x: 0.43, y: 0.52}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e462237aa5f281146a09d0eec1e3696f
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: akkoro-walk-1_11
-      rect:
-        serializedVersion: 2
-        x: 3808
-        y: 0
-        width: 952
-        height: 270
-      alignment: 9
-      pivot: {x: 0.235, y: 0.555}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5510096845f3bfd4ba93cc1058c41c15
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: akkoro-walk-1_12
-      rect:
-        serializedVersion: 2
-        x: 4760
-        y: 0
-        width: 952
-        height: 270
-      alignment: 9
-      pivot: {x: 0.235, y: 0.555}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 15b34e11a0044ba41a56dd1b5a164b3c
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: akkoro-walk-1_13
-      rect:
-        serializedVersion: 2
-        x: 5712
-        y: 0
-        width: 952
-        height: 270
-      alignment: 9
-      pivot: {x: 0.235, y: 0.555}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a097d94b32c81934091d89cd09925e5c
+      spriteID: fa8385113fe488840a61e2af779f4a72
       vertices: []
       indices: 
       edges: []
@@ -378,7 +378,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 25cda647199175749a26db1422dc4c0d
+    spriteID: 7b87bd9eaa8ee754d8bac15690b0a9ee
     vertices: []
     indices: 
     edges: []

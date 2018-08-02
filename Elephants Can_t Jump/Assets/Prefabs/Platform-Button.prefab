@@ -360,6 +360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 095ba5ac6f307a54ab6ab8cae7c24d07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  active: 0
   isPressed: 0
   press: 0
   StartP: {fileID: 4160036132178886}

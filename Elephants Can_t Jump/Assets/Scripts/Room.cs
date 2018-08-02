@@ -13,8 +13,7 @@ public class Room : MonoBehaviour {
 
     void Awake()
     {
-        
-        thisRoom = GetComponent<Room>();
+        thisRoom = this;
     }
     private void Start()
     {
@@ -23,6 +22,11 @@ public class Room : MonoBehaviour {
     }
     void Update()
     {
+        if(player != CameraCenterpoints.player.transform)
+        {
+            player = CameraCenterpoints.player.transform;
+        }
+
 
         // if the player is outside the bounds of the room
         if (!(player.position.x < transform.position.x - Variables.horzExtent ||

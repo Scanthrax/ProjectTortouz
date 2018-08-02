@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class BackgroundRegister : MonoBehaviour
 {
-    private GameObject Player;
-    public GameObject Light;
-    private bool start;
-    public float interval = 1;
+    private Coroutine lastRoutine; //keeps track of coroutine
+    public GameObject Light; //Light object
+    public float interval; //time between change of lights from red to yellow to green
+    public bool shoot; //keeps track of when platform shoots
 
 
     // Use this for initialization
     void Start ()
     {
-        start = false;
-
+        shoot = false;
 	}
 	
 	// Update is called once per frame
@@ -25,22 +24,37 @@ public class BackgroundRegister : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //start countdown when player is on platform
         if(collision.CompareTag("Player"))
         {
-            StartCoroutine("cntdwn");
+            lastRoutine = StartCoroutine(cntdwn());
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        //stops everything if the player exits area
+        if (collision.CompareTag("Player"))
+        {
+            Light.GetComponent<lightControl>().TurnGray();
+            StopCoroutine(lastRoutine);
         }
     }
 
     IEnumerator cntdwn()
     {
-        Debug.Log("Red");
+        //red
         Light.GetComponent<lightControl>().TurnRed();
-        yield return new WaitForSeconds(1.5f);
-        Debug.Log("Yellow");
+        yield return new WaitForSeconds(interval);
+        //yellow
         Light.GetComponent<lightControl>().TurnYellow();
-        yield return new WaitForSeconds(.1f);
-        Debug.Log("Green");
+        yield return new WaitForSeconds(interval);
+        //green
         Light.GetComponent<lightControl>().TurnGreen();
-        yield return new WaitForSeconds(.1f);
+        yield return new WaitForSeconds(interval);
+        //shoot
+        shoot = true;
     }
+
+
 }
