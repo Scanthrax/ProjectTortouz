@@ -21,6 +21,8 @@ public class AkkoroDetach : MonoBehaviour {
             print("Should be detaching!");
             gameObject.SetActive(false);
             Akkoro.transform.position = transform.position;
+            Akkoro.GetComponent<SpriteRenderer>().flipX = GetComponent<SpriteRenderer>().flipX;
+            Akkoro.GetComponent<PlayerMovement>().room = GetComponent<PlayerMovement>().room;
             Akkoro.SetActive(true);
         }
 	}

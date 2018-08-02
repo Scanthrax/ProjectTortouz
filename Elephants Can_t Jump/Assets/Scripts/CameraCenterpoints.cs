@@ -7,7 +7,6 @@ public class CameraCenterpoints : MonoBehaviour {
 
     Camera cam;
 
-    public GameObject[] playerGameObjects;
     public static GameObject player;
 
     float lerp;
@@ -16,10 +15,7 @@ public class CameraCenterpoints : MonoBehaviour {
     public delegate void RoomName();
     public static event RoomName roomName;
 
-    private void Awake()
-    {
-        player = playerGameObjects[0];
-    }
+
 
     void Start ()
     {

@@ -228,6 +228,11 @@ public class PlayerMovement : MonoBehaviour
         faceDir = 1;
     }
 
+    private void OnEnable()
+    {
+        CameraCenterpoints.player = gameObject;
+    }
+
     #region anim functions
     public void enableAttack()
     {
@@ -366,9 +371,9 @@ public class PlayerMovement : MonoBehaviour
             if (i != faceDir)
             {
                 faceDir = i;
-                rend.flipX = !rend.flipX;
                 bc.offset = new Vector2(-bc.offset.x, bc.offset.y);
             }
+            rend.flipX = faceDir == -1 ? true : false;
         }
         
 
