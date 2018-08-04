@@ -276,7 +276,6 @@ public class PlayerMovement : MonoBehaviour
         #endregion
 
         #region Find out which walls Akkoro is currently grounded to
-
         if(groundingBoxes[0])
         {
             groundingTB = Grounding.Bottom;
@@ -459,7 +458,10 @@ public class PlayerMovement : MonoBehaviour
         }
         
 
-        
+        if(movement == Movement.Ground)
+        {
+            rend.flipY = false;
+        }
         #endregion
 
 
@@ -737,6 +739,11 @@ public class PlayerMovement : MonoBehaviour
                 }
                 #endregion
 
+                if(thisTentacle.dist > tentacleRange)
+                {
+                    ClampTentacles(thisTentacle);
+                }
+
                 if (Input.GetKey(Variables.launch) && otherTentacle.state == Tentacles.Anchored)
                 {
                     #region retract both tentacles
@@ -763,7 +770,7 @@ public class PlayerMovement : MonoBehaviour
                     thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.position, transform.position);
                 #endregion
 
-                ClampTentacles(thisTentacle);
+                //ClampTentacles(thisTentacle);
                 #endregion
 
                 UpdateTentacleLength(thisTentacle);
@@ -852,37 +859,37 @@ public class PlayerMovement : MonoBehaviour
 
     void ClampTentacles(Tentacle tent)
     {
-        //// find the point on the edge of the radius
-        //Vector2 circlePoint = CirclePoint(tent.anchorPos.position, tentacleRange, (Vector2.SignedAngle(Vector2.right, tent.rot.right * -1)));
+        // find the point on the edge of the radius
+        Vector2 circlePoint = CirclePoint(tent.anchorPos.position, tentacleRange, (Vector2.SignedAngle(Vector2.right, tent.rot.right * -1)));
 
-        //if (groundingTB == Grounding.None && groundingLR == Grounding.None)
-        //{
-        //    transform.position = new Vector2(circlePoint.x, circlePoint.y);
-        //    rb.velocity = Vector2.zero;
-        //}
-        //// Only adjust the x value of the transform when on ceiling or ground
-        //else if (groundingTB != Grounding.None)
-        //{
-        //    transform.position = new Vector2(circlePoint.x, transform.position.y);
-        //    //rb.velocity = new Vector2(0f, rb.velocity.y);
-        //}
-        //// Only adjust the y value of the transform when on walls
-        //else if (groundingLR != Grounding.None)
-        //{
-        //    transform.position = new Vector2(transform.position.x, circlePoint.y);
-        //    rb.velocity = new Vector2(rb.velocity.x, 0f);
-        //}
-        ////Adjust both x & y during any other case
-        //else
-        //{
-        //    transform.position = new Vector2(circlePoint.x, circlePoint.y);
-        //    rb.velocity = Vector2.zero;
-        //}
+        if (groundingTB == Grounding.None && groundingLR == Grounding.None)
+        {
+            transform.position = new Vector2(circlePoint.x, circlePoint.y);
+            rb.velocity = Vector2.zero;
+        }
+        // Only adjust the x value of the transform when on ceiling or ground
+        else if (groundingTB != Grounding.None)
+        {
+            transform.position = new Vector2(circlePoint.x, transform.position.y);
+            //rb.velocity = new Vector2(0f, rb.velocity.y);
+        }
+        // Only adjust the y value of the transform when on walls
+        else if (groundingLR != Grounding.None)
+        {
+            transform.position = new Vector2(transform.position.x, circlePoint.y);
+            rb.velocity = new Vector2(rb.velocity.x, 0f);
+        }
+        //Adjust both x & y during any other case
+        else
+        {
+            transform.position = new Vector2(circlePoint.x, circlePoint.y);
+            rb.velocity = Vector2.zero;
+        }
 
 
-        var allowedPos = transform.position - tent.anchorPos.position;
-        allowedPos = Vector2.ClampMagnitude(allowedPos, tentacleRange);
-        transform.position = new Vector2(tent.anchorPos.position.x + allowedPos.x, tent.anchorPos.position.y + allowedPos.y);
+        //var allowedPos = transform.position - tent.anchorPos.position;
+        //allowedPos = Vector2.ClampMagnitude(allowedPos, tentacleRange);
+        //transform.position = new Vector2(tent.anchorPos.position.x + allowedPos.x, tent.anchorPos.position.y + allowedPos.y);
     }
 
     /// <summary>
@@ -944,8 +951,19 @@ public class PlayerMovement : MonoBehaviour
         }
         #endregion
 
-        
-
+        #region Collect alien
+        if(collision.gameObject.layer == LayerMask.NameToLayer("AlienCollectable"))
+        {
+            AlienObjects thisAlien = collision.GetComponent<AlienCollectable>().alien;
+            AlienCollectables.alienDictionary[thisAlien.name] = true;
+            if(AlienCollectables.alienDictionary[thisAlien.name])
+            {
+                print("Collected the alien!");
+                Destroy(collision.gameObject);
+            }
+            
+        }
+        #endregion
     }
 
     private void OnTriggerExit2D(Collider2D collision)

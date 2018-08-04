@@ -3319,8 +3319,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 753587454}
-  - component: {fileID: 753587456}
   - component: {fileID: 753587455}
+  - component: {fileID: 753587456}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -3358,15 +3358,13 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 753587453}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d593192babfeeab4186784a389df20ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 0ea1408bd0c007645bfa3b69e2797837, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  publicUnits:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  aliens:
+  - {fileID: 11400000, guid: 0d8c53e33d211044884287e2eec4ffe8, type: 2}
 --- !u!1 &755366953 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1230566603385340, guid: f6c41853ae2a68f458798385d92300c8,
@@ -4353,7 +4351,8 @@ GameObject:
   - component: {fileID: 1028321066}
   - component: {fileID: 1028321065}
   - component: {fileID: 1028321064}
-  m_Layer: 0
+  - component: {fileID: 1028321067}
+  m_Layer: 12
   m_Name: Alien
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4425,12 +4424,37 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1028321063}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 162.5, y: 8, z: 1.5}
+  m_LocalPosition: {x: 138, y: -11, z: 1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1028321067
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1028321063}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 5.38, y: 2.7}
+    newSize: {x: 0.2, y: 0.2}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2, y: 2}
+  m_EdgeRadius: 0
 --- !u!1001 &1049779989
 Prefab:
   m_ObjectHideFlags: 0

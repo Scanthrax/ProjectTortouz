@@ -14,4 +14,13 @@ public class AlienCollectable : MonoBehaviour {
             rend.sprite = alien.sprite;
         }
     }
+
+    private void Start()
+    {
+        if (alien != null && !AlienCollectables.alienDictionary[alien.name])
+        {
+            gameObject.SetActive(true);
+        }
+        else gameObject.SetActive(false);
+    }
 }
