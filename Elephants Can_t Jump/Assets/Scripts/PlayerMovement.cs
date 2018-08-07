@@ -531,18 +531,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        #region movement
-        // only move horizontally at reduced rate while airborne
-        if (movement == Movement.Airborne)
-        {
-            rb.AddForce(new Vector2(hor * 100f * 0.25f, 0f));
-        }
-        // otherwise move vertically & horizontally
-        else
-        {
-            rb.AddForce(new Vector2( hor * 100, vert * 100));
-        }
-        #endregion
+
+        rb.AddForce(new Vector2(hor * 100, vert * 100));
 
         // while grounded to any surface
         if (movement != Movement.Airborne)
@@ -695,7 +685,7 @@ public class PlayerMovement : MonoBehaviour
                 #endregion
 
                 #region calculate distance
-                thisTentacle.rot.right = thisTentacle.anchorPos.position - transform.position;
+                thisTentacle.rot.right = thisTentacle.anchorPos.position - thisTentacle.rot.position;
                 
                 #endregion
 
@@ -727,7 +717,7 @@ public class PlayerMovement : MonoBehaviour
             case Tentacles.Anchored:
 
                 #region Aim at anchor
-                thisTentacle.rot.right = thisTentacle.anchorPos.position - transform.position;
+                thisTentacle.rot.right = thisTentacle.anchorPos.position - thisTentacle.rot.position;
                 #endregion
 
                 #region Press key to retract
@@ -761,16 +751,11 @@ public class PlayerMovement : MonoBehaviour
 
                 #region Adjust tentacle based on distance
                 thisTentacle.scale = magicNumber * thisTentacle.dist;
-                UpdateTentacleLength(thisTentacle);
                 #endregion
 
-                #region Keep Akkoro clamped between the range of the tentacles
                 #region tentacle distance
                 if (thisTentacle.anchorPos != null)
-                    thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.position, transform.position);
-                #endregion
-
-                //ClampTentacles(thisTentacle);
+                    thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.position, thisTentacle.rot.position);
                 #endregion
 
                 UpdateTentacleLength(thisTentacle);
@@ -1035,7 +1020,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 lerp = 0f;
                 goBack = false;
-                Controller.switchUnits(Controlling.Both, Vector3.zero);
+                
             }
         }
     }

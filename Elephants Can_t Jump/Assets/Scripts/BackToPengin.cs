@@ -51,7 +51,7 @@ public class BackToPengin : MonoBehaviour
             {
                 lerp = 0f;
                 goBack = false;
-                Controller.switchUnits(Controlling.Both, Vector3.zero);
+                
             }
         }
     }

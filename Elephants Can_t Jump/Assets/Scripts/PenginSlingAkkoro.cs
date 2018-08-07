@@ -79,7 +79,7 @@ public class PenginSlingAkkoro : MonoBehaviour
                 gameObject.SetActive(false);
                 Akkoro.transform.position = transform.position;
                 Akkoro.GetComponent<PlayerMovement>().room = GetComponent<PlayerMovement>().room;
-                Akkoro.GetComponent<PlayerMovement>().movement = Movement.Ground;
+                Akkoro.GetComponent<PlayerMovement>().movement = Movement.Airborne;
                 Akkoro.SetActive(true);
                 Pengin.transform.position = transform.position;
                 Pengin.SetActive(true);

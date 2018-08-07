@@ -22,7 +22,7 @@ public class AttachToPengin : MonoBehaviour
         {
             if (Input.GetKeyDown(attach))
             {
-                Controller.switchUnits(Controlling.Both, Vector3.zero);
+                
             }
         }
     }
