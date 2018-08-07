@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utility;
 
-public class AkkoroPengin : MonoBehaviour
+public class PenginSlingAkkoro : MonoBehaviour
 {
     public KeyCode launchPrep;
     public KeyCode launchButton;
-    public KeyCode detach;
     
     public Transform aimLaunch;
 
@@ -28,6 +27,10 @@ public class AkkoroPengin : MonoBehaviour
 
     PlayerMovement playerMovement;
     public static bool prepLaunch;
+
+
+    public GameObject Akkoro;
+    public GameObject Pengin;
 
     void Start()
     {
@@ -55,7 +58,7 @@ public class AkkoroPengin : MonoBehaviour
     void Update ()
     {
         #region launch
-        if (Input.GetKey(launchPrep) && false && (playerMovement.leftTentacle.state == Tentacles.None && playerMovement.rightTentacle.state == Tentacles.None))
+        if (Input.GetKey(launchPrep) && (playerMovement.leftTentacle.state == Tentacles.None && playerMovement.rightTentacle.state == Tentacles.None))
         {
             print("should be preparing for launch!");
             prepLaunch = true;
@@ -72,9 +75,16 @@ public class AkkoroPengin : MonoBehaviour
 
             if (Input.GetKeyDown(launchButton))
             {
-                Controller.switchUnits(Controlling.Akkoro, aimLaunch.right.normalized * launchForce);
-                BackToPengin.isSlinging = true;
                 enablePoints(false);
+                gameObject.SetActive(false);
+                Akkoro.transform.position = transform.position;
+                Akkoro.GetComponent<PlayerMovement>().room = GetComponent<PlayerMovement>().room;
+                Akkoro.GetComponent<PlayerMovement>().movement = Movement.Ground;
+                Akkoro.SetActive(true);
+                Pengin.transform.position = transform.position;
+                Pengin.SetActive(true);
+                Akkoro.GetComponent<Rigidbody2D>().AddForce(aimLaunch.right * launchForce);
+                print(launchForce);
             }
         }
         else
@@ -85,12 +95,6 @@ public class AkkoroPengin : MonoBehaviour
         #endregion
 
 
-        #region detach
-        if (Input.GetKeyDown(detach) && !onEnable)
-        {
-            Controller.switchUnits(Controlling.Akkoro, Vector3.zero);
-        }
-        #endregion
         onEnable = false;
     }
 

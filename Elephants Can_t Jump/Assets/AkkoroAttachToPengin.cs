@@ -17,7 +17,7 @@ public class AkkoroAttachToPengin : MonoBehaviour {
     void Update () {
 		if(Input.GetKeyDown(key))
         {
-            //Pengin.SetActive(false);
+            Pengin.SetActive(false);
             gameObject.SetActive(false);
             AkkoroAndPengin.GetComponent<SpriteRenderer>().flipX = GetComponent<SpriteRenderer>().flipX;
             AkkoroAndPengin.transform.position = transform.position;

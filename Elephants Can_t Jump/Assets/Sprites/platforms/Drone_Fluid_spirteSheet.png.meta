@@ -1,17 +1,13 @@
 fileFormatVersion: 2
-guid: ed01b58a1f5844d47a208d421db60ab5
+guid: 1e106973437ed00499af8228c48d781c
 TextureImporter:
   fileIDToRecycleName:
-    21300000: AP_wallwalk1_0
-    21300002: AP_wallwalk1_1
-    21300004: AP_wallwalk1_2
-    21300006: AP_wallwalk1_3
-    21300008: AP_wallwalk1_4
-    21300010: AP_wallwalk1_5
-    21300012: AP_wallwalk1_6
-    21300014: AP_wallwalk1_7
-    21300016: AP_wallwalk1_8
-    21300018: AP_wallwalk1_9
+    21300000: Drone_Fluid_spirteSheet_0
+    21300002: Drone_Fluid_spirteSheet_1
+    21300004: Drone_Fluid_spirteSheet_2
+    21300006: Drone_Fluid_spirteSheet_3
+    21300008: Drone_Fluid_spirteSheet_4
+    21300010: Drone_Fluid_spirteSheet_5
   externalObjects: {}
   serializedVersion: 5
   mipmaps:
@@ -53,7 +49,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 90
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -92,201 +88,121 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: AP_wallwalk1_0
+      name: Drone_Fluid_spirteSheet_0
       rect:
         serializedVersion: 2
-        x: 21
-        y: 572
-        width: 290
-        height: 436
-      alignment: 9
-      pivot: {x: 0.345, y: 0.5}
+        x: 0
+        y: 808
+        width: 901
+        height: 404
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fd36b69aefc6ca14a8ddd32163becef8
+      spriteID: ce7127a921f29284fa8a92e5bb4392fb
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AP_wallwalk1_1
+      name: Drone_Fluid_spirteSheet_1
       rect:
         serializedVersion: 2
-        x: 353
-        y: 572
-        width: 290
-        height: 436
-      alignment: 9
-      pivot: {x: 0.345, y: 0.5}
+        x: 901
+        y: 808
+        width: 901
+        height: 404
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 716c8657668a9184ca25c197c291515e
+      spriteID: 20cf13f2554b9b64c9fc0d790b29a8bd
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AP_wallwalk1_2
+      name: Drone_Fluid_spirteSheet_2
       rect:
         serializedVersion: 2
-        x: 693
-        y: 534
-        width: 281
-        height: 473
-      alignment: 9
-      pivot: {x: 0.345, y: 0.5}
+        x: 0
+        y: 404
+        width: 901
+        height: 404
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 542357f5d6dea89438f4824abfcde0af
+      spriteID: a7d99bd0de1b4144887e6317b7015ad9
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AP_wallwalk1_3
+      name: Drone_Fluid_spirteSheet_3
       rect:
         serializedVersion: 2
-        x: 1025
-        y: 534
-        width: 281
-        height: 473
-      alignment: 9
-      pivot: {x: 0.345, y: 0.5}
+        x: 901
+        y: 404
+        width: 901
+        height: 404
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7b0fa1488bd734443b4a9fc241d2d810
+      spriteID: 202d54a34e0f2f5439fb95ecf15e0fc8
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AP_wallwalk1_4
+      name: Drone_Fluid_spirteSheet_4
       rect:
         serializedVersion: 2
-        x: 1367
-        y: 563
-        width: 270
-        height: 431
-      alignment: 9
-      pivot: {x: 0.345, y: 0.5}
+        x: 0
+        y: 0
+        width: 901
+        height: 404
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 61d8f566380244249b24c44bafa37737
+      spriteID: 67fca207de273b3428a69fdbf9c375c4
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AP_wallwalk1_5
+      name: Drone_Fluid_spirteSheet_5
       rect:
         serializedVersion: 2
-        x: 28
-        y: 48
-        width: 281
-        height: 440
-      alignment: 9
-      pivot: {x: 0.345, y: 0.5}
+        x: 901
+        y: 0
+        width: 901
+        height: 404
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 078e9f5464b078043a2813f82873eaeb
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: AP_wallwalk1_6
-      rect:
-        serializedVersion: 2
-        x: 354
-        y: 63
-        width: 288
-        height: 452
-      alignment: 9
-      pivot: {x: 0.345, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9fdffbb088d4ee54bae62971ade6e18d
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: AP_wallwalk1_7
-      rect:
-        serializedVersion: 2
-        x: 667
-        y: 83
-        width: 307
-        height: 415
-      alignment: 9
-      pivot: {x: 0.345, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 37aad5e30c1ce7b4995ab96f3693dcf6
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: AP_wallwalk1_8
-      rect:
-        serializedVersion: 2
-        x: 1015
-        y: 61
-        width: 294
-        height: 437
-      alignment: 9
-      pivot: {x: 0.345, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7185e8aec5a149942b4c8817129dce2f
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: AP_wallwalk1_9
-      rect:
-        serializedVersion: 2
-        x: 1345
-        y: 34
-        width: 290
-        height: 462
-      alignment: 9
-      pivot: {x: 0.345, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3f234c096a49ac74599dc957b21de2fa
+      spriteID: 32dac8e78fe51d14595184fb067d3fd2
       vertices: []
       indices: 
       edges: []
@@ -294,7 +210,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 111980f58c9ab1346bb7d6a8e028d460
+    spriteID: deb176ef6237ec34c941bbee91a0bd21
     vertices: []
     indices: 
     edges: []

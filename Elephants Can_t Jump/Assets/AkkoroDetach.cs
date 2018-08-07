@@ -6,7 +6,7 @@ public class AkkoroDetach : MonoBehaviour {
 
     public KeyCode key;
     public GameObject Akkoro;
-    //public GameObject Pengin;
+    public GameObject Pengin;
 
 
     private void OnEnable()
@@ -16,7 +16,7 @@ public class AkkoroDetach : MonoBehaviour {
 
     void Update ()
     {
-		if(Input.GetKeyDown(key))
+		if(Input.GetKeyDown(key) && !PenginSlingAkkoro.prepLaunch)
         {
             print("Should be detaching!");
             gameObject.SetActive(false);
@@ -24,6 +24,9 @@ public class AkkoroDetach : MonoBehaviour {
             Akkoro.GetComponent<SpriteRenderer>().flipX = GetComponent<SpriteRenderer>().flipX;
             Akkoro.GetComponent<PlayerMovement>().room = GetComponent<PlayerMovement>().room;
             Akkoro.SetActive(true);
+            Pengin.transform.position = transform.position;
+            Pengin.GetComponent<SpriteRenderer>().flipX = GetComponent<SpriteRenderer>().flipX;
+            Pengin.SetActive(true);
         }
 	}
 }

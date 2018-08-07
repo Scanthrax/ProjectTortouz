@@ -581,7 +581,7 @@ public class PlayerMovement : MonoBehaviour
         // launch
         if (launch)
         {
-            rb.AddForce(launchDir.right * SpringCalc2());
+            rb.AddForce(Vector2.ClampMagnitude(launchDir.right * SpringCalc2(),10000f));
             launch = false;
         }
 
@@ -623,7 +623,7 @@ public class PlayerMovement : MonoBehaviour
                 #endregion
 
                 #region Expand the Anchor tentacle when in range of anchor & key is pressed
-                if ((Input.GetKey(thisTentacle.key) || Input.GetMouseButton(thisTentacle.mouseButton)) && !AkkoroPengin.prepLaunch)
+                if ((Input.GetKey(thisTentacle.key) || Input.GetMouseButton(thisTentacle.mouseButton)) && !PenginSlingAkkoro.prepLaunch)
                 {
                     // there is only a single point
                     if (anchorPositions.Count == 1)
@@ -817,6 +817,10 @@ public class PlayerMovement : MonoBehaviour
         //{
         //    thisTentacle.state = Tentacles.Retracting;
         //}
+
+        thisTentacle.rot.transform.position = new Vector3(transform.position.x + (-0.47f * Mathf.Sign(faceDir)), transform.position.y, transform.position.z);
+
+
     }
         
 
