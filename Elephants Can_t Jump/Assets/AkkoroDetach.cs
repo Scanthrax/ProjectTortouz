@@ -18,7 +18,6 @@ public class AkkoroDetach : MonoBehaviour {
     {
 		if(Input.GetKeyDown(key) && !PenginSlingAkkoro.prepLaunch)
         {
-            print("Should be detaching!");
             gameObject.SetActive(false);
             Akkoro.transform.position = transform.position;
             Akkoro.GetComponent<SpriteRenderer>().flipX = GetComponent<SpriteRenderer>().flipX;

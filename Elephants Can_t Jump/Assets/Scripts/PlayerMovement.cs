@@ -250,6 +250,7 @@ public class PlayerMovement : MonoBehaviour
     {
         action = false;
     }
+
     public void GroundSlam()
     {
         // find all items within 10 unit radius
@@ -547,12 +548,19 @@ public class PlayerMovement : MonoBehaviour
             {
                 rb.velocity = new Vector2(rb.velocity.x, 0f);
             }
+
             // make sure we do not exceed max speed
             if (rb.velocity.magnitude > maxSpeed)
             {
                 rb.velocity = rb.velocity.normalized * maxSpeed;
             }
         }
+        else
+        {
+            rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -20, 20), rb.velocity.y);
+        }
+
+
 
         #region Clamp tentacles
         //if (!launch)
@@ -848,6 +856,7 @@ public class PlayerMovement : MonoBehaviour
 
     void ClampTentacles(Tentacle tent)
     {
+        print("CLAMP");
         // find the point on the edge of the radius
         Vector2 circlePoint = CirclePoint(tent.anchorPos.position, tentacleRange, (Vector2.SignedAngle(Vector2.right, tent.rot.right * -1)));
 
@@ -1023,5 +1032,10 @@ public class PlayerMovement : MonoBehaviour
                 
             }
         }
+    }
+
+    public void Launch(Vector2 vec)
+    {
+        rb.AddForce(vec);
     }
 }
