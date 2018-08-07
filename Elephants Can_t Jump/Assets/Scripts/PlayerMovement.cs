@@ -61,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
     public Grounding groundingLR;
     public Grounding groundingTB;
 
+    public float tentacleOffset;
 
     /// <summary>
     /// Ints used to determine direction
@@ -811,7 +812,7 @@ public class PlayerMovement : MonoBehaviour
         //    thisTentacle.state = Tentacles.Retracting;
         //}
 
-        thisTentacle.rot.transform.position = new Vector3(transform.position.x + (-0.47f * Mathf.Sign(faceDir)), transform.position.y, transform.position.z);
+        thisTentacle.rot.transform.position = new Vector3(transform.position.x + (-tentacleOffset * Mathf.Sign(faceDir)), transform.position.y, transform.position.z);
 
 
     }

@@ -11,6 +11,8 @@ public class DoorMove : MonoBehaviour
     public Transform Target; //target point
     public float speed;         //speed
     private Button button;
+
+    public Color color;
     // Use this for initialization
     void Start()
     {
@@ -34,6 +36,13 @@ public class DoorMove : MonoBehaviour
             }
         }
 
+    }
+
+
+    private void OnValidate()
+    {
+        door.GetComponent<SpriteRenderer>().color = color;
+        ButtonSystem.GetComponentInChildren<SpriteRenderer>().color = color;
     }
 
     //gizmos to help see the path of the platform
