@@ -303,14 +303,17 @@ public class PlayerMovement : MonoBehaviour
             groundingLR = Grounding.None;
         }
 
-        if (groundingTB != Grounding.Bottom)
-        {
-            movement = Movement.Airborne;
-        }
-        else if (groundingTB == Grounding.Bottom)
-        {
-            movement = Movement.Ground;
-        }
+        //if (groundTimer >= 5)
+        //{
+            if (groundingTB != Grounding.Bottom && movement != Movement.Launch)
+            {
+                movement = Movement.Airborne;
+            }
+            else if (groundingTB == Grounding.Bottom)
+            {
+                movement = Movement.Ground;
+            }
+        //}
         #endregion
 
         #region Holding spacebar enables grip
@@ -532,33 +535,38 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (groundTimer < 5)
-        {
-            groundTimer++;
-            movement = Movement.Airborne;
-        }
-        else if(groundingTB == Grounding.Bottom)
-        {
-            movement = Movement.Ground;
-        }
-
-        /// this is causing problems with air speed
-        rb.AddForce(new Vector2(hor * 100, vert * 100));
-
         // launch
         if (launch)
         {
-            rb.AddForce(Vector2.ClampMagnitude(launchDir.right * SpringCalc2(),10000f));
+            rb.AddForce(Vector2.ClampMagnitude(launchDir.right * SpringCalc2(), 10000f));
             launch = false;
         }
 
+        rb.AddForce(new Vector2(hor * 100, vert * 100));
+
+        //if (groundTimer < 5)
+        //{
+        //    groundTimer++;
+        //    movement = Movement.Launch;
+        //}
+        //else if(groundingTB == Grounding.Bottom)
+        //{
+        //    movement = Movement.Ground;
+        //}
 
 
-        if(rb.velocity.magnitude >= 10 && (movement == Movement.Ground || movement == Movement.Wallclimb))
+
+
+
+        if (movement == Movement.Ground || movement == Movement.Wallclimb)
         {
-            rb.velocity = new Vector2(rb.velocity.normalized.x * 10, rb.velocity.normalized.y * 10);
+            if (rb.velocity.magnitude >= 10f)
+            {
+                rb.velocity = Vector2.ClampMagnitude(rb.velocity, 10f);
+            }
         }
-        
+
+
     }
 
 
@@ -709,7 +717,7 @@ public class PlayerMovement : MonoBehaviour
                     #endregion
                     launch = true;
                     groundTimer = 0;
-                    movement = Movement.Airborne;
+                    movement = Movement.Launch;
                     //thisTentacle.clampTent = false;
                     //otherTentacle.clampTent = false;
                 }
@@ -821,27 +829,39 @@ public class PlayerMovement : MonoBehaviour
 
         if (groundingTB == Grounding.None && groundingLR == Grounding.None)
         {
-            transform.position = new Vector2(circlePoint.x, circlePoint.y);
+            //transform.position = new Vector2(circlePoint.x, circlePoint.y);
             //rb.velocity = Vector2.zero;
         }
         // Only adjust the x value of the transform when on ceiling or ground
         else if (groundingTB != Grounding.None)
         {
-            transform.position = new Vector2(circlePoint.x, transform.position.y);
+            //transform.position = new Vector2(circlePoint.x, transform.position.y);
             //rb.velocity = new Vector2(0f, rb.velocity.y);
         }
         // Only adjust the y value of the transform when on walls
         else if (groundingLR != Grounding.None)
         {
-            transform.position = new Vector2(transform.position.x, circlePoint.y);
+            //transform.position = new Vector2(transform.position.x, circlePoint.y);
             //rb.velocity = new Vector2(rb.velocity.x, 0f);
         }
         //Adjust both x & y during any other case
         else
         {
-            transform.position = new Vector2(circlePoint.x, circlePoint.y);
+            //transform.position = new Vector2(circlePoint.x, circlePoint.y);
             //rb.velocity = Vector2.zero;
         }
+
+
+        //mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //var allowedPos = mousePos - initialPos;
+        //allowedPos = Vector3.ClampMagnitude(allowedPos, 2.0);
+        //transform.position = initialPos + allowedPos;
+
+        var initPos = tent.anchorPos.position;
+        var allowedPos = -initPos + transform.position;
+        allowedPos = Vector2.ClampMagnitude(allowedPos, tentacleRange);
+        transform.position = tent.anchorPos.position + allowedPos;
+
     }
 
     /// <summary>

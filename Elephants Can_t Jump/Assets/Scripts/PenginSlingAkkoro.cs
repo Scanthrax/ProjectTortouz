@@ -88,7 +88,7 @@ public class PenginSlingAkkoro : MonoBehaviour
                 pm.room = GetComponent<PlayerMovement>().room;
                 pm.rb.AddForce(aimLaunch.right * launchForce * 1.5f);
                 pm.groundTimer = 0;
-                pm.movement = Movement.Airborne;
+                pm.movement = Movement.Launch;
                 pm.groundingBoxes[0] = false;
                 
 
