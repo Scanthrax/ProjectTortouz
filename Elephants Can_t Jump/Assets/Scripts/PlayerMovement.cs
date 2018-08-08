@@ -37,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
     /// The rigid body component for Akkoro
     /// </summary>
     [Header("Objects & Components")]
-    Rigidbody2D rb;
+    public Rigidbody2D rb;
     /// <summary>
     /// The rotation of this transform will be used to calculate the launch direction of Akkoro
     /// </summary>
@@ -197,7 +197,7 @@ public class PlayerMovement : MonoBehaviour
     PhysicsMaterial2D pmLR = null, pmTB = null;
     public Movement movement;
     bool launch;
-    int groundTimer;
+    public int groundTimer;
     bool clampTentacles;
     public int faceDir;
     public bool[] groundingBoxes = new bool[4];
@@ -224,7 +224,6 @@ public class PlayerMovement : MonoBehaviour
         slingshot = Sling.None;
         bc = GetComponent<BoxCollider2D>();
         anim = GetComponent<Animator>();
-        //gameObject.SetActive(false);
         movement = Movement.Ground;
         faceDir = 1;
     }
@@ -533,49 +532,18 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (groundTimer < 5)
+        {
+            groundTimer++;
+            movement = Movement.Airborne;
+        }
+        else if(groundingTB == Grounding.Bottom)
+        {
+            movement = Movement.Ground;
+        }
 
+        /// this is causing problems with air speed
         rb.AddForce(new Vector2(hor * 100, vert * 100));
-
-        // while grounded to any surface
-        if (movement != Movement.Airborne)
-        {
-            // set horizontal velocity to 0
-            if (hor == 0)
-            {
-                rb.velocity = new Vector2(0f, rb.velocity.y);
-            }
-            // set vertical velocity to 0
-            if (vert == 0)
-            {
-                rb.velocity = new Vector2(rb.velocity.x, 0f);
-            }
-
-            // make sure we do not exceed max speed
-            if (rb.velocity.magnitude > maxSpeed)
-            {
-                rb.velocity = rb.velocity.normalized * maxSpeed;
-            }
-        }
-        else
-        {
-            rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -20, 20), rb.velocity.y);
-        }
-
-
-
-        #region Clamp tentacles
-        //if (!launch)
-        //{
-        //    if (leftTentacle.clampTent)
-        //    {
-        //        ClampTentacles(leftTentacle);
-        //    }
-        //    if (rightTentacle.clampTent)
-        //    {
-        //        ClampTentacles(rightTentacle);
-        //    }
-        //}
-        #endregion
 
         // launch
         if (launch)
@@ -586,20 +554,10 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-        // give a small window of time where we cannot ground ourselves, used immediately when launching
-        if (groundTimer < 10)
+        if(rb.velocity.magnitude >= 10 && (movement == Movement.Ground || movement == Movement.Wallclimb))
         {
-            groundTimer++;
+            rb.velocity = new Vector2(rb.velocity.normalized.x * 10, rb.velocity.normalized.y * 10);
         }
-        else
-        {
-            // detect when we hit the ground
-            if (groundingTB == Grounding.Bottom && movement == Movement.Airborne)
-            {
-                movement = Movement.Ground;
-            }
-        }
-
         
     }
 
@@ -864,7 +822,7 @@ public class PlayerMovement : MonoBehaviour
         if (groundingTB == Grounding.None && groundingLR == Grounding.None)
         {
             transform.position = new Vector2(circlePoint.x, circlePoint.y);
-            rb.velocity = Vector2.zero;
+            //rb.velocity = Vector2.zero;
         }
         // Only adjust the x value of the transform when on ceiling or ground
         else if (groundingTB != Grounding.None)
@@ -876,19 +834,14 @@ public class PlayerMovement : MonoBehaviour
         else if (groundingLR != Grounding.None)
         {
             transform.position = new Vector2(transform.position.x, circlePoint.y);
-            rb.velocity = new Vector2(rb.velocity.x, 0f);
+            //rb.velocity = new Vector2(rb.velocity.x, 0f);
         }
         //Adjust both x & y during any other case
         else
         {
             transform.position = new Vector2(circlePoint.x, circlePoint.y);
-            rb.velocity = Vector2.zero;
+            //rb.velocity = Vector2.zero;
         }
-
-
-        //var allowedPos = transform.position - tent.anchorPos.position;
-        //allowedPos = Vector2.ClampMagnitude(allowedPos, tentacleRange);
-        //transform.position = new Vector2(tent.anchorPos.position.x + allowedPos.x, tent.anchorPos.position.y + allowedPos.y);
     }
 
     /// <summary>
@@ -983,6 +936,7 @@ public class PlayerMovement : MonoBehaviour
     {
         #region calculate collision impact
         if (collision.relativeVelocity.magnitude > 40)
+        { }
             // we have a hit!
         #endregion
 
@@ -1035,8 +989,4 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void Launch(Vector2 vec)
-    {
-        rb.AddForce(vec);
-    }
 }

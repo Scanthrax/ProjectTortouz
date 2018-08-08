@@ -385,6 +385,7 @@ GameObject:
   - component: {fileID: 84955730}
   - component: {fileID: 84955729}
   - component: {fileID: 84955736}
+  - component: {fileID: 84955737}
   m_Layer: 0
   m_Name: Akkoro
   m_TagString: Player
@@ -410,9 +411,10 @@ MonoBehaviour:
   maxStamina: 120
   stamina: 0
   storeParent: {fileID: 0}
+  rb: {fileID: 84955732}
   launchDir: {fileID: 0}
   attackCollider: {fileID: 0}
-  pengin: {fileID: 0}
+  pengin: {fileID: 199872540}
   grounding: 9
   groundingLR: 0
   groundingTB: 0
@@ -455,6 +457,7 @@ MonoBehaviour:
   room: {fileID: 0}
   isSliding: 0
   movement: 0
+  groundTimer: 0
   faceDir: 0
   groundingBoxes: 00000000
   wallbreakCol: {fileID: 0}
@@ -511,7 +514,7 @@ Rigidbody2D:
   m_GravityScale: 15
   m_Material: {fileID: 0}
   m_Interpolate: 0
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 0
   m_Constraints: 4
 --- !u!61 &84955733
@@ -602,7 +605,7 @@ Transform:
   - {fileID: 555085480}
   - {fileID: 240472007}
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &84955736
 MonoBehaviour:
@@ -615,9 +618,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91b1dfe8f434fb44088c36b589a09475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  key: 113
+  key: 101
   Pengin: {fileID: 199872535}
   AkkoroAndPengin: {fileID: 755366953}
+--- !u!114 &84955737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 84955728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0cec3f4229de544f858af3a025d77d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 84955732}
+  toss: 0
+  temp: {x: 0, y: 0}
 --- !u!4 &120289964 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4176020281487622, guid: 1dce3e74b5a50a646ad4a01cce302cf3,
@@ -1058,6 +1075,7 @@ GameObject:
   - component: {fileID: 199872540}
   - component: {fileID: 199872539}
   - component: {fileID: 199872536}
+  - component: {fileID: 199872537}
   m_Layer: 0
   m_Name: Pengin
   m_TagString: Player
@@ -1077,6 +1095,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac3d46f4cc81abe42bc1a40740f0eafc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!61 &199872537
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 199872535}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 6, y: 3.7099998}
+    newSize: {x: 6.0000005, y: 3.44}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3, y: 3}
+  m_EdgeRadius: 0
 --- !u!212 &199872539
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1113,7 +1156,7 @@ SpriteRenderer:
   m_SortingLayerID: -1475997179
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300016, guid: 075165f909fd21946872533504f8d3d7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 64732e5073c2d5246846f127d69d2d98, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -3973,12 +4016,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   launchPrep: 32
-  launchButton: 0
+  launchButton: 113
   aimLaunch: {fileID: 1452536480}
   launchForce: 2800
   TrajectoryPointPrefab: {fileID: 2118046818}
   Akkoro: {fileID: 84955728}
   Pengin: {fileID: 199872535}
+--- !u!50 &755366960 stripped
+Rigidbody2D:
+  m_PrefabParentObject: {fileID: 50893150956122872, guid: f6c41853ae2a68f458798385d92300c8,
+    type: 2}
+  m_PrefabInternal: {fileID: 1111349948}
 --- !u!1001 &772680778
 Prefab:
   m_ObjectHideFlags: 0
@@ -4118,7 +4166,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4534273421793462, guid: 978cba79cb5c15143afab15b01e7333f, type: 2}
       propertyPath: m_RootOrder
-      value: 15
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 1126209134316460, guid: 978cba79cb5c15143afab15b01e7333f, type: 2}
       propertyPath: m_Name
@@ -5472,11 +5520,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4560336647356960, guid: f6c41853ae2a68f458798385d92300c8, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 83
+      value: -17.5
       objectReference: {fileID: 0}
     - target: {fileID: 4560336647356960, guid: f6c41853ae2a68f458798385d92300c8, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -1
+      value: -9.5
       objectReference: {fileID: 0}
     - target: {fileID: 4560336647356960, guid: f6c41853ae2a68f458798385d92300c8, type: 2}
       propertyPath: m_LocalPosition.z
@@ -5500,7 +5548,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4560336647356960, guid: f6c41853ae2a68f458798385d92300c8, type: 2}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 1230566603385340, guid: f6c41853ae2a68f458798385d92300c8, type: 2}
       propertyPath: m_IsActive
@@ -5610,6 +5658,16 @@ Prefab:
         type: 2}
       propertyPath: tentacleOffset
       value: 0.47
+      objectReference: {fileID: 0}
+    - target: {fileID: 114698259439454970, guid: f6c41853ae2a68f458798385d92300c8,
+        type: 2}
+      propertyPath: rb
+      value: 
+      objectReference: {fileID: 755366960}
+    - target: {fileID: 50893150956122872, guid: f6c41853ae2a68f458798385d92300c8,
+        type: 2}
+      propertyPath: m_SleepingMode
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114280987555013236, guid: f6c41853ae2a68f458798385d92300c8, type: 2}
@@ -8651,7 +8709,7 @@ Transform:
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2141311413
 Prefab:

@@ -32,11 +32,14 @@ public class PenginSlingAkkoro : MonoBehaviour
     public GameObject Akkoro;
     public GameObject Pengin;
 
+    PlayerMovement pm;
+
     void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
         Physics2D.queriesStartInColliders = false;
         cam = Camera.main;
+        pm = Akkoro.GetComponent<PlayerMovement>();
 
         trajectoryPoints = new List<GameObject>();
         //   TrajectoryPoints are instatiated
@@ -54,6 +57,7 @@ public class PenginSlingAkkoro : MonoBehaviour
     {
         onEnable = true;
     }
+
     // Update is called once per frame
     void Update ()
     {
@@ -67,26 +71,32 @@ public class PenginSlingAkkoro : MonoBehaviour
             #region trajectory
 
             
-            setTrajectoryPoints(transform.position, aimLaunch.right.normalized * (launchForce/155f));
+            setTrajectoryPoints(transform.position + new Vector3(pm.faceDir * 2.5f,0), aimLaunch.right.normalized * (launchForce/155f));
             enablePoints(true);
 
 
             #endregion
-
+            
             if (Input.GetKeyDown(launchButton))
             {
+
                 enablePoints(false);
-                gameObject.SetActive(false);
+
+
                 Akkoro.SetActive(true);
-                Akkoro.transform.position = transform.position;
-                Akkoro.GetComponent<PlayerMovement>().room = GetComponent<PlayerMovement>().room;
-                Akkoro.GetComponent<PlayerMovement>().movement = Movement.Airborne;
-                Akkoro.GetComponent<PlayerMovement>().Launch(aimLaunch.right * launchForce * 1.5f);
+                Akkoro.transform.position = transform.position + new Vector3(3,0);
+                pm.room = GetComponent<PlayerMovement>().room;
+                pm.rb.AddForce(aimLaunch.right * launchForce * 1.5f);
+                pm.groundTimer = 0;
+                pm.movement = Movement.Airborne;
+                pm.groundingBoxes[0] = false;
                 
+
                 Pengin.transform.position = transform.position;
                 Pengin.SetActive(true);
-                
-                print(launchForce);
+                prepLaunch = false;
+
+                gameObject.SetActive(false);
             }
         }
         else
@@ -125,4 +135,6 @@ public class PenginSlingAkkoro : MonoBehaviour
             point.GetComponent<Renderer>().enabled = enable;
         }
     }
+
+
 }

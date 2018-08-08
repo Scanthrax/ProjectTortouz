@@ -11,18 +11,24 @@ public class AkkoroAttachToPengin : MonoBehaviour {
 
     private void OnEnable()
     {
-        
+        GetComponent<PlayerMovement>().movement = Utility.Movement.Airborne;
     }
 
-    void Update () {
-		if(Input.GetKeyDown(key))
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if(collision.transform.tag == "Player")
         {
-            Pengin.SetActive(false);
-            gameObject.SetActive(false);
-            AkkoroAndPengin.GetComponent<SpriteRenderer>().flipX = GetComponent<SpriteRenderer>().flipX;
-            AkkoroAndPengin.transform.position = transform.position;
-            AkkoroAndPengin.GetComponent<PlayerMovement>().room = GetComponent<PlayerMovement>().room;
-            AkkoroAndPengin.SetActive(true);
+            if (Input.GetKeyDown(key))
+            {
+                Pengin.SetActive(false);
+                gameObject.SetActive(false);
+                AkkoroAndPengin.SetActive(true);
+                AkkoroAndPengin.GetComponent<SpriteRenderer>().flipX = GetComponent<SpriteRenderer>().flipX;
+                AkkoroAndPengin.transform.position = transform.position;
+                AkkoroAndPengin.GetComponent<PlayerMovement>().room = GetComponent<PlayerMovement>().room;
+                
+            }
         }
-	}
+    }
 }
