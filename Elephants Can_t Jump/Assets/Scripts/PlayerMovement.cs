@@ -194,7 +194,6 @@ public class PlayerMovement : MonoBehaviour
     public float maxSpeed = 10f;
     public Room room;
     public bool isSliding;
-    PhysicsMaterial2D pmLR = null, pmTB = null;
     public Movement movement;
     bool launch;
     public int groundTimer;
@@ -203,8 +202,7 @@ public class PlayerMovement : MonoBehaviour
     public bool[] groundingBoxes = new bool[4];
     public BoxCollider2D wallbreakCol;
     public bool action;
-    public Sprite[] anchorSprites;
-    RaycastHit2D[] hits = new RaycastHit2D[10];
+    public Sprite[] anchorSprites; 
 
     void Start()
     {
@@ -538,7 +536,9 @@ public class PlayerMovement : MonoBehaviour
         // launch
         if (launch)
         {
-            rb.AddForce(Vector2.ClampMagnitude(launchDir.right * SpringCalc2(), 9000f));
+            // clamp the magnitude of the launch
+            rb.AddForce(Vector2.ClampMagnitude(launchDir.right * SpringCalc2(), 7000f));
+            // no longer launching
             launch = false;
         }
 
