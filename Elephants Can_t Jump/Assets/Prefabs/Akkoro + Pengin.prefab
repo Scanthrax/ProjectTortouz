@@ -94,7 +94,6 @@ GameObject:
   - component: {fileID: 114698259439454970}
   - component: {fileID: 114552181649917616}
   - component: {fileID: 114297269696300424}
-  - component: {fileID: 114184228308252622}
   m_Layer: 0
   m_Name: Akkoro + Pengin
   m_TagString: Player
@@ -303,7 +302,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1230566603385340}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16.5, y: 2, z: 0}
+  m_LocalPosition: {x: -17.908497, y: -2.7957, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4158357771969938}
@@ -626,24 +625,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerMovement: {fileID: 114698259439454970}
   i: 1
---- !u!114 &114184228308252622
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1230566603385340}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 209bed08a879c584f88821b854fdce95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  launchPrep: 32
-  launchButton: 113
-  aimLaunch: {fileID: 4158357771969938}
-  launchForce: 2800
-  TrajectoryPointPrefab: {fileID: 0}
-  Akkoro: {fileID: 0}
-  Pengin: {fileID: 0}
 --- !u!114 &114293385325526146
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -756,7 +737,7 @@ MonoBehaviour:
   speed: 2
   gravScale: 15
   gripping: 0
-  maxStamina: 120
+  maxStamina: 60
   stamina: 0
   storeParent: {fileID: 0}
   rb: {fileID: 50893150956122872}

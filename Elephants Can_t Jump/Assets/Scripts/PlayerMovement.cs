@@ -275,6 +275,8 @@ public class PlayerMovement : MonoBehaviour
         #endregion
 
         #region Find out which walls Akkoro is currently grounded to
+
+        #region determine grounding for top & bottom
         if(groundingBoxes[0])
         {
             groundingTB = Grounding.Bottom;
@@ -287,8 +289,10 @@ public class PlayerMovement : MonoBehaviour
         {
             groundingTB = Grounding.None;
         }
+        #endregion
 
-        if(groundingBoxes[1])
+        #region determine grounding for left & right
+        if (groundingBoxes[1])
         {
             groundingLR = Grounding.Left;
         }
@@ -300,18 +304,19 @@ public class PlayerMovement : MonoBehaviour
         {
             groundingLR = Grounding.None;
         }
+        #endregion
 
-        //if (groundTimer >= 5)
-        //{
-            if (groundingTB != Grounding.Bottom && movement != Movement.Launch)
-            {
-                movement = Movement.Airborne;
-            }
-            else if (groundingTB == Grounding.Bottom)
-            {
-                movement = Movement.Ground;
-            }
-        //}
+        #endregion
+        
+        #region what movement state are we in?
+        if (groundingTB != Grounding.Bottom && movement != Movement.Launch)
+        {
+            movement = Movement.Airborne;
+        }
+        else if (groundingTB == Grounding.Bottom)
+        {
+            movement = Movement.Ground;
+        }
         #endregion
 
         #region Holding spacebar enables grip
@@ -328,11 +333,16 @@ public class PlayerMovement : MonoBehaviour
         {
             gripping = false;
         }
+
+        if (stamina <= 0)
+        {
+            gripping = false;
+        }
         #endregion
 
         #region movement
         // The player will only be able to move on walls when gripping
-        if (gripping  && stamina > 0)
+        if (gripping)
         {
             up = Input.GetKey(KeyCode.W) ? 1 : 0;
             down = Input.GetKey(KeyCode.S) ? -1 : 0;
@@ -342,23 +352,21 @@ public class PlayerMovement : MonoBehaviour
             up = 0;
             down = 0;
         }
+
         left = Input.GetKey(KeyCode.A) ? -1 : 0;
         right = Input.GetKey(KeyCode.D) ? 1 : 0;
 
-        if(stamina <= 0)
+
+        if (groundingLR == Grounding.Left)
         {
-            if(groundingLR == Grounding.Left)
-            {
-                left = 0;
-            }
-            else if(groundingLR == Grounding.Right)
-            {
-                right = 0;
-            }
+            left = 0;
+        }
+        else if (groundingLR == Grounding.Right)
+        {
+            right = 0;
         }
 
-        int i = (left + right);
-        int j = (up + down);
+
 
         // horizontal movement with A & D
         hor = (left + right) * speed;
@@ -367,13 +375,14 @@ public class PlayerMovement : MonoBehaviour
 
 
         
-        if (i != 0)
+        if (hor != 0)
         {
-            if (i != faceDir)
+            if (faceDir != Mathf.Sign(hor))
             {
-                faceDir = i;
+                faceDir = (int)Mathf.Sign(hor);
                 bc.offset = new Vector2(-bc.offset.x, bc.offset.y);
             }
+
             rend.flipX = faceDir == -1 ? true : false;
         }
         
@@ -384,21 +393,20 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        if( (groundingLR == Grounding.Left && i == -1) || (groundingLR == Grounding.Right && i == 1) || i == 0)
+        if( (groundingLR == Grounding.Left && hor < 0) || (groundingLR == Grounding.Right && hor > 0) || hor == 0)
         {
             anim.SetBool("walkHor", false);
         }
-        else if (i != 0)
+        else if (hor != 0)
         {
             anim.SetBool("walkHor", true);
         }
 
-        print(j);
-        if ((groundingTB == Grounding.Top && j == 1) || (groundingTB == Grounding.Bottom && j == -1) || j == 0)
+        if ((groundingTB == Grounding.Top && vert > 0) || (groundingTB == Grounding.Bottom && vert < 0) || vert == 0)
         {
             anim.SetBool("walkVert", false);
         }
-        else if (j != 0)
+        else if (vert != 0)
         {
             anim.SetBool("walkVert", true);
         }
@@ -470,12 +478,14 @@ public class PlayerMovement : MonoBehaviour
 
         #endregion
 
+        
+
+
         #region Stickiness
-        if (false)
+        if (gripping)
         {
             stamina--;
         }
-
         #endregion
 
         #region Calculate launch direction
@@ -500,9 +510,9 @@ public class PlayerMovement : MonoBehaviour
         #endregion
 
         #region Recover Stamina
-        if (false)
+        if (groundingTB == Grounding.Bottom)
         {
-            stamina += 5;
+            stamina = maxStamina;
         }
         #endregion
 
@@ -510,21 +520,15 @@ public class PlayerMovement : MonoBehaviour
         stamina = Mathf.Clamp(stamina, 0, maxStamina);
         #endregion
 
-        if(movement == Movement.Wallclimb)
+        if (gripping)
         {
-            if (gripping)
-            {
-                EnableGravity(false);
-            }
-            else
-            {
-                EnableGravity(true);
-            }
+            EnableGravity(false);
         }
         else
         {
             EnableGravity(true);
         }
+
 
 
     }
@@ -575,7 +579,6 @@ public class PlayerMovement : MonoBehaviour
     /// <param name="otherTentacle">The other tentacle to take into consideration</param>
     void TentacleGrab(ref Tentacle thisTentacle, ref Tentacle otherTentacle)
     {
-
         switch (thisTentacle.state)
         {
             case Tentacles.None:
@@ -585,7 +588,7 @@ public class PlayerMovement : MonoBehaviour
                 #endregion
 
                 #region Expand the Anchor tentacle when in range of anchor & key is pressed
-                if ((Input.GetKey(thisTentacle.key) || Input.GetMouseButton(thisTentacle.mouseButton)) && !PenginSlingAkkoro.prepLaunch)
+                if ((Input.GetKey(thisTentacle.key) || Input.GetMouseButton(thisTentacle.mouseButton)))
                 {
                     // there is only a single point
                     if (anchorPositions.Count == 1)
@@ -633,6 +636,7 @@ public class PlayerMovement : MonoBehaviour
                 #endregion
 
                 break;
+
             case Tentacles.Expanding:
 
                 #region retract & break if connection is broken
@@ -659,9 +663,8 @@ public class PlayerMovement : MonoBehaviour
                 thisTentacle.rot.right = thisTentacle.anchorPos.position - thisTentacle.rot.position;
                 #endregion
 
-                #region Update Tentacle length
+                #region Update Tentacle length (scale)
                 thisTentacle.scale += rate;
-                
                 #endregion
 
                 #region Set anchor when full distance to anchor is reached
@@ -669,11 +672,9 @@ public class PlayerMovement : MonoBehaviour
                 {
                     thisTentacle.scale = thisTentacle.dist * magicNumber;
                     // set state to Anchored
-                    UpdateTentacleLength(thisTentacle);
                     thisTentacle.state = Tentacles.Anchored;
 
-                    #region
-                    
+                    #region switch tentacles
                     if (otherTentacle.state == Tentacles.Anchored)
                     {
                         switchTentacles = true;
@@ -682,15 +683,10 @@ public class PlayerMovement : MonoBehaviour
                     #endregion
                 }
                 #endregion
+
                 UpdateTentacleLength(thisTentacle);
                 break;
             case Tentacles.Anchored:
-
-                ClampTentacles(thisTentacle);
-
-                #region Aim at anchor
-                thisTentacle.rot.right = thisTentacle.anchorPos.position - thisTentacle.rot.position;
-                #endregion
 
                 #region Press key to retract
                 if (!Input.GetKey(thisTentacle.key) && !Input.GetMouseButton(thisTentacle.mouseButton))
@@ -701,6 +697,19 @@ public class PlayerMovement : MonoBehaviour
                 }
                 #endregion
 
+                #region tentacle distance
+                if (thisTentacle.anchorPos != null)
+                    thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.position, thisTentacle.rot.position);
+                #endregion
+
+                ClampTentacles(thisTentacle);
+
+                #region Aim at anchor
+                thisTentacle.rot.right = thisTentacle.anchorPos.position - thisTentacle.rot.position;
+                #endregion
+
+                
+
 
                 if (Input.GetKey(Variables.launch) && otherTentacle.state == Tentacles.Anchored)
                 {
@@ -709,10 +718,7 @@ public class PlayerMovement : MonoBehaviour
                     otherTentacle.state = Tentacles.Retracting;
                     #endregion
                     launch = true;
-                    groundTimer = 0;
                     movement = Movement.Launch;
-                    //thisTentacle.clampTent = false;
-                    //otherTentacle.clampTent = false;
                 }
 
                 
@@ -721,12 +727,11 @@ public class PlayerMovement : MonoBehaviour
                 thisTentacle.scale = magicNumber * thisTentacle.dist;
                 #endregion
 
-                #region tentacle distance
-                if (thisTentacle.anchorPos != null)
-                    thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.position, thisTentacle.rot.position);
-                #endregion
+                
 
                 UpdateTentacleLength(thisTentacle);
+
+                
                 break;
 
             case Tentacles.Retracting:
@@ -738,10 +743,6 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
 
-        #region tentacle distance
-        if (thisTentacle.anchorPos != null)
-            thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.position, transform.position);
-        #endregion
 
         
         // for each anchor nearby
@@ -756,7 +757,6 @@ public class PlayerMovement : MonoBehaviour
                 // if I hit a wall...
                 if (hit.transform.gameObject.layer == walls)
                 {
-                    print("there is a wall in the way!");
                     // if this tentacle is targeting the anchorpoint, retract it
                     if(thisTentacle.anchorPos == trans)
                         thisTentacle.state = Tentacles.Retracting;
@@ -822,9 +822,6 @@ public class PlayerMovement : MonoBehaviour
 
         allowedPos = Vector2.ClampMagnitude(allowedPos, tentacleRange);
 
-        print("CLAMP");
-
-
         // Only adjust the x value of the transform when on ceiling or ground
 
         if (groundingTB != Grounding.None)
@@ -842,6 +839,11 @@ public class PlayerMovement : MonoBehaviour
         if(groundingLR == Grounding.None && groundingTB == Grounding.None)
         {
             transform.position = new Vector2(tent.anchorPos.position.x + allowedPos.x, tent.anchorPos.position.y + allowedPos.y);
+        }
+
+        if(Vector2.Distance(tent.anchorPos.position,transform.position) > tentacleRange)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, 0f);
         }
 
         
