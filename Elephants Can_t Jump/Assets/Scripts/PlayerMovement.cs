@@ -538,13 +538,13 @@ public class PlayerMovement : MonoBehaviour
         // launch
         if (launch)
         {
-            rb.AddForce(Vector2.ClampMagnitude(launchDir.right * SpringCalc2(), 10000f));
+            rb.AddForce(Vector2.ClampMagnitude(launchDir.right * SpringCalc2(), 9000f));
             launch = false;
         }
 
         float speedMult = 100f;
 
-        if(movement == Movement.Airborne)
+        if(movement == Movement.Airborne || movement == Movement.Launch)
         {
             speedMult = 10f;
         }
