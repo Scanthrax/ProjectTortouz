@@ -542,17 +542,14 @@ public class PlayerMovement : MonoBehaviour
             launch = false;
         }
 
-        rb.AddForce(new Vector2(hor * 100, vert * 100));
+        float speedMult = 100f;
 
-        //if (groundTimer < 5)
-        //{
-        //    groundTimer++;
-        //    movement = Movement.Launch;
-        //}
-        //else if(groundingTB == Grounding.Bottom)
-        //{
-        //    movement = Movement.Ground;
-        //}
+        if(movement == Movement.Airborne)
+        {
+            speedMult = 10f;
+        }
+
+        rb.AddForce(new Vector2(hor * speedMult, vert * speedMult));
 
 
 
@@ -584,7 +581,7 @@ public class PlayerMovement : MonoBehaviour
             case Tentacles.None:
 
                 #region set anchor to null
-                thisTentacle.anchorPos = null;
+                if(thisTentacle.anchorPos != null) thisTentacle.anchorPos = null;
                 #endregion
 
                 #region Expand the Anchor tentacle when in range of anchor & key is pressed
@@ -632,7 +629,6 @@ public class PlayerMovement : MonoBehaviour
                             thisTentacle.state = Tentacles.Expanding;
                         }
                     }
-
                 }
                 #endregion
 
@@ -659,9 +655,8 @@ public class PlayerMovement : MonoBehaviour
                 }
                 #endregion
 
-                #region calculate distance
+                #region aim tentacle
                 thisTentacle.rot.right = thisTentacle.anchorPos.position - thisTentacle.rot.position;
-                
                 #endregion
 
                 #region Update Tentacle length
@@ -691,6 +686,8 @@ public class PlayerMovement : MonoBehaviour
                 break;
             case Tentacles.Anchored:
 
+                ClampTentacles(thisTentacle);
+
                 #region Aim at anchor
                 thisTentacle.rot.right = thisTentacle.anchorPos.position - thisTentacle.rot.position;
                 #endregion
@@ -704,10 +701,6 @@ public class PlayerMovement : MonoBehaviour
                 }
                 #endregion
 
-                if(thisTentacle.dist > tentacleRange)
-                {
-                    ClampTentacles(thisTentacle);
-                }
 
                 if (Input.GetKey(Variables.launch) && otherTentacle.state == Tentacles.Anchored)
                 {
@@ -735,6 +728,7 @@ public class PlayerMovement : MonoBehaviour
 
                 UpdateTentacleLength(thisTentacle);
                 break;
+
             case Tentacles.Retracting:
 
                 #region retract Anchor tentacle
@@ -823,44 +817,35 @@ public class PlayerMovement : MonoBehaviour
 
     void ClampTentacles(Tentacle tent)
     {
-        print("CLAMP");
-        // find the point on the edge of the radius
-        Vector2 circlePoint = CirclePoint(tent.anchorPos.position, tentacleRange, (Vector2.SignedAngle(Vector2.right, tent.rot.right * -1)));
 
-        if (groundingTB == Grounding.None && groundingLR == Grounding.None)
-        {
-            //transform.position = new Vector2(circlePoint.x, circlePoint.y);
-            //rb.velocity = Vector2.zero;
-        }
-        // Only adjust the x value of the transform when on ceiling or ground
-        else if (groundingTB != Grounding.None)
-        {
-            //transform.position = new Vector2(circlePoint.x, transform.position.y);
-            //rb.velocity = new Vector2(0f, rb.velocity.y);
-        }
-        // Only adjust the y value of the transform when on walls
-        else if (groundingLR != Grounding.None)
-        {
-            //transform.position = new Vector2(transform.position.x, circlePoint.y);
-            //rb.velocity = new Vector2(rb.velocity.x, 0f);
-        }
-        //Adjust both x & y during any other case
-        else
-        {
-            //transform.position = new Vector2(circlePoint.x, circlePoint.y);
-            //rb.velocity = Vector2.zero;
-        }
+        var allowedPos = transform.position - tent.anchorPos.position;
 
-
-        //mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //var allowedPos = mousePos - initialPos;
-        //allowedPos = Vector3.ClampMagnitude(allowedPos, 2.0);
-        //transform.position = initialPos + allowedPos;
-
-        var initPos = tent.anchorPos.position;
-        var allowedPos = -initPos + transform.position;
         allowedPos = Vector2.ClampMagnitude(allowedPos, tentacleRange);
-        transform.position = tent.anchorPos.position + allowedPos;
+
+        print("CLAMP");
+
+
+        // Only adjust the x value of the transform when on ceiling or ground
+
+        if (groundingTB != Grounding.None)
+        {
+            transform.position = new Vector2(tent.anchorPos.position.x + allowedPos.x, transform.position.y);
+        }
+
+        // Only adjust the y value of the transform when on walls
+        if (groundingLR != Grounding.None)
+
+        {
+            transform.position = new Vector2(transform.position.x, tent.anchorPos.position.y + allowedPos.y);
+        }
+
+        if(groundingLR == Grounding.None && groundingTB == Grounding.None)
+        {
+            transform.position = new Vector2(tent.anchorPos.position.x + allowedPos.x, tent.anchorPos.position.y + allowedPos.y);
+        }
+
+        
+        
 
     }
 
