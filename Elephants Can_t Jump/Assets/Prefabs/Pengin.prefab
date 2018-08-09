@@ -20,25 +20,24 @@ GameObject:
   m_Component:
   - component: {fileID: 4196336148435424}
   - component: {fileID: 212235953844683846}
-  - component: {fileID: 61293746071509602}
-  - component: {fileID: 114230580420090454}
   - component: {fileID: 114990603598197482}
+  - component: {fileID: 61293746071509602}
   m_Layer: 0
   m_Name: Pengin
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4196336148435424
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1332874662580834}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -19.647865, y: -11.295624, z: 0.171875}
-  m_LocalScale: {x: 8.303933, y: 8.303933, z: 8.303933}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 115, y: -10.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -59,27 +58,15 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.659, y: 0.418}
-    newSize: {x: 6.59, y: 4.18}
+    oldSize: {x: 6, y: 3.7099998}
+    newSize: {x: 6.0000005, y: 3.44}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.57, y: 0.33}
+  m_Size: {x: 3, y: 3}
   m_EdgeRadius: 0
---- !u!114 &114230580420090454
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1332874662580834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85545fd1b52e11f4882f706c8d97a15a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attach: 120
 --- !u!114 &114990603598197482
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -123,15 +110,15 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1475997179
+  m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 2a8b6483505424c4aa6d185b3df65b7c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 64732e5073c2d5246846f127d69d2d98, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 6.59, y: 4.18}
+  m_Size: {x: 6.0000005, y: 3.44}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
