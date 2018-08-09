@@ -239,6 +239,8 @@ public class PlayerMovement : MonoBehaviour
     public void disableAttack()
     {
         wallbreakCol.enabled = false;
+        groundingBoxes[1] = false;
+        groundingBoxes[2] = false;
     }
     public void enableWallBreak()
     {
@@ -267,6 +269,8 @@ public class PlayerMovement : MonoBehaviour
         }
     }
     #endregion
+
+
 
     void Update()
     {
