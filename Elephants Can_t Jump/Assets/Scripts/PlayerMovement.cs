@@ -487,12 +487,7 @@ public class PlayerMovement : MonoBehaviour
         
 
 
-        #region Stickiness
-        if (gripping)
-        {
-            stamina--;
-        }
-        #endregion
+        
 
         #region Calculate launch direction
         // if both tentacles are anchored, set the launch direction
@@ -573,6 +568,14 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
+
+
+        #region Stickiness
+        if (gripping)
+        {
+            stamina--;
+        }
+        #endregion
 
     }
 
@@ -655,7 +658,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 if(thisTentacle.anchorPos != null)
                 {
-                    if(Vector2.Distance(transform.position, thisTentacle.anchorPos.position) > 2 * tentacleRange)
+                    if(Vector2.Distance(transform.position, thisTentacle.anchorPos.position) > tentacleRange)
                     {
                         print("Retracting & breaking connection");
                         thisTentacle.state = Tentacles.Retracting;
