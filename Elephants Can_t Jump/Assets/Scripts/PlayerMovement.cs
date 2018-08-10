@@ -224,6 +224,8 @@ public class PlayerMovement : MonoBehaviour
         anim = GetComponent<Animator>();
         movement = Movement.Ground;
         faceDir = 1;
+
+        
     }
 
     private void OnEnable()
@@ -653,7 +655,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 if(thisTentacle.anchorPos != null)
                 {
-                    if(Vector2.Distance(transform.position, thisTentacle.anchorPos.position) > tentacleRange)
+                    if(Vector2.Distance(transform.position, thisTentacle.anchorPos.position) > 2 * tentacleRange)
                     {
                         print("Retracting & breaking connection");
                         thisTentacle.state = Tentacles.Retracting;
@@ -701,10 +703,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 #endregion
 
-                #region tentacle distance
-                if (thisTentacle.anchorPos != null)
-                    thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.position, thisTentacle.rot.position);
-                #endregion
+                
 
                 ClampTentacles(thisTentacle);
 
@@ -747,8 +746,11 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
 
+        #region tentacle distance
+        if (thisTentacle.anchorPos != null)
+            thisTentacle.dist = Vector2.Distance(thisTentacle.anchorPos.position, thisTentacle.rot.position);
+        #endregion
 
-        
         // for each anchor nearby
         foreach (Transform trans in anchorPositions)
         {
