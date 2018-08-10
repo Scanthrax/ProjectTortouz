@@ -2,8 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LevelController : MonoBehaviour {
+
+    private void Awake()
+    {
+        Application.targetFrameRate = 30;
+    }
 
     private void LateUpdate()
     {
@@ -17,5 +23,7 @@ public class LevelController : MonoBehaviour {
         //    //DontDestroyOnLoad(Camera.main);
         //    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         //}
+
+
     }
 }

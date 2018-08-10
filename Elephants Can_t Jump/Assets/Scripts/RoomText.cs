@@ -6,17 +6,17 @@ using Utility;
 
 public class RoomText : MonoBehaviour {
 
-    Text text;
+ //   public Text text;
 
-	void Start () {
-        CameraCenterpoints.roomName += changeText;
-        text = GetComponent<Text>();
-    }
+	//void Start () {
+ //       CameraCenterpoints.roomName += changeText;
+ //       text = GetComponent<Text>();
+ //   }
 
 
-    void changeText()
-    {
-        text = GetComponent<Text>();
-        text.text = "Room: " + Variables.room.parent;
-    }
+ //   void changeText()
+ //   {
+ //       text = GetComponent<Text>();
+ //       text.text = "Room: " + Variables.room.parent;
+ //   }
 }

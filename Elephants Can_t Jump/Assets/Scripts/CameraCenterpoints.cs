@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Utility;
+using UnityEngine.UI;
 
 public class CameraCenterpoints : MonoBehaviour {
 
@@ -16,6 +17,7 @@ public class CameraCenterpoints : MonoBehaviour {
     public static event RoomName roomName;
 
 
+    public Text text;
 
     void Start ()
     {
@@ -48,6 +50,8 @@ public class CameraCenterpoints : MonoBehaviour {
             // unpause the game
             Time.timeScale = 1f;
             player.GetComponent<PlayerMovement>().room = to;
+
+            text.text = to.transform.parent.name;
         }
     }
 }
