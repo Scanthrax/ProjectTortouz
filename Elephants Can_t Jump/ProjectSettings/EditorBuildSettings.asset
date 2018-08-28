@@ -14,7 +14,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Test Levels/Demo.unity
     guid: 704a5fd4093d2ed48b6ddf87c0e9a3d1
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Levels/02) Storage/Buildout_Storage_v2.6.unity
     guid: 50ccef5bfae9dc2429e2b1adef24dc05
+  - enabled: 1
+    path: Assets/Scenes/Levels/02) Storage/Buildout_Storage_v2.7.unity
+    guid: ad0d02ad0ca82014ba5d58f3022a8d1a
   m_configObjects: {}

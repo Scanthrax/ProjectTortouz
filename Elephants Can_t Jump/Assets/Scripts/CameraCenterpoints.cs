@@ -25,7 +25,15 @@ public class CameraCenterpoints : MonoBehaviour {
         cam.transform.position = player.GetComponent<PlayerMovement>().room.transform.position;
         
         Room.roomChange += ChangeRoom;
-        
+
+        Application.targetFrameRate = 30;
+    }
+
+
+    private void FixedUpdate()
+    {
+        if (Input.GetKey("escape"))
+            Application.Quit();
     }
 
 

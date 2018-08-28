@@ -24,6 +24,8 @@ namespace Utility
 
     public enum Movement { Ground, Wallclimb, Airborne, Launch}
 
+    public enum AnchorGrip { None, Single, Both}
+
 
     public interface LeftTentacle { }
     public interface RightTentacle { }

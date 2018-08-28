@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utility;
 
+//TODO: safeguard for groundslam animation not completing
+
 public class PlayerMovement : MonoBehaviour
 {
     #region Movement
@@ -202,7 +204,8 @@ public class PlayerMovement : MonoBehaviour
     public bool[] groundingBoxes = new bool[4];
     public BoxCollider2D wallbreakCol;
     public bool action;
-    public Sprite[] anchorSprites; 
+    public Sprite[] anchorSprites;
+    public AnchorGrip anchorGrip;
 
     void Start()
     {
@@ -225,7 +228,7 @@ public class PlayerMovement : MonoBehaviour
         movement = Movement.Ground;
         faceDir = 1;
 
-        
+        anchorGrip = AnchorGrip.None;
     }
 
     private void OnEnable()
@@ -569,6 +572,45 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
+        if(leftTentacle.state == Tentacles.Anchored && rightTentacle.state == Tentacles.Anchored)
+        {
+            anchorGrip = AnchorGrip.Both;
+        }
+        else if(leftTentacle.state == Tentacles.Anchored || rightTentacle.state == Tentacles.Anchored)
+        {
+            anchorGrip = AnchorGrip.Single;
+        }
+        else anchorGrip = AnchorGrip.None;
+
+
+
+
+        //if(anchorGrip == AnchorGrip.Single)
+        //{
+        //    var point = leftTentacle.anchorPos != null ? leftTentacle.anchorPos.position : rightTentacle.anchorPos.position;
+
+        //    if(Vector2.Distance(point, transform.position) > tentacleRange)
+        //    {
+        //        var angle = -Vector2.Angle(Vector2.right, transform.position - point);
+        //        if (angle >= -180 || angle <= 0)
+        //        {
+        //            print("Edge of circle");
+
+        //            EnableGravity(false);
+        //            rb.velocity = Vector2.zero;
+
+
+        //            print(angle);
+        //            angle = Mathf.Clamp(angle, -180f, 0f);
+
+        //            var temp = 5 * (left + right) + angle;
+        //            var edge = CirclePoint(point, tentacleRange, temp);
+        //            transform.position = edge;
+        //        }
+        //    }
+        //}
+
+
 
         #region Stickiness
         if (gripping)
@@ -852,7 +894,7 @@ public class PlayerMovement : MonoBehaviour
 
         if(Vector2.Distance(tent.anchorPos.position,transform.position) > tentacleRange)
         {
-            rb.velocity = new Vector2(rb.velocity.x, 0f);
+            rb.velocity = new Vector2(0f, 0f);
         }
 
         
