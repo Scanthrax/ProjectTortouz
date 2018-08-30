@@ -535,6 +535,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+
     }
 
 
@@ -956,8 +957,9 @@ public class PlayerMovement : MonoBehaviour
             if (!anchorPositions.Contains(collision.gameObject.transform))
             {
                 anchorPositions.Add(collision.gameObject.transform);
-                collision.gameObject.GetComponent<SpriteRenderer>().sprite = anchorSprites[1];
+                
             }
+            collision.gameObject.GetComponent<SpriteRenderer>().sprite = anchorSprites[1];
         }
         #endregion
 
@@ -984,8 +986,9 @@ public class PlayerMovement : MonoBehaviour
             if (anchorPositions.Contains(collision.gameObject.transform))
             {
                 anchorPositions.Remove(collision.gameObject.transform);
-                collision.gameObject.GetComponent<SpriteRenderer>().sprite = anchorSprites[0];
+                
             }
+            collision.gameObject.GetComponent<SpriteRenderer>().sprite = anchorSprites[0];
         }
         #endregion
     }
