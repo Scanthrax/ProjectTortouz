@@ -227,6 +227,7 @@ public class PlayerMovement : MonoBehaviour
         anim = GetComponent<Animator>();
         movement = Movement.Ground;
         faceDir = 1;
+        groundingLR = Grounding.None;
 
         anchorGrip = AnchorGrip.None;
     }
@@ -424,7 +425,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-        if (movement == Movement.Airborne)
+        if (movement == Movement.Airborne || movement == Movement.Launch)
         {
             anim.SetBool("inAir", true);
         }
@@ -460,6 +461,19 @@ public class PlayerMovement : MonoBehaviour
             anim.SetBool("onGround", false);
         }
 
+        if (groundingLR != Grounding.None && stamina <= 0)
+        {
+            anim.SetBool("dragWall", true);
+        }
+        else
+        {
+            anim.SetBool("dragWall", false);
+        }
+
+
+
+
+
         if (movement == Movement.Wallclimb)
         {
             if (vert < 0)
@@ -481,6 +495,25 @@ public class PlayerMovement : MonoBehaviour
         {
             rend.flipY = false;
         }
+
+
+
+        if(groundingLR == Grounding.Left)
+        {
+            rend.flipX = true;
+        }
+        else if(groundingLR == Grounding.Right)
+        {
+            rend.flipX = false;
+        }
+
+        if(groundingTB == Grounding.Bottom)
+        {
+            rend.flipY = false;
+        }
+
+
+
         #endregion
 
 
@@ -760,7 +793,7 @@ public class PlayerMovement : MonoBehaviour
                 
 
 
-                if (Input.GetKey(Variables.launch) && otherTentacle.state == Tentacles.Anchored)
+                if (Input.GetKeyUp(Variables.launch) && otherTentacle.state == Tentacles.Anchored)
                 {
                     #region retract both tentacles
                     thisTentacle.state = Tentacles.Retracting;
@@ -1045,7 +1078,6 @@ public class PlayerMovement : MonoBehaviour
             {
                 lerp = 0f;
                 goBack = false;
-                
             }
         }
     }
