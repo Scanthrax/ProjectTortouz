@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// Akkoro's sprite renderer
     /// </summary>
-    SpriteRenderer rend;
+    public SpriteRenderer rend;
     public Transform pengin;
     #endregion
     #region Grounding
@@ -206,6 +206,13 @@ public class PlayerMovement : MonoBehaviour
     public bool action;
     public Sprite[] anchorSprites;
     public AnchorGrip anchorGrip;
+    Transform rendTransform;
+
+    float[] increment = new float[2];
+    float noiseSpeed = 0.2f;
+    float noiseIntensity = 1.5f;
+
+    public AnimationCurve shakeCurve;
 
     void Start()
     {
@@ -218,7 +225,7 @@ public class PlayerMovement : MonoBehaviour
         // make sure that raycasts don't detect the colliders that they start in
         Physics2D.queriesStartInColliders = false;
         stamina = maxStamina;
-        rend = GetComponentInChildren<SpriteRenderer>();
+        //rend = GetComponentInChildren<SpriteRenderer>();
         leftTentacle.anchorPos = null;
         rightTentacle.anchorPos = null;
         switchTentacles = false;
@@ -230,6 +237,10 @@ public class PlayerMovement : MonoBehaviour
         groundingLR = Grounding.None;
 
         anchorGrip = AnchorGrip.None;
+
+        rendTransform = rend.transform;
+        increment[0] = Random.Range(0f, 10f);
+        increment[1] = Random.Range(0f, 10f);
     }
 
     private void OnEnable()
@@ -567,11 +578,17 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-
-
+        if (gripping && groundingTB != Grounding.Bottom)
+            rendTransform.position = new Vector3(transform.position.x + GenerateNoise(0), transform.position.y + GenerateNoise(1), transform.position.z);
+        else
+            rendTransform.localPosition = Vector3.zero;
     }
 
-
+    float GenerateNoise(int i)
+    {
+        print((float)(maxStamina - stamina) / maxStamina);
+        return Mathf.PerlinNoise(0f, increment[i] += noiseSpeed) * noiseIntensity * shakeCurve.Evaluate((float)(maxStamina - stamina)/maxStamina);
+    }
 
     private void FixedUpdate()
     {
