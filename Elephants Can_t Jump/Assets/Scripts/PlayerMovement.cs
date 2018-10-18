@@ -241,6 +241,7 @@ public class PlayerMovement : MonoBehaviour
         rendTransform = rend.transform;
         increment[0] = Random.Range(0f, 10f);
         increment[1] = Random.Range(0f, 10f);
+
     }
 
     private void OnEnable()
@@ -670,6 +671,8 @@ public class PlayerMovement : MonoBehaviour
         }
         #endregion
 
+
+        
     }
 
 

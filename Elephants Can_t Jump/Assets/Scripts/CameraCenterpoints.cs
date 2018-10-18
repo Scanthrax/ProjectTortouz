@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class CameraCenterpoints : MonoBehaviour {
 
     Camera cam;
+    public SaveController saveController;
 
     public static GameObject player;
 
@@ -60,6 +61,8 @@ public class CameraCenterpoints : MonoBehaviour {
             player.GetComponent<PlayerMovement>().room = to;
 
             text.text = to.transform.parent.name;
+
+            saveController.SaveGame(true);
         }
     }
 }
