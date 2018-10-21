@@ -214,6 +214,8 @@ public class PlayerMovement : MonoBehaviour
 
     public AnimationCurve shakeCurve;
 
+    bool delayLaunch = false;
+
     void Start()
     {
         // assign the rigidbody component
@@ -585,6 +587,25 @@ public class PlayerMovement : MonoBehaviour
             rendTransform.localPosition = Vector3.zero;
     }
 
+
+    void LaunchDelay(float duration)
+    {
+        StartCoroutine(AnimateMove(duration));
+    }
+
+    IEnumerator AnimateMove(float duration)
+    {
+        float journey = 0f;
+        while (journey <= duration)
+        {
+            journey = journey + Time.deltaTime;
+            yield return null;
+        }
+        delayLaunch = false;
+    }
+
+
+
     float GenerateNoise(int i)
     {
         print((float)(maxStamina - stamina) / maxStamina);
@@ -594,12 +615,13 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         // launch
-        if (launch)
+        if (launch && !delayLaunch)
         {
             // clamp the magnitude of the launch
             rb.AddForce(Vector2.ClampMagnitude(launchDir.right * SpringCalc2(), 7000f));
             // no longer launching
             launch = false;
+            LaunchDelay(0.4f);
         }
 
         float speedMult = 100f;
