@@ -14,7 +14,9 @@ public class Save
     public float x, y, z;
     [SerializeField]
     public int faceDirection;
+    [SerializeField]
+    
+    public Dictionary<int, bool> activatedItems = new Dictionary<int, bool>();
 
-    public bool autosaved;
 }
 

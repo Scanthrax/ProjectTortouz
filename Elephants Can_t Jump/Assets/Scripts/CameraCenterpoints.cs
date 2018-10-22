@@ -62,7 +62,7 @@ public class CameraCenterpoints : MonoBehaviour {
 
             text.text = to.transform.parent.name;
 
-            saveController.SaveGame(true);
+            saveController.SaveGame();
         }
     }
 }

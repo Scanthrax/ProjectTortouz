@@ -8,17 +8,25 @@ using System.IO;
 public class SaveController : MonoBehaviour
 {
     public Transform pengin;
+    public List<GameObject> objects;
+
+    Dictionary<int, GameObject> listOfGameObjects = new Dictionary<int, GameObject>();
+
+    Save save = new Save();
 
     private void Awake()
     {
+        //DeleteFile();
+        InitDictionary();
         LoadGame();
     }
 
-    private void Update()
+
+    void InitDictionary()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        foreach (var obj in objects)
         {
-            SaveGame(false);
+            listOfGameObjects.Add(obj.GetInstanceID(), obj);
         }
     }
 
@@ -32,32 +40,70 @@ public class SaveController : MonoBehaviour
             Save save = (Save)bf.Deserialize(file);
             file.Close();
 
+            
+            // update pengin's position
             pengin.position = new Vector3(save.x + (save.faceDirection * 1.25f), save.y, save.z);
+
+
+            foreach (var obj in objects)
+            {
+                if (!save.activatedItems.ContainsKey(obj.GetInstanceID()))
+                    continue;
+
+                var breakableWall = obj.GetComponent<BreakableWall>();
+                if(breakableWall != null)
+                {
+                    listOfGameObjects[obj.GetInstanceID()].GetComponent<BreakableWall>().isBroken = save.activatedItems[obj.GetInstanceID()];
+                }
+
+                var button = obj.GetComponentInChildren<Button>();
+                if (button != null)
+                {
+                    listOfGameObjects[obj.GetInstanceID()].GetComponentInChildren<Button>().press = save.activatedItems[obj.GetInstanceID()];
+                }
+            }
+
 
             Debug.Log("Game Loaded");
         }
         else
         {
             Debug.Log("No game saved!");
+            
         }
     }
 
+        
 
-
-    public void SaveGame(bool autosave)
+    public void SaveGame()
     {
-        Save save = new Save();
+        save = new Save();
 
-        save.faceDirection = autosave? pengin.GetComponent<PlayerMovement>().faceDir : 0;
+        save.faceDirection = pengin.GetComponent<PlayerMovement>().faceDir;
 
+        // save the xyz coordinates
         save.x = pengin.position.x;
         save.y = pengin.position.y;
         save.z = pengin.position.z;
 
+        foreach (var item in objects)
+        {
+            var breakableWall = item.GetComponent<BreakableWall>();
+            if (breakableWall != null)
+            {
+                save.activatedItems.Add(item.GetInstanceID(), breakableWall.isBroken);
+                print("updated wall");
+                continue;
+            }
+
+            var button = item.GetComponentInChildren<Button>();
+            if (button != null)
+            {
+                save.activatedItems.Add(item.GetInstanceID(), button.isPressed);
+                print("updated button");
+            }
+        }
         
-
-
-        save.autosaved = autosave;
 
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(Application.persistentDataPath + "/gamesave.save");
@@ -67,4 +113,8 @@ public class SaveController : MonoBehaviour
         Debug.Log("Game Saved");
     }
 
+    void DeleteFile()
+    {
+        File.Delete(Application.persistentDataPath + "/gamesave.save");
+    }
 }

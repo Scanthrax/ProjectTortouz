@@ -10,6 +10,7 @@ public class BreakableWall : MonoBehaviour, IBreakable
     /// </summary>
     public int health;
 
+    public bool isBroken = false;
 
     public void Break(int damage)
     {
@@ -19,6 +20,13 @@ public class BreakableWall : MonoBehaviour, IBreakable
         if(health <= 0)
         {
             gameObject.SetActive(false);
+            isBroken = true;
         }
+    }
+
+    private void Start()
+    {
+        if(isBroken)
+            gameObject.SetActive(false);
     }
 }
