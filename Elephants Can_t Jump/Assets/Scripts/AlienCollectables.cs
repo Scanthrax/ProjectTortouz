@@ -11,7 +11,8 @@ public class AlienCollectables : MonoBehaviour {
     {
 		foreach(AlienObjects obj in aliens)
         {
-            alienDictionary.Add(obj.name, false);
+            if(alienDictionary.ContainsKey(obj.name))
+                alienDictionary.Add(obj.name, false);
         }
 	}
 }
