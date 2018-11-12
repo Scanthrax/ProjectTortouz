@@ -802,7 +802,7 @@ public class PlayerMovement : MonoBehaviour
                     // set state to Anchored
                     thisTentacle.state = Tentacles.Anchored;
 
-                    SoundLibrary.AudioSource[0].clip = SoundLibrary.StretchTentacle;
+                    SoundLibrary.AudioSource[0].clip = SoundLibrary.TentacleSlap;
                     SoundLibrary.AudioSource[0].Play();
 
                     #region switch tentacles
@@ -847,9 +847,11 @@ public class PlayerMovement : MonoBehaviour
                     #endregion
                     launch = true;
                     movement = Movement.Launch;
-
-                    AudioSource[1].clip = SoundLibrary.Launch[0];
-                    AudioSource[1].Play();
+                    if (Random.Range(0, 3) == 0)
+                    {
+                        SoundLibrary.AudioSource[1].clip = SoundLibrary.Launch[Random.Range(0, SoundLibrary.Launch.Length-1)];
+                        SoundLibrary.AudioSource[1].Play();
+                    }
 
                 }
 

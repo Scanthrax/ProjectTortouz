@@ -17,8 +17,8 @@ public class SaveController : MonoBehaviour
     private void Awake()
     {
         //DeleteFile();
-        InitDictionary();
-        LoadGame();
+        //InitDictionary();
+        //LoadGame();
     }
 
 
@@ -32,44 +32,47 @@ public class SaveController : MonoBehaviour
 
     public void LoadGame()
     {
-        if (File.Exists(Application.persistentDataPath + "/gamesave.save"))
+        if (false)
         {
-
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(Application.persistentDataPath + "/gamesave.save", FileMode.Open);
-            Save save = (Save)bf.Deserialize(file);
-            file.Close();
-
-            
-            // update pengin's position
-            pengin.position = new Vector3(save.x + (save.faceDirection * 1.25f), save.y, save.z);
-
-
-            foreach (var obj in objects)
+            if (File.Exists(Application.persistentDataPath + "/gamesave.save"))
             {
-                if (!save.activatedItems.ContainsKey(obj.GetInstanceID()))
-                    continue;
 
-                var breakableWall = obj.GetComponent<BreakableWall>();
-                if(breakableWall != null)
+                BinaryFormatter bf = new BinaryFormatter();
+                FileStream file = File.Open(Application.persistentDataPath + "/gamesave.save", FileMode.Open);
+                Save save = (Save)bf.Deserialize(file);
+                file.Close();
+
+
+                // update pengin's position
+                pengin.position = new Vector3(save.x + (save.faceDirection * 1.25f), save.y, save.z);
+
+
+                foreach (var obj in objects)
                 {
-                    listOfGameObjects[obj.GetInstanceID()].GetComponent<BreakableWall>().isBroken = save.activatedItems[obj.GetInstanceID()];
+                    if (!save.activatedItems.ContainsKey(obj.GetInstanceID()))
+                        continue;
+
+                    var breakableWall = obj.GetComponent<BreakableWall>();
+                    if (breakableWall != null)
+                    {
+                        listOfGameObjects[obj.GetInstanceID()].GetComponent<BreakableWall>().isBroken = save.activatedItems[obj.GetInstanceID()];
+                    }
+
+                    var button = obj.GetComponentInChildren<Button>();
+                    if (button != null)
+                    {
+                        listOfGameObjects[obj.GetInstanceID()].GetComponentInChildren<Button>().press = save.activatedItems[obj.GetInstanceID()];
+                    }
                 }
 
-                var button = obj.GetComponentInChildren<Button>();
-                if (button != null)
-                {
-                    listOfGameObjects[obj.GetInstanceID()].GetComponentInChildren<Button>().press = save.activatedItems[obj.GetInstanceID()];
-                }
+
+                Debug.Log("Game Loaded");
             }
+            else
+            {
+                Debug.Log("No game saved!");
 
-
-            Debug.Log("Game Loaded");
-        }
-        else
-        {
-            Debug.Log("No game saved!");
-            
+            }
         }
     }
 

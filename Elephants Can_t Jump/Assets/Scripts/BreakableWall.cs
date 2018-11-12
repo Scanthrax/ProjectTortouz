@@ -21,6 +21,8 @@ public class BreakableWall : MonoBehaviour, IBreakable
         {
             gameObject.SetActive(false);
             isBroken = true;
+
+            SoundLibrary.AudioSource[1].clip = SoundLibrary.WallBreak[Random.Range(0, SoundLibrary.WallBreak.Length - 1)];
         }
     }
 
