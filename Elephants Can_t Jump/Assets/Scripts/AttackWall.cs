@@ -34,6 +34,9 @@ public class AttackWall : MonoBehaviour
         if(Input.GetKeyDown(key) && pm.movement == Movement.Ground && !pm.action)
         {
             anim.SetTrigger("Wallbreak");
+            SoundLibrary.AudioSource[1].clip = SoundLibrary.WallBreak[1];
+            SoundLibrary.AudioSource[1].volume = 0.35f;
+            SoundLibrary.AudioSource[1].Play();
         }
     }
 

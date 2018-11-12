@@ -19,6 +19,8 @@ public class Button : MonoBehaviour, IBreakable
 
     public KeyCode key; //use key from the inspector
 
+    bool playSound = true;
+
     SpriteRenderer spriteRend;
     // Use this for initialization
     void Start () {
@@ -54,6 +56,12 @@ public class Button : MonoBehaviour, IBreakable
             //if button is pressed
             if (press == true)
             {
+                if(playSound)
+                {
+                    SoundLibrary.AudioSource[1].clip = SoundLibrary.Button;
+                    SoundLibrary.AudioSource[1].Play();
+                    playSound = false;
+                }
                 //lerping of button
                 time1 += speed1 * Time.deltaTime;
                 this.transform.position = Vector3.Lerp(this.transform.position, EndP.position, time1);
@@ -64,6 +72,7 @@ public class Button : MonoBehaviour, IBreakable
                     moving = false;
                     time1 = 0f;
                     press = false;
+                    playSound = true;
                 }
 
             }

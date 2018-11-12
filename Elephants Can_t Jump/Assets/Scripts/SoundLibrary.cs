@@ -9,6 +9,8 @@ public class SoundLibrary : MonoBehaviour {
     public AudioClip doorOpen;
     public AudioClip tentacleSlap;
     public AudioClip[] wallBreak;
+    public AudioClip crateBreak;
+    public AudioClip button;
 
 
     public static AudioSource[] AudioSource;
@@ -17,6 +19,8 @@ public class SoundLibrary : MonoBehaviour {
     public static AudioClip DoorOpen;
     public static AudioClip TentacleSlap;
     public static AudioClip[] WallBreak;
+    public static AudioClip CrateBreak;
+    public static AudioClip Button;
 
     // Use this for initialization
     void Start () {
@@ -26,6 +30,9 @@ public class SoundLibrary : MonoBehaviour {
         Launch = launch;
         DoorOpen = doorOpen;
         TentacleSlap = tentacleSlap;
+        WallBreak = wallBreak;
+        CrateBreak = crateBreak;
+        Button = button;
 	}
 	
 	// Update is called once per frame

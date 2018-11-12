@@ -22,7 +22,13 @@ public class BreakableWall : MonoBehaviour, IBreakable
             gameObject.SetActive(false);
             isBroken = true;
 
-            SoundLibrary.AudioSource[1].clip = SoundLibrary.WallBreak[Random.Range(0, SoundLibrary.WallBreak.Length - 1)];
+            SoundLibrary.AudioSource[0].clip = SoundLibrary.WallBreak[0];
+            SoundLibrary.AudioSource[0].volume = 0.45f;
+            SoundLibrary.AudioSource[1].Play();
+
+            SoundLibrary.AudioSource[1].clip = SoundLibrary.CrateBreak;
+            SoundLibrary.AudioSource[1].volume = 0.7f;
+            SoundLibrary.AudioSource[1].Play();
         }
     }
 
