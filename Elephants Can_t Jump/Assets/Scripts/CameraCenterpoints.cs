@@ -41,6 +41,7 @@ public class CameraCenterpoints : MonoBehaviour {
 
     void ChangeRoom(Room from, Room to)
     {
+        if (cam == null) return;
         // pause the game while room is changing
         if(Time.timeScale != 0f) Time.timeScale = 0f;
         // increment lerp
