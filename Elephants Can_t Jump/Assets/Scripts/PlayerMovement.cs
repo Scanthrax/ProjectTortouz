@@ -244,6 +244,7 @@ public class PlayerMovement : MonoBehaviour
         increment[0] = Random.Range(0f, 10f);
         increment[1] = Random.Range(0f, 10f);
 
+        
     }
 
     private void OnEnable()
@@ -801,6 +802,9 @@ public class PlayerMovement : MonoBehaviour
                     // set state to Anchored
                     thisTentacle.state = Tentacles.Anchored;
 
+                    SoundLibrary.AudioSource[0].clip = SoundLibrary.StretchTentacle;
+                    SoundLibrary.AudioSource[0].Play();
+
                     #region switch tentacles
                     if (otherTentacle.state == Tentacles.Anchored)
                     {
@@ -843,6 +847,10 @@ public class PlayerMovement : MonoBehaviour
                     #endregion
                     launch = true;
                     movement = Movement.Launch;
+
+                    AudioSource[1].clip = SoundLibrary.Launch[0];
+                    AudioSource[1].Play();
+
                 }
 
                 
@@ -1123,5 +1131,9 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
+
+
+
+
 
 }

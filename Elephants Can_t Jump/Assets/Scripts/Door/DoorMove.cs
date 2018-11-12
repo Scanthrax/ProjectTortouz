@@ -14,6 +14,11 @@ public class DoorMove : MonoBehaviour
 
     public Color color;
     // Use this for initialization
+
+
+
+    bool playSound = true;
+
     void Start()
     {
         open = false;
@@ -29,10 +34,18 @@ public class DoorMove : MonoBehaviour
 
         if (open)
         {
+            if(playSound)
+            {
+                SoundLibrary.AudioSource[0].clip = SoundLibrary.DoorOpen;
+                SoundLibrary.AudioSource[0].Play();
+                playSound = false;
+            }
+
             door.transform.position = Vector3.MoveTowards(door.transform.position, Target.position, Time.deltaTime * speed); //move the platform towards the next point in the array
             if(ButtonSystem.transform.Find("Button").transform.position == ButtonSystem.transform.Find("EndP").transform.position)
             {
                 button.active = false;
+                playSound = true;
             }
         }
 
