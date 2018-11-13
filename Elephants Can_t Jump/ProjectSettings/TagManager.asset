@@ -8,6 +8,7 @@ TagManager:
   - Platform
   - Collectable
   - Controller
+  - Alien
   layers:
   - Default
   - TransparentFX

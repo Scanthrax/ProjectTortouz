@@ -6,6 +6,5 @@ using UnityEngine;
 public class AlienObjects : ScriptableObject
 {
     public Sprite sprite;
-    public new string name;
     public bool isCollected;
 }

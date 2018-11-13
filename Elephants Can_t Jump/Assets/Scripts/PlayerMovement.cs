@@ -244,7 +244,7 @@ public class PlayerMovement : MonoBehaviour
         increment[0] = Random.Range(0f, 10f);
         increment[1] = Random.Range(0f, 10f);
 
-        
+        StartCoroutine(Fade.FadeIn(2f));
     }
 
     private void OnEnable()
@@ -1049,15 +1049,12 @@ public class PlayerMovement : MonoBehaviour
         #endregion
 
         #region Collect alien
-        if(collision.gameObject.layer == LayerMask.NameToLayer("AlienCollectable"))
+        if(collision.gameObject.CompareTag("Alien"))
         {
             AlienObjects thisAlien = collision.GetComponent<AlienCollectable>().alien;
-            AlienCollectables.alienDictionary[thisAlien.name] = true;
-            if(AlienCollectables.alienDictionary[thisAlien.name])
-            {
-                print("Collected the alien!");
-                Destroy(collision.gameObject);
-            }
+            SaveController.alienCollectables[thisAlien.name] = true;
+            print("Collected the alien!");
+            Destroy(collision.gameObject);
             
         }
         #endregion

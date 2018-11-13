@@ -17,7 +17,7 @@ public class AlienCollectable : MonoBehaviour {
 
     private void Start()
     {
-        if (alien != null && !AlienCollectables.alienDictionary[alien.name])
+        if (alien != null && !SaveController.alienCollectables[alien.name])
         {
             gameObject.SetActive(true);
         }

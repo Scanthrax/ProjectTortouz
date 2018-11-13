@@ -45,7 +45,7 @@ public class CameraCenterpoints : MonoBehaviour {
         // pause the game while room is changing
         if(Time.timeScale != 0f) Time.timeScale = 0f;
         // increment lerp
-        lerp += 0.03f;
+        lerp += 0.06f;
         // update camera position
         cam.transform.position = Vector3.Lerp(from.transform.position, to.transform.position, lerp);
         // if camera destination reached...

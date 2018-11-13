@@ -7,7 +7,13 @@ using System.IO;
 public class MenuFunctions : MonoBehaviour
 {
     public Object gameScene;
+    public static Object GameScene;
     //public SaveController saveController;
+
+    private void Start()
+    {
+        GameScene = gameScene;
+    }
 
     public void NewGame()
     {
@@ -21,11 +27,11 @@ public class MenuFunctions : MonoBehaviour
 
     public void ContinueGame()
     {
-        LoadGame();
+        StartCoroutine(Fade.FadeOut(1.5f));
     }
 
-    void LoadGame()
+    public static void LoadGame()
     {
-        SceneManager.LoadScene(gameScene.name);
+        SceneManager.LoadScene(GameScene.name);
     }
 }

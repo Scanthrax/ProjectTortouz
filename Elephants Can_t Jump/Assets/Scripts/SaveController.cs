@@ -12,10 +12,18 @@ public class SaveController : MonoBehaviour
 
     Dictionary<int, GameObject> listOfGameObjects = new Dictionary<int, GameObject>();
 
+    public static Dictionary<string, bool> alienCollectables = new Dictionary<string, bool>();
+
     Save save = new Save();
 
     private void Awake()
     {
+        foreach (var item in GameObject.FindGameObjectsWithTag("Alien"))
+        {
+            string temp = item.GetComponent<AlienCollectable>().alien.name;
+            alienCollectables.Add(temp, false);
+        }
+
         //DeleteFile();
         //InitDictionary();
         //LoadGame();
@@ -106,7 +114,10 @@ public class SaveController : MonoBehaviour
                 print("updated button");
             }
         }
-        
+
+
+        save.alienCollectables = alienCollectables;
+
 
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(Application.persistentDataPath + "/gamesave.save");

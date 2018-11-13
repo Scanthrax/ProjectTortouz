@@ -17,6 +17,7 @@ public class Save
     [SerializeField]
     
     public Dictionary<int, bool> activatedItems = new Dictionary<int, bool>();
+    public Dictionary<string, bool> alienCollectables = new Dictionary<string, bool>();
 
 }
 
