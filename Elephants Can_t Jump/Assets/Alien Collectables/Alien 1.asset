@@ -9,8 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 32abe923dfb101f4aab4ac0fc83341d0, type: 3}
-  m_Name: Test Alien
+  m_Name: Alien 1
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: be1830c09aa33ca4290dbd76d537ccdf, type: 3}
-  name: Skwib
+  sprite: {fileID: 0}
   isCollected: 0

@@ -5,6 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Alien", menuName = "Alien")]
 public class AlienObjects : ScriptableObject
 {
-    public Sprite sprite;
+    public Sprite[] sprites;
     public bool isCollected;
 }

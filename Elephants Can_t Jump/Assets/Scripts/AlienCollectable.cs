@@ -11,7 +11,7 @@ public class AlienCollectable : MonoBehaviour {
     {
         if (alien != null)
         {
-            rend.sprite = alien.sprite;
+            rend.sprite = alien.sprites[0];
         }
     }
 
@@ -21,6 +21,7 @@ public class AlienCollectable : MonoBehaviour {
         {
             gameObject.SetActive(true);
         }
-        else gameObject.SetActive(false);
+        else
+            gameObject.SetActive(false);
     }
 }
