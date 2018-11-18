@@ -61,7 +61,7 @@ public class CameraCenterpoints : MonoBehaviour {
             Time.timeScale = 1f;
             player.GetComponent<PlayerMovement>().room = to;
 
-            text.text = to.transform.parent.name;
+            //text.text = to.transform.parent.name;
 
             saveController.SaveGame();
         }

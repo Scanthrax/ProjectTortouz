@@ -272,6 +272,11 @@ public class PlayerMovement : MonoBehaviour
         action = false;
     }
 
+    public void canBeAirborne()
+    {
+        anim.SetBool("canBeAirborne", false);
+    }
+
     public void GroundSlam()
     {
         // find all items within 10 unit radius
@@ -586,6 +591,22 @@ public class PlayerMovement : MonoBehaviour
             rendTransform.position = new Vector3(transform.position.x + GenerateNoise(0), transform.position.y + GenerateNoise(1), transform.position.z);
         else
             rendTransform.localPosition = Vector3.zero;
+
+
+        if(rb.velocity.y > 0)
+        {
+            anim.SetBool("LaunchDirection", true);
+        }
+        else
+        {
+            anim.SetBool("LaunchDirection", false);
+        }
+
+        if(groundingTB == Grounding.Bottom)
+        {
+            anim.SetBool("canBeAirborne", true);
+        }
+
     }
 
 
@@ -693,6 +714,8 @@ public class PlayerMovement : MonoBehaviour
             stamina--;
         }
         #endregion
+
+
 
 
         
