@@ -26,7 +26,7 @@ public class SaveController : MonoBehaviour
 
         //DeleteFile();
         //InitDictionary();
-        //LoadGame();
+        LoadGame();
     }
 
 
@@ -40,8 +40,8 @@ public class SaveController : MonoBehaviour
 
     public void LoadGame()
     {
-        if (false)
-        {
+        //if (false)
+        //{
             if (File.Exists(Application.persistentDataPath + "/gamesave.save"))
             {
 
@@ -73,6 +73,8 @@ public class SaveController : MonoBehaviour
                     }
                 }
 
+                alienCollectables = save.alienCollectables;
+
 
                 Debug.Log("Game Loaded");
             }
@@ -81,7 +83,7 @@ public class SaveController : MonoBehaviour
                 Debug.Log("No game saved!");
 
             }
-        }
+        //}
     }
 
         

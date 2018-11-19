@@ -47,8 +47,8 @@ public class MenuSelection : MonoBehaviour
         // set button interactions
         // Get menu                  // locate the button & get the component   // add the function to the button listener  // out menu             // in menu                      // direction of sweep
 
-        menuDictionary[Menu.Menu].Find("Collectables").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { GoToNextMenu(menuDictionary[Menu.Menu], menuDictionary[Menu.Critters], Direction.Right); });
         menuDictionary[Menu.Critters].Find("Button").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { GoToNextMenu(menuDictionary[Menu.Critters], menuDictionary[Menu.Menu], Direction.Left); });
+        menuDictionary[Menu.Menu].Find("Buttons").Find("Collectables").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { GoToNextMenu(menuDictionary[Menu.Menu], menuDictionary[Menu.Critters], Direction.Right); });
 
         // disable all menus
         foreach (KeyValuePair<Menu, RectTransform> entry in menuDictionary)
@@ -93,19 +93,20 @@ public class MenuSelection : MonoBehaviour
     {
         Vector2 target;
         Vector2 origin;
-
         Vector2 offset;
+        int offsetDist = 1920;
+
 
         switch (dir)
         {
             case Direction.Right:
-                offset = new Vector2(750, 0);
+                offset = new Vector2(offsetDist, 0);
                 break;
             case Direction.Left:
-                offset = new Vector2(-750, 0);
+                offset = new Vector2(-offsetDist, 0);
                 break;
             default:
-                offset = new Vector2(750, 0);
+                offset = new Vector2(offsetDist, 0);
                 break;
         }
         // If false, this means that the menu is currently disabled.  We need to enable it & set it off screen so it can swipe in

@@ -245,6 +245,9 @@ public class PlayerMovement : MonoBehaviour
         increment[1] = Random.Range(0f, 10f);
 
         StartCoroutine(Fade.FadeIn(2f));
+
+        print(SaveController.alienCollectables["Alien 1"]);
+
     }
 
     private void OnEnable()
@@ -1076,7 +1079,7 @@ public class PlayerMovement : MonoBehaviour
         {
             AlienObjects thisAlien = collision.GetComponent<AlienCollectable>().alien;
             SaveController.alienCollectables[thisAlien.name] = true;
-            print("Collected the alien!");
+            print("Collected the alien: " + thisAlien.name);
             Destroy(collision.gameObject);
             
         }
