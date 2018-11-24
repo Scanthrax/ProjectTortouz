@@ -17194,7 +17194,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c19328212197b8408109300484bfe9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cam: {fileID: 141106304}
   pengin: {fileID: 1555072660}
+  objects: []
 --- !u!114 &753587458
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -235,7 +235,6 @@ public class PlayerMovement : MonoBehaviour
         bc = GetComponent<BoxCollider2D>();
         anim = GetComponent<Animator>();
         movement = Movement.Ground;
-        faceDir = 1;
         groundingLR = Grounding.None;
 
         anchorGrip = AnchorGrip.None;

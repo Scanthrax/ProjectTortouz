@@ -7,6 +7,7 @@ using System.IO;
 
 public class SaveController : MonoBehaviour
 {
+    public Camera cam;
     public Transform pengin;
     public List<GameObject> objects;
 
@@ -23,7 +24,6 @@ public class SaveController : MonoBehaviour
             string temp = item.GetComponent<AlienCollectable>().alien.name;
             alienCollectables.Add(temp, false);
         }
-
         //DeleteFile();
         //InitDictionary();
         LoadGame();
@@ -52,8 +52,11 @@ public class SaveController : MonoBehaviour
 
 
                 // update pengin's position
-                pengin.position = new Vector3(save.x + (save.faceDirection * 1.25f), save.y, save.z);
+                int temp = save.lastSave ? 1 : 0;
 
+                pengin.position = new Vector3(save.x + (save.faceDirection * 1.25f * temp), save.y, save.z);
+                pengin.GetComponent<PlayerMovement>().faceDir = save.faceDirection;
+                cam.transform.position = new Vector3(save.camX, save.camY, save.camZ);
 
                 foreach (var obj in objects)
                 {
@@ -77,7 +80,8 @@ public class SaveController : MonoBehaviour
 
 
                 Debug.Log("Game Loaded");
-            }
+                SaveGame(save);
+        }
             else
             {
                 Debug.Log("No game saved!");
@@ -99,6 +103,10 @@ public class SaveController : MonoBehaviour
         save.y = pengin.position.y;
         save.z = pengin.position.z;
 
+        save.camX = cam.transform.position.x;
+        save.camY = cam.transform.position.y;
+        save.camZ = cam.transform.position.z;
+
         foreach (var item in objects)
         {
             var breakableWall = item.GetComponent<BreakableWall>();
@@ -119,7 +127,7 @@ public class SaveController : MonoBehaviour
 
 
         save.alienCollectables = alienCollectables;
-
+        save.lastSave = true;
 
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(Application.persistentDataPath + "/gamesave.save");
@@ -128,6 +136,22 @@ public class SaveController : MonoBehaviour
 
         Debug.Log("Game Saved");
     }
+
+    public void SaveGame(Save save)
+    {
+        save.lastSave = false;
+        save.x = pengin.position.x;
+        save.y = pengin.position.y;
+        save.z = pengin.position.z;
+
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.persistentDataPath + "/gamesave.save");
+        bf.Serialize(file, save);
+        file.Close();
+
+        Debug.Log("last save");
+    }
+
 
     void DeleteFile()
     {

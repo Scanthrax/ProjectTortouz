@@ -11,12 +11,17 @@ public class Save
 {
     // save the position of Pengin & Akkoro
     [SerializeField]
-    public float x, y, z;
+    public float x, y, z, camX, camY, camZ;
+    // which direction were they facing when they last saved?
     [SerializeField]
     public int faceDirection;
+    // used for the offset the 1st time they load into a new room
     [SerializeField]
-    
+    public bool lastSave;
+
+    [SerializeField]
     public Dictionary<int, bool> activatedItems = new Dictionary<int, bool>();
+    [SerializeField]
     public Dictionary<string, bool> alienCollectables = new Dictionary<string, bool>();
 
 }

@@ -17,6 +17,7 @@ public class CameraCenterpoints : MonoBehaviour {
     public delegate void RoomName();
     public static event RoomName roomName;
 
+    bool firstLoad;
 
     public Text text;
 
@@ -28,6 +29,8 @@ public class CameraCenterpoints : MonoBehaviour {
         Room.roomChange += ChangeRoom;
 
         Application.targetFrameRate = 30;
+
+        firstLoad = true;
     }
 
 
@@ -62,8 +65,14 @@ public class CameraCenterpoints : MonoBehaviour {
             player.GetComponent<PlayerMovement>().room = to;
 
             //text.text = to.transform.parent.name;
-
-            saveController.SaveGame();
+            if (firstLoad)
+            {
+                firstLoad = false;
+            }
+            else
+            {
+                saveController.SaveGame();
+            }
         }
     }
 }
