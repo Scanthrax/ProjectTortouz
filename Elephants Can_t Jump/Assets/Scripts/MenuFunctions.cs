@@ -8,7 +8,6 @@ public class MenuFunctions : MonoBehaviour
 {
     public Object gameScene;
     public static Object GameScene;
-    //public SaveController saveController;
 
     private void Start()
     {
@@ -21,7 +20,7 @@ public class MenuFunctions : MonoBehaviour
         {
             File.Delete(Application.persistentDataPath + "/gamesave.save");
         }
-        LoadGame();
+        StartCoroutine(Fade.FadeOut(1.5f));
     }
 
 

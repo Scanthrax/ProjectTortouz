@@ -6,5 +6,6 @@ using UnityEngine;
 public class AlienObjects : ScriptableObject
 {
     public Sprite[] sprites;
+    public int framerate;
     public bool isCollected;
 }

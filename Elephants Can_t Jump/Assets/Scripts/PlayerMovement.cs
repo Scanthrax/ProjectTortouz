@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Utility;
-
+using UnityEngine.UI;
 //TODO: safeguard for groundslam animation not completing
 
 public class PlayerMovement : MonoBehaviour
@@ -216,6 +216,12 @@ public class PlayerMovement : MonoBehaviour
 
     bool delayLaunch = false;
 
+    public GameObject teardrop;
+
+    public Image blackscreen;
+    public SaveController saveController;
+
+
     void Start()
     {
         // assign the rigidbody component
@@ -243,10 +249,12 @@ public class PlayerMovement : MonoBehaviour
         increment[0] = Random.Range(0f, 10f);
         increment[1] = Random.Range(0f, 10f);
 
+        
+        Fade.Screen = blackscreen;
+        blackscreen.gameObject.SetActive(true);
         StartCoroutine(Fade.FadeIn(2f));
 
-        print(SaveController.alienCollectables["Alien 1"]);
-
+        saveController.LoadGame();
     }
 
     private void OnEnable()
@@ -590,7 +598,8 @@ public class PlayerMovement : MonoBehaviour
 
 
         if (gripping && groundingTB != Grounding.Bottom)
-            rendTransform.position = new Vector3(transform.position.x + GenerateNoise(0), transform.position.y + GenerateNoise(1), transform.position.z);
+            //rendTransform.position = new Vector3(transform.position.x + GenerateNoise(0), transform.position.y + GenerateNoise(1), transform.position.z);
+            rendTransform.localPosition = Vector3.zero;
         else
             rendTransform.localPosition = Vector3.zero;
 
@@ -717,7 +726,11 @@ public class PlayerMovement : MonoBehaviour
         }
         #endregion
 
-
+        if(stamina == 30)
+        {
+            var temp = Instantiate(teardrop,transform.position,Quaternion.identity,transform);
+            temp.transform.position += new Vector3(1.5f * -faceDir, 1f);
+        }
 
 
         

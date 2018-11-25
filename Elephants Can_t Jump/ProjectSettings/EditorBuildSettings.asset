@@ -29,4 +29,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Levels/03) Hydro/Buildout_Hydro_v1.3.unity
     guid: 53ffe824dae31294f808a9aad47c02ef
+  - enabled: 1
+    path: Assets/Scenes/Levels/04) Adding_Art/Buildout_Art_v2.0.unity
+    guid: bfb3d9c75596ec04c9f79766ee58493c
   m_configObjects: {}

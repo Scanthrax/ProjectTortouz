@@ -10,6 +10,7 @@ public class SaveController : MonoBehaviour
     public Camera cam;
     public Transform pengin;
     public List<GameObject> objects;
+    public List<AlienObjects> listOfAliens;
 
     Dictionary<int, GameObject> listOfGameObjects = new Dictionary<int, GameObject>();
 
@@ -19,14 +20,24 @@ public class SaveController : MonoBehaviour
 
     private void Awake()
     {
-        foreach (var item in GameObject.FindGameObjectsWithTag("Alien"))
+        foreach (var item in listOfAliens)
         {
-            string temp = item.GetComponent<AlienCollectable>().alien.name;
-            alienCollectables.Add(temp, false);
+            alienCollectables.Add(item.name, false);
         }
         //DeleteFile();
         //InitDictionary();
-        LoadGame();
+
+        if (File.Exists(Application.persistentDataPath + "/gamesave.save"))
+        {
+
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + "/gamesave.save", FileMode.Open);
+            Save save = (Save)bf.Deserialize(file);
+            file.Close();
+
+            alienCollectables = save.alienCollectables;
+        }
+
     }
 
 
@@ -40,54 +51,51 @@ public class SaveController : MonoBehaviour
 
     public void LoadGame()
     {
-        //if (false)
-        //{
-            if (File.Exists(Application.persistentDataPath + "/gamesave.save"))
+        if (File.Exists(Application.persistentDataPath + "/gamesave.save"))
+        {
+
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + "/gamesave.save", FileMode.Open);
+            Save save = (Save)bf.Deserialize(file);
+            file.Close();
+
+
+            // update pengin's position
+            int temp = save.lastSave ? 1 : 0;
+
+            pengin.position = new Vector3(save.x + (save.faceDirection * 1.25f * temp), save.y, save.z);
+            pengin.GetComponent<PlayerMovement>().faceDir = save.faceDirection;
+            cam.transform.position = new Vector3(save.camX, save.camY, save.camZ);
+
+            foreach (var obj in objects)
             {
+                if (!save.activatedItems.ContainsKey(obj.GetInstanceID()))
+                    continue;
 
-                BinaryFormatter bf = new BinaryFormatter();
-                FileStream file = File.Open(Application.persistentDataPath + "/gamesave.save", FileMode.Open);
-                Save save = (Save)bf.Deserialize(file);
-                file.Close();
-
-
-                // update pengin's position
-                int temp = save.lastSave ? 1 : 0;
-
-                pengin.position = new Vector3(save.x + (save.faceDirection * 1.25f * temp), save.y, save.z);
-                pengin.GetComponent<PlayerMovement>().faceDir = save.faceDirection;
-                cam.transform.position = new Vector3(save.camX, save.camY, save.camZ);
-
-                foreach (var obj in objects)
+                var breakableWall = obj.GetComponent<BreakableWall>();
+                if (breakableWall != null)
                 {
-                    if (!save.activatedItems.ContainsKey(obj.GetInstanceID()))
-                        continue;
-
-                    var breakableWall = obj.GetComponent<BreakableWall>();
-                    if (breakableWall != null)
-                    {
-                        listOfGameObjects[obj.GetInstanceID()].GetComponent<BreakableWall>().isBroken = save.activatedItems[obj.GetInstanceID()];
-                    }
-
-                    var button = obj.GetComponentInChildren<Button>();
-                    if (button != null)
-                    {
-                        listOfGameObjects[obj.GetInstanceID()].GetComponentInChildren<Button>().press = save.activatedItems[obj.GetInstanceID()];
-                    }
+                    listOfGameObjects[obj.GetInstanceID()].GetComponent<BreakableWall>().isBroken = save.activatedItems[obj.GetInstanceID()];
                 }
 
-                alienCollectables = save.alienCollectables;
-
-
-                Debug.Log("Game Loaded");
-                SaveGame(save);
-        }
-            else
-            {
-                Debug.Log("No game saved!");
-
+                var button = obj.GetComponentInChildren<Button>();
+                if (button != null)
+                {
+                    listOfGameObjects[obj.GetInstanceID()].GetComponentInChildren<Button>().press = save.activatedItems[obj.GetInstanceID()];
+                }
             }
-        //}
+
+            alienCollectables = save.alienCollectables;
+
+
+            Debug.Log("Game Loaded");
+            SaveGame(save);
+        }
+        else
+        {
+            Debug.Log("No game saved!");
+
+        }
     }
 
         

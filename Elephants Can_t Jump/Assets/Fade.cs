@@ -6,14 +6,16 @@ using UnityEngine.UI;
 public class Fade : MonoBehaviour {
 
     Image screen;
-    static Image Screen;
+    public static Image Screen;
 
 	void Awake ()
     {
+        
+        print(gameObject);
         screen = GetComponent<Image>();
         Screen = screen;
-        
-	}
+
+    }
 	
 	public static IEnumerator FadeIn(float time)
     {
@@ -23,7 +25,7 @@ public class Fade : MonoBehaviour {
 
         while (timer <= time)
         {
-            timer += Time.deltaTime;
+            timer += Time.deltaTime * 0.8f;
             percent = timer / time;
             Screen.color = new Color(Screen.color.r, Screen.color.g, Screen.color.b, 1-percent);
             yield return null;
