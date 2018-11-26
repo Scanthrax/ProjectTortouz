@@ -33,7 +33,7 @@ public class Fade : MonoBehaviour {
     }
 
 
-    public static IEnumerator FadeOut(float time)
+    public static IEnumerator FadeOut(float time, Object scene)
     {
         float timer = 0f;
         float percent = 0f;
@@ -49,7 +49,7 @@ public class Fade : MonoBehaviour {
             yield return null;
         }
 
-        MenuFunctions.LoadGame();
+        MenuFunctions.LoadGame(scene);
     }
 
 

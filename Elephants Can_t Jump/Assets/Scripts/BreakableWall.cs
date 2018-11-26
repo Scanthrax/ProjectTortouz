@@ -10,7 +10,9 @@ public class BreakableWall : MonoBehaviour, IBreakable
     /// </summary>
     public int health;
 
-    public bool isBroken = false;
+    public bool isBroken;
+
+    string keyID;
 
     public void Break(int damage)
     {
@@ -29,11 +31,21 @@ public class BreakableWall : MonoBehaviour, IBreakable
             SoundLibrary.AudioSource[1].clip = SoundLibrary.CrateBreak;
             SoundLibrary.AudioSource[1].volume = 0.7f;
             SoundLibrary.AudioSource[1].Play();
+
+
+            if (!SaveController.breakableDict.ContainsKey(keyID))
+                SaveController.breakableDict.Add(keyID, true);
+            else
+                SaveController.breakableDict[keyID] = true;
         }
     }
 
     private void Start()
     {
+        keyID = transform.position.ToString();
+
+        isBroken = SaveController.breakableDict.ContainsKey(keyID) ? true : false;
+
         if(isBroken)
             gameObject.SetActive(false);
     }

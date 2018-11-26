@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameScene: {fileID: 102900000, guid: bfb3d9c75596ec04c9f79766ee58493c, type: 3}
+  menuScene: {fileID: 102900000, guid: b9b4c497d7d71d04b929dba8741c2cee, type: 3}
 --- !u!4 &106793045
 Transform:
   m_ObjectHideFlags: 0

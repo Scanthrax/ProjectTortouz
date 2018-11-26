@@ -249,13 +249,18 @@ public class PlayerMovement : MonoBehaviour
         increment[0] = Random.Range(0f, 10f);
         increment[1] = Random.Range(0f, 10f);
 
+
         
         Fade.Screen = blackscreen;
         blackscreen.gameObject.SetActive(true);
         StartCoroutine(Fade.FadeIn(2f));
 
         saveController.LoadGame();
+
+
+        
     }
+
 
     private void OnEnable()
     {

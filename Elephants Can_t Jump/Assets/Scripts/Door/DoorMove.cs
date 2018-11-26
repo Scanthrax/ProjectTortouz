@@ -15,22 +15,24 @@ public class DoorMove : MonoBehaviour
     public Color color;
     // Use this for initialization
 
+    public bool playSound = true;
 
-
-    bool playSound = true;
 
     void Start()
     {
-        open = false;
         button = ButtonSystem.transform.Find("Button").GetComponent<Button>();
+        
+        button.door = this;
     }
 
     // Update is called once per frame
     void Update()
     {
         //if a button is assigned to the platform
-        open = button.isPressed;
-
+        if (SaveController.buttonsDict.ContainsKey(button.keyID))
+            open = SaveController.buttonsDict[button.keyID];
+        else
+            open = button.isPressed;
 
         if (open)
         {
@@ -45,7 +47,7 @@ public class DoorMove : MonoBehaviour
             if(ButtonSystem.transform.Find("Button").transform.position == ButtonSystem.transform.Find("EndP").transform.position)
             {
                 button.active = false;
-                playSound = true;
+                //playSound = true;
             }
         }
 

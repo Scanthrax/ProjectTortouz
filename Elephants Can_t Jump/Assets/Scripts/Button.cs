@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Button : MonoBehaviour, IBreakable
 {
     public bool active; //used to deactivate button for objects that only have 1 function such as doors that only open.
@@ -21,17 +22,37 @@ public class Button : MonoBehaviour, IBreakable
 
     bool playSound = true;
 
+    public DoorMove door;
+
     SpriteRenderer spriteRend;
+
+    public string keyID;
+
     // Use this for initialization
-    void Start () {
+    void Start ()
+    {
+        keyID = transform.position.ToString();
+
         active = true;
-        isPressed = false;
+        //isPressed = false;
         spriteRend = GetComponent<SpriteRenderer>();
+
+        
+
+        print("Button Start " + keyID);
+
+        bool temp;
+        if (SaveController.buttonsDict.ContainsKey(keyID))
+        {
+            temp = SaveController.buttonsDict[keyID];
+            transform.position = !temp ? StartP.position : EndP.position;
+            isPressed = !temp;
+        }
+
     }
 	
     public void Break(int damage)
     {
-        
         if (!moving)
         {
             
@@ -39,11 +60,21 @@ public class Button : MonoBehaviour, IBreakable
             {
                 press = true;
                 print("push");
+                if (!SaveController.buttonsDict.ContainsKey(keyID))
+                    SaveController.buttonsDict.Add(keyID, true);
+                else
+                    SaveController.buttonsDict[keyID] = true;
             }
             else if(isPressed && !release)
             {
                 release = true;
                 print("pull");
+
+                if (!SaveController.buttonsDict.ContainsKey(keyID))
+                    SaveController.buttonsDict.Add(keyID, false);
+                else
+                    SaveController.buttonsDict[keyID] = false;
+
             }
         }
     }

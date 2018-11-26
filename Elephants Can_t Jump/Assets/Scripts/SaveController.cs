@@ -9,11 +9,11 @@ public class SaveController : MonoBehaviour
 {
     public Camera cam;
     public Transform pengin;
-    public List<GameObject> objects;
+
+    public static Dictionary<string, bool> buttonsDict = new Dictionary<string, bool>();
+    public static Dictionary<string, bool> breakableDict = new Dictionary<string, bool>();
+
     public List<AlienObjects> listOfAliens;
-
-    Dictionary<int, GameObject> listOfGameObjects = new Dictionary<int, GameObject>();
-
     public static Dictionary<string, bool> alienCollectables = new Dictionary<string, bool>();
 
     Save save = new Save();
@@ -25,7 +25,6 @@ public class SaveController : MonoBehaviour
             alienCollectables.Add(item.name, false);
         }
         //DeleteFile();
-        //InitDictionary();
 
         if (File.Exists(Application.persistentDataPath + "/gamesave.save"))
         {
@@ -35,19 +34,15 @@ public class SaveController : MonoBehaviour
             Save save = (Save)bf.Deserialize(file);
             file.Close();
 
+            buttonsDict = save.buttonsDict;
+            breakableDict = save.breakableDict;
             alienCollectables = save.alienCollectables;
         }
 
     }
 
 
-    void InitDictionary()
-    {
-        foreach (var obj in objects)
-        {
-            listOfGameObjects.Add(obj.GetInstanceID(), obj);
-        }
-    }
+    
 
     public void LoadGame()
     {
@@ -67,25 +62,9 @@ public class SaveController : MonoBehaviour
             pengin.GetComponent<PlayerMovement>().faceDir = save.faceDirection;
             cam.transform.position = new Vector3(save.camX, save.camY, save.camZ);
 
-            foreach (var obj in objects)
-            {
-                if (!save.activatedItems.ContainsKey(obj.GetInstanceID()))
-                    continue;
-
-                var breakableWall = obj.GetComponent<BreakableWall>();
-                if (breakableWall != null)
-                {
-                    listOfGameObjects[obj.GetInstanceID()].GetComponent<BreakableWall>().isBroken = save.activatedItems[obj.GetInstanceID()];
-                }
-
-                var button = obj.GetComponentInChildren<Button>();
-                if (button != null)
-                {
-                    listOfGameObjects[obj.GetInstanceID()].GetComponentInChildren<Button>().press = save.activatedItems[obj.GetInstanceID()];
-                }
-            }
-
             alienCollectables = save.alienCollectables;
+            buttonsDict = save.buttonsDict;
+            breakableDict = save.breakableDict;
 
 
             Debug.Log("Game Loaded");
@@ -104,38 +83,26 @@ public class SaveController : MonoBehaviour
     {
         save = new Save();
 
-        save.faceDirection = pengin.GetComponent<PlayerMovement>().faceDir;
+        
 
         // save the xyz coordinates
         save.x = pengin.position.x;
         save.y = pengin.position.y;
         save.z = pengin.position.z;
 
+        save.faceDirection = pengin.GetComponent<PlayerMovement>().faceDir;
+
         save.camX = cam.transform.position.x;
         save.camY = cam.transform.position.y;
         save.camZ = cam.transform.position.z;
 
-        foreach (var item in objects)
-        {
-            var breakableWall = item.GetComponent<BreakableWall>();
-            if (breakableWall != null)
-            {
-                save.activatedItems.Add(item.GetInstanceID(), breakableWall.isBroken);
-                print("updated wall");
-                continue;
-            }
-
-            var button = item.GetComponentInChildren<Button>();
-            if (button != null)
-            {
-                save.activatedItems.Add(item.GetInstanceID(), button.isPressed);
-                print("updated button");
-            }
-        }
-
-
+        save.buttonsDict = buttonsDict;
+        save.breakableDict = breakableDict;
         save.alienCollectables = alienCollectables;
         save.lastSave = true;
+
+        
+
 
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(Application.persistentDataPath + "/gamesave.save");
@@ -151,6 +118,8 @@ public class SaveController : MonoBehaviour
         save.x = pengin.position.x;
         save.y = pengin.position.y;
         save.z = pengin.position.z;
+
+        save.faceDirection = pengin.GetComponent<PlayerMovement>().faceDir;
 
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(Application.persistentDataPath + "/gamesave.save");

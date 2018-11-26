@@ -20,7 +20,9 @@ public class Save
     public bool lastSave;
 
     [SerializeField]
-    public Dictionary<int, bool> activatedItems = new Dictionary<int, bool>();
+    public Dictionary<string, bool> buttonsDict = new Dictionary<string, bool>();
+    [SerializeField]
+    public Dictionary<string, bool> breakableDict = new Dictionary<string, bool>();
     [SerializeField]
     public Dictionary<string, bool> alienCollectables = new Dictionary<string, bool>();
 
