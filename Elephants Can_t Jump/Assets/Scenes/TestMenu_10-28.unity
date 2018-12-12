@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ceca7c76c54d20b4998ecc01f940f7c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameScene: {fileID: 102900000, guid: bfb3d9c75596ec04c9f79766ee58493c, type: 3}
+  gameScene: {fileID: 102900000, guid: ca770fc2abd2e6942826cc9102e286ff, type: 3}
   menuScene: {fileID: 102900000, guid: b9b4c497d7d71d04b929dba8741c2cee, type: 3}
 --- !u!4 &106793045
 Transform:
@@ -170,7 +170,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 1557783910}
   pengin: {fileID: 1557783911}
-  objects: []
   listOfAliens:
   - {fileID: 11400000, guid: 0d8c53e33d211044884287e2eec4ffe8, type: 2}
   - {fileID: 11400000, guid: d7bdb3bfdaa4d8c4f87e5731f3724a72, type: 2}

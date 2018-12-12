@@ -20,6 +20,8 @@ public class SaveController : MonoBehaviour
 
     private void Awake()
     {
+        cam = Camera.main;
+
         foreach (var item in listOfAliens)
         {
             alienCollectables.Add(item.name, false);

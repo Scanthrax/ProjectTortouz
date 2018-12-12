@@ -309,6 +309,8 @@ MonoBehaviour:
   speed1: 0.5
   speed2: 0.5
   key: 102
+  door: {fileID: 0}
+  keyID: 
 --- !u!114 &114438372711597090
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -325,6 +327,7 @@ MonoBehaviour:
   Target: {fileID: 4218625575580222}
   speed: 2
   color: {r: 0, g: 0.20115566, b: 1, a: 1}
+  playSound: 1
 --- !u!212 &212508843372237794
 SpriteRenderer:
   m_ObjectHideFlags: 1
