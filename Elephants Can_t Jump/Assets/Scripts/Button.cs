@@ -23,6 +23,7 @@ public class Button : MonoBehaviour, IBreakable
     bool playSound = true;
 
     public DoorMove door;
+    public MovingPlatform platform;
 
     SpriteRenderer spriteRend;
 
@@ -47,6 +48,8 @@ public class Button : MonoBehaviour, IBreakable
             temp = SaveController.buttonsDict[keyID];
             transform.position = !temp ? StartP.position : EndP.position;
             isPressed = !temp;
+
+            if(platform != null) platform.canMove = temp;
         }
 
     }

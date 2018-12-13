@@ -258,7 +258,7 @@ public class PlayerMovement : MonoBehaviour
         saveController.LoadGame();
 
 
-        
+        Cursor.visible = false;
     }
 
 
@@ -581,6 +581,12 @@ public class PlayerMovement : MonoBehaviour
         }
         #endregion
 
+
+        if(groundingTB == Grounding.None && ((leftTentacle.state == Tentacles.Anchored) != (rightTentacle.state == Tentacles.Anchored)))
+        {
+            stamina--;
+        }
+
         #region Recover Stamina
         if (groundingTB == Grounding.Bottom)
         {
@@ -633,6 +639,7 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator AnimateMove(float duration)
     {
+        delayLaunch = true;
         float journey = 0f;
         while (journey <= duration)
         {
@@ -657,9 +664,10 @@ public class PlayerMovement : MonoBehaviour
         {
             // clamp the magnitude of the launch
             rb.AddForce(Vector2.ClampMagnitude(launchDir.right * SpringCalc2(), 7000f));
+            print((1/SpringCalc2()) * 1200f + " force");
             // no longer launching
             launch = false;
-            LaunchDelay(0.4f);
+            LaunchDelay((1/SpringCalc2())* 1200f);
         }
 
         float speedMult = 100f;
@@ -731,10 +739,13 @@ public class PlayerMovement : MonoBehaviour
         }
         #endregion
 
-        if(stamina == 30)
+        if(Random.Range(0,stamina * 3) == 0 && stamina != maxStamina)
         {
-            var temp = Instantiate(teardrop,transform.position,Quaternion.identity,transform);
-            temp.transform.position += new Vector3(1.5f * -faceDir, 1f);
+            //var temp = Instantiate(teardrop,transform.position,Quaternion.identity,transform);
+            //temp.transform.position += new Vector3(1.5f * -faceDir, 1f);
+
+            var temp = Instantiate(teardrop, transform.position, Quaternion.identity, transform);
+            temp.transform.position += new Vector3(Random.Range(-1.5f,1.5f),Random.Range(-1.5f, 1.5f));
         }
 
 
@@ -759,7 +770,7 @@ public class PlayerMovement : MonoBehaviour
                 #endregion
 
                 #region Expand the Anchor tentacle when in range of anchor & key is pressed
-                if ((Input.GetKey(thisTentacle.key) || Input.GetMouseButton(thisTentacle.mouseButton)))
+                if (((Input.GetKey(thisTentacle.key) || Input.GetMouseButton(thisTentacle.mouseButton))) && !delayLaunch)
                 {
                     // there is only a single point
                     if (anchorPositions.Count == 1)
@@ -828,6 +839,7 @@ public class PlayerMovement : MonoBehaviour
                         break;
                     }
                 }
+
                 #endregion
 
                 #region aim tentacle
@@ -871,7 +883,15 @@ public class PlayerMovement : MonoBehaviour
                 }
                 #endregion
 
-                
+                if(otherTentacle.state == Tentacles.None)
+                {
+                    if(stamina <= 0)
+                    {
+                        thisTentacle.state = Tentacles.Retracting;
+                        thisTentacle.anchorPos = null;
+                        break;
+                    }
+                }
 
                 ClampTentacles(thisTentacle);
 

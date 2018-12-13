@@ -389,6 +389,7 @@ MonoBehaviour:
   speed2: 0.5
   key: 102
   door: {fileID: 0}
+  platform: {fileID: 0}
   keyID: 
 --- !u!114 &114404027068879444
 MonoBehaviour:

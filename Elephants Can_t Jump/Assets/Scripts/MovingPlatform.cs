@@ -15,11 +15,19 @@ public class MovingPlatform : MonoBehaviour
     int delay;
     public Button button;
 
+
+    private void Awake()
+    {
+        //button.platform = this;
+    }
+
     // Use this for initialization
     void Start()
     {
         currentP = pointArr[pointSelection]; //Start at the first point
         delay = 0;
+        canMove = !button.isPressed;
+        
 	}
 	
 	// Update is called once per frame
