@@ -36,8 +36,8 @@ public class CameraCenterpoints : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        if (Input.GetKey("escape"))
-            Application.Quit();
+        //if (Input.GetKey("escape"))
+        //    Application.Quit();
     }
 
 

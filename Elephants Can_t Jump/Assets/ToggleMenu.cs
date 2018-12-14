@@ -22,12 +22,16 @@ public class ToggleMenu : MonoBehaviour {
 
     public void Restart()
     {
-        StartCoroutine(Fade.FadeOut(1.5f, MenuFunctions.GameScene));
+        StartCoroutine(Fade.FadeOut(1.5f, "Buildout_Art_Final"));
     }
 
     public void MainMenu()
     {
-        StartCoroutine(Fade.FadeOut(1.5f, MenuFunctions.MenuScene));
+        StartCoroutine(Fade.FadeOut(1.5f, "TestMenu_10-28"));
     }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }

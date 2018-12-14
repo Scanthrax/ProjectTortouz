@@ -25,17 +25,26 @@ public class MenuFunctions : MonoBehaviour
         SaveController.buttonsDict = new Dictionary<string, bool>();
         SaveController.breakableDict = new Dictionary<string, bool>();
         SaveController.alienCollectables = new Dictionary<string, bool>();
-        StartCoroutine(Fade.FadeOut(1.5f, GameScene));
+        StartCoroutine(Fade.FadeOut(1.5f, "Buildout_Art_Final"));
     }
 
 
     public void ContinueGame()
     {
-        StartCoroutine(Fade.FadeOut(1.5f, GameScene));
+        StartCoroutine(Fade.FadeOut(1.5f, "Buildout_Art_Final"));
     }
 
     public static void LoadGame(Object scene)
     {
         SceneManager.LoadScene(scene.name);
+    }
+    public static void LoadGame(string str)
+    {
+        SceneManager.LoadScene(str);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

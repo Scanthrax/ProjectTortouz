@@ -257,8 +257,8 @@ public class PlayerMovement : MonoBehaviour
 
         saveController.LoadGame();
 
-
-        Cursor.visible = false;
+        rend.flipX = faceDir == -1 ? true : false;
+        //Cursor.visible = false;
     }
 
 
@@ -315,6 +315,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+
         #region Order nearby anchorpoints by distance
         Functions.OrderByDistance(anchorPositions, transform.position);
         #endregion
@@ -739,11 +740,8 @@ public class PlayerMovement : MonoBehaviour
         }
         #endregion
 
-        if(Random.Range(0,stamina * 3) == 0 && stamina != maxStamina)
+        if(Random.Range(0,4) == 0 && (stamina < 45 && stamina != 0))
         {
-            //var temp = Instantiate(teardrop,transform.position,Quaternion.identity,transform);
-            //temp.transform.position += new Vector3(1.5f * -faceDir, 1f);
-
             var temp = Instantiate(teardrop, transform.position, Quaternion.identity, transform);
             temp.transform.position += new Vector3(Random.Range(-1.5f,1.5f),Random.Range(-1.5f, 1.5f));
         }
@@ -902,7 +900,7 @@ public class PlayerMovement : MonoBehaviour
                 
 
 
-                if (Input.GetKeyUp(Variables.launch) && otherTentacle.state == Tentacles.Anchored)
+                if (Input.GetKeyDown(Variables.launch) && otherTentacle.state == Tentacles.Anchored)
                 {
                     #region retract both tentacles
                     thisTentacle.state = Tentacles.Retracting;

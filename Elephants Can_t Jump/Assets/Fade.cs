@@ -53,4 +53,24 @@ public class Fade : MonoBehaviour {
     }
 
 
+    public static IEnumerator FadeOut(float time, string str)
+    {
+        float timer = 0f;
+        float percent = 0f;
+
+        Screen.color = new Color(Screen.color.r, Screen.color.g, Screen.color.b, 0);
+
+        while (timer <= time)
+        {
+
+            timer += Time.deltaTime;
+            percent = timer / time;
+            Screen.color = new Color(Screen.color.r, Screen.color.g, Screen.color.b, percent);
+            yield return null;
+        }
+
+        MenuFunctions.LoadGame(str);
+    }
+
+
 }

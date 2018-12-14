@@ -13,10 +13,10 @@ public class LevelController : MonoBehaviour {
 
     private void LateUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    Application.Quit();
+        //}
 
         //if (Input.GetKeyDown(KeyCode.R))
         //{

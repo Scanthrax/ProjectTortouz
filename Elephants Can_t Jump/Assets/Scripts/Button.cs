@@ -46,10 +46,7 @@ public class Button : MonoBehaviour, IBreakable
         if (SaveController.buttonsDict.ContainsKey(keyID))
         {
             temp = SaveController.buttonsDict[keyID];
-            transform.position = !temp ? StartP.position : EndP.position;
-            isPressed = !temp;
-
-            if(platform != null) platform.canMove = temp;
+            press = temp;
         }
 
     }

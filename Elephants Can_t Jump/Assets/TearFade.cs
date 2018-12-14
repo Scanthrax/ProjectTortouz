@@ -6,26 +6,27 @@ public class TearFade : MonoBehaviour {
 
     SpriteRenderer renderer;
     Rigidbody2D rb;
-
+    Color newCol;
 
     private void Start()
     {
         renderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
-        rb.AddForce(new Vector2(Random.Range(-1, 1), Random.Range(-1, 1)) * 100f);
+        rb.AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f))*1000f);
+
+        float temp = Random.Range(0.9f, 2.1f);
+        transform.localScale = new Vector3(temp, temp);
+        newCol = renderer.color;
     }
 
 
     private void Update()
     {
-        Color col = renderer.color;
-        col.a -= 0.04f;
-        renderer.color = col;
-        //transform.position += Vector3.down * 0.01f;
-        transform.localScale = new Vector3(Random.Range(0.8f, 2.2f), Random.Range(0.8f, 2.2f));
+        newCol.a -= 0.04f;
+        renderer.color = newCol;
         if(renderer.color.a <= 0f)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
     }
 }
