@@ -630,7 +630,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Credits: {fileID: 1236898948}
   endPoint: {fileID: 703723473}
-  speed: 60
+  speed: 800
 --- !u!1 &290187027
 GameObject:
   m_ObjectHideFlags: 0
@@ -771,7 +771,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -1454}
+  m_AnchoredPosition: {x: 0, y: -1677.0398}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &366585782
@@ -1643,7 +1643,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1647}
+  m_AnchoredPosition: {x: 0, y: 6326}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &725949572
@@ -2363,7 +2363,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -501}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1154271271
@@ -2747,7 +2747,7 @@ RectTransform:
   m_GameObject: {fileID: 1236898948}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3.7953756, y: 3.795378, z: 3.795378}
   m_Children:
   - {fileID: 1014183618}
   - {fileID: 61032505}
@@ -2764,7 +2764,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -501}
+  m_AnchoredPosition: {x: 0, y: -1858}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1276290434
@@ -3344,7 +3344,7 @@ RectTransform:
   m_GameObject: {fileID: 1507352317}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 11.77605, y: 6.7620463, z: 1.3401433}
+  m_LocalScale: {x: 20.74, y: 13, z: 1.3401433}
   m_Children: []
   m_Father: {fileID: 170253027}
   m_RootOrder: 0
@@ -3528,7 +3528,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Ronald Weeden Jr.
+  m_Text: Ronald Weeden Jr
 --- !u!222 &1535027499
 CanvasRenderer:
   m_ObjectHideFlags: 0

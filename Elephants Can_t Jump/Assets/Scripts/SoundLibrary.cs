@@ -13,7 +13,11 @@ public class SoundLibrary : MonoBehaviour {
     public AudioClip crateBreak;
     public AudioClip button;
 
+    public AudioClip[] fall;
+    public AudioClip[] quips;
 
+
+    #region
     public static AudioSource[] AudioSource;
     public static AudioClip StretchTentacle;
     public static AudioClip[] Launch;
@@ -22,7 +26,9 @@ public class SoundLibrary : MonoBehaviour {
     public static AudioClip[] WallBreak;
     public static AudioClip CrateBreak;
     public static AudioClip Button;
-
+    public static AudioClip[] Fall;
+    public static AudioClip[] Quips;
+    #endregion
     // Use this for initialization
     void Start () {
         AudioSource = GetComponents<AudioSource>();

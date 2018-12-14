@@ -221,6 +221,8 @@ public class PlayerMovement : MonoBehaviour
     public Image blackscreen;
     public SaveController saveController;
 
+    public float quipTimer = 0f;
+    public float quipTime = 10f;
 
     void Start()
     {
@@ -628,6 +630,23 @@ public class PlayerMovement : MonoBehaviour
         if(groundingTB == Grounding.Bottom)
         {
             anim.SetBool("canBeAirborne", true);
+        }
+
+
+
+        if(hor != 0)
+        {
+            //print("moving!");
+            quipTimer = 0f;
+        }
+        else
+        {
+            quipTimer += Time.deltaTime;
+        }
+
+        if(quipTimer >= quipTime)
+        {
+            print("Time for a quip!");
         }
 
     }

@@ -370,6 +370,27 @@ MonoBehaviour:
   m_Script: {fileID: 185759285, guid: 0472bdc8d6d15384d98f22ee34302f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _quads: []
+  _sharedIndices: []
+  _vertices: []
+  _uv: []
+  _uv3: []
+  _uv4: []
+  _tangents: []
+  _sharedIndicesUV: []
+  _colors: []
+  userCollisions: 0
+  isSelectable: 1
+  unwrapParameters:
+    hardAngle: 88
+    packMargin: 4
+    angleError: 8
+    areaError: 15
+  asset_guid: 
+  dontDestroyMeshOnDelete: 0
+  m_selectedFaces: 
+  m_SelectedEdges: []
+  m_selectedTriangles: 
 --- !u!33 &48561846
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -423,6 +444,7 @@ MonoBehaviour:
   m_Script: {fileID: 16342205, guid: 0472bdc8d6d15384d98f22ee34302f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _entityType: 0
 --- !u!4 &48561849
 Transform:
   m_ObjectHideFlags: 0
@@ -3514,9 +3536,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f3f09ab5586b8b4f8bfa43961989d34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerGameObjects:
-  - {fileID: 755366953}
-  panCam: 0
+  saveController: {fileID: 0}
+  text: {fileID: 0}
 --- !u!114 &753587456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3528,15 +3549,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d593192babfeeab4186784a389df20ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  publicUnits:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
---- !u!1 &755366953 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1230566603385340, guid: f6c41853ae2a68f458798385d92300c8,
-    type: 2}
-  m_PrefabInternal: {fileID: 1111349948}
 --- !u!1001 &772680778
 Prefab:
   m_ObjectHideFlags: 0
@@ -5283,6 +5295,8 @@ MonoBehaviour:
   door: {fileID: 2008846154}
   Target: {fileID: 1473233877}
   speed: 2
+  color: {r: 0, g: 0, b: 0, a: 0}
+  playSound: 1
 --- !u!4 &1284469756
 Transform:
   m_ObjectHideFlags: 0
@@ -7317,7 +7331,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: fd69184de63452640a23933a4155f47f, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -7437,7 +7451,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: fd69184de63452640a23933a4155f47f, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -7513,6 +7527,9 @@ MonoBehaviour:
   speed1: 0.5
   speed2: 0.5
   key: 102
+  door: {fileID: 0}
+  platform: {fileID: 0}
+  keyID: 
 --- !u!1 &2010091966
 GameObject:
   m_ObjectHideFlags: 0
