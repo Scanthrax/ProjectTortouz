@@ -5,6 +5,9 @@ using Utility;
 using UnityEngine.UI;
 //TODO: safeguard for groundslam animation not completing
 
+
+public enum AudioChannel { Environment, Character, Destruction}
+
 public class PlayerMovement : MonoBehaviour
 {
     #region Movement
@@ -223,6 +226,8 @@ public class PlayerMovement : MonoBehaviour
 
     public float quipTimer = 0f;
     public float quipTime = 10f;
+    public float quipLength;
+    public bool playingQuip = false;
 
     void Start()
     {
@@ -634,7 +639,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-        if(hor != 0)
+        if(hor != 0 && !playingQuip)
         {
             //print("moving!");
             quipTimer = 0f;
@@ -644,9 +649,25 @@ public class PlayerMovement : MonoBehaviour
             quipTimer += Time.deltaTime;
         }
 
-        if(quipTimer >= quipTime)
+        if (!playingQuip)
         {
-            print("Time for a quip!");
+            if (quipTimer >= quipTime)
+            {
+                print("start quip!");
+                playingQuip = true;
+                quipTimer = 0f;
+                // get length of quip here
+                quipLength = 2f;
+            }
+        }
+        else
+        {
+            if (quipTimer >= quipLength)
+            {
+                playingQuip = false;
+                quipTimer = 0f;
+                print("done playing quip!");
+            }
         }
 
     }
@@ -874,8 +895,8 @@ public class PlayerMovement : MonoBehaviour
                     // set state to Anchored
                     thisTentacle.state = Tentacles.Anchored;
 
-                    SoundLibrary.AudioSource[0].clip = SoundLibrary.TentacleSlap;
-                    SoundLibrary.AudioSource[0].Play();
+                    SoundLibrary.AudioSource[(int)AudioChannel.Environment].clip = SoundLibrary.TentacleSlap;
+                    SoundLibrary.AudioSource[(int)AudioChannel.Environment].Play();
 
                     #region switch tentacles
                     if (otherTentacle.state == Tentacles.Anchored)
@@ -929,8 +950,8 @@ public class PlayerMovement : MonoBehaviour
                     movement = Movement.Launch;
                     if (Random.Range(0, 3) == 0)
                     {
-                        SoundLibrary.AudioSource[1].clip = SoundLibrary.Launch[Random.Range(0, SoundLibrary.Launch.Length-1)];
-                        SoundLibrary.AudioSource[1].Play();
+                        SoundLibrary.AudioSource[(int)AudioChannel.Character].clip = SoundLibrary.Launch[Random.Range(0, SoundLibrary.Launch.Length-1)];
+                        SoundLibrary.AudioSource[(int)AudioChannel.Character].Play();
                     }
 
                 }
