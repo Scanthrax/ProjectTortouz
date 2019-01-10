@@ -31,7 +31,7 @@ public class AttackWall : MonoBehaviour
     {
         bc.offset = new Vector2(pm.faceDir*Mathf.Abs(bc.offset.x), bc.offset.y);
 
-        if(Input.GetKeyDown(key) && pm.movement == Movement.Ground && !pm.action)
+        if((Input.GetKeyDown(key) || Input.GetButtonDown("Wall Bash")) && pm.movement == Movement.Ground && !pm.action)
         {
             anim.SetTrigger("Wallbreak");
             SoundLibrary.AudioSource[1].clip = SoundLibrary.WallBreak[1];

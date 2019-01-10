@@ -32,7 +32,7 @@ public class MenuFunctions : MonoBehaviour
 
     public void ContinueGame()
     {
-        StartCoroutine(Fade.FadeOut(1.5f, "Buildout_Art_Final"));
+        StartCoroutine(Fade.FadeOut(1.5f, "Buildout_Art_Final_2.0"));
     }
 
     public static void LoadGame(Object scene)

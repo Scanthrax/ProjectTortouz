@@ -66,7 +66,7 @@ public class PenginSlingAkkoro : MonoBehaviour
         {
             print("should be preparing for launch!");
             prepLaunch = true;
-            aimLaunch.right = cam.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+            //aimLaunch.right = cam.ScreenToWorldPoint(Input.Position) - transform.position;
 
             #region trajectory
 

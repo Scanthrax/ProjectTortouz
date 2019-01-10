@@ -265,7 +265,7 @@ public class PlayerMovement : MonoBehaviour
         saveController.LoadGame();
 
         rend.flipX = faceDir == -1 ? true : false;
-        //Cursor.visible = false;
+        Cursor.visible = false;
     }
 
 
@@ -373,7 +373,7 @@ public class PlayerMovement : MonoBehaviour
         #endregion
 
         #region Holding spacebar enables grip
-        if (Input.GetKey(Variables.wallGrip))
+        if (Input.GetKey(Variables.wallGrip) || Input.GetButton("Grip"))
         {
             if (groundingLR != Grounding.None || groundingTB == Grounding.Top)
             {
@@ -397,8 +397,8 @@ public class PlayerMovement : MonoBehaviour
         // The player will only be able to move on walls when gripping
         if (gripping)
         {
-            up = Input.GetKey(KeyCode.W) ? 1 : 0;
-            down = Input.GetKey(KeyCode.S) ? -1 : 0;
+            up = (Input.GetKey(KeyCode.W) || Input.GetAxis("Vertical") < 0f) ? 1 : 0;
+            down = (Input.GetKey(KeyCode.S) || Input.GetAxis("Vertical") > 0f) ? -1 : 0;
         }
         else
         {
@@ -406,8 +406,8 @@ public class PlayerMovement : MonoBehaviour
             down = 0;
         }
 
-        left = Input.GetKey(KeyCode.A) ? -1 : 0;
-        right = Input.GetKey(KeyCode.D) ? 1 : 0;
+        left = (Input.GetKey(KeyCode.A) || Input.GetAxis("Horizontal") > 0f) ? -1 : 0;
+        right = (Input.GetKey(KeyCode.D) || Input.GetAxis("Horizontal") < 0f) ? 1 : 0;
 
 
         if (groundingLR == Grounding.Left)
@@ -808,7 +808,7 @@ public class PlayerMovement : MonoBehaviour
                 #endregion
 
                 #region Expand the Anchor tentacle when in range of anchor & key is pressed
-                if (((Input.GetKey(thisTentacle.key) || Input.GetMouseButton(thisTentacle.mouseButton))) && !delayLaunch)
+                if ((Input.GetKey(thisTentacle.key) || Input.GetMouseButton(thisTentacle.mouseButton) || Input.GetAxis("Tentacle Grab") != 0f) && !delayLaunch)
                 {
                     // there is only a single point
                     if (anchorPositions.Count == 1)
@@ -913,7 +913,7 @@ public class PlayerMovement : MonoBehaviour
             case Tentacles.Anchored:
 
                 #region Press key to retract
-                if (!Input.GetKey(thisTentacle.key) && !Input.GetMouseButton(thisTentacle.mouseButton))
+                if (!Input.GetKey(thisTentacle.key) && !Input.GetMouseButton(thisTentacle.mouseButton) && Input.GetAxis("Tentacle Grab") == 0f)
                 {
                     thisTentacle.state = Tentacles.Retracting;
                     thisTentacle.anchorPos = null;
@@ -940,7 +940,7 @@ public class PlayerMovement : MonoBehaviour
                 
 
 
-                if (Input.GetKeyDown(Variables.launch) && otherTentacle.state == Tentacles.Anchored)
+                if ((Input.GetKeyDown(Variables.launch) || Input.GetButtonDown("Launch")) && otherTentacle.state == Tentacles.Anchored)
                 {
                     #region retract both tentacles
                     thisTentacle.state = Tentacles.Retracting;

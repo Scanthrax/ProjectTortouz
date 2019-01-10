@@ -7,35 +7,38 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 0
     path: 
-    guid: 2cda990e2423bbf4892e6590ba056729
+    guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/Scenes/Test Levels/TEST LEVELS.unity
-    guid: 6223f763614119f44b2d02c8cbe3a5e5
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/Scenes/Test Levels/Demo.unity
-    guid: 704a5fd4093d2ed48b6ddf87c0e9a3d1
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/Scenes/Levels/02) Storage/Buildout_Storage_v2.6.unity
-    guid: 50ccef5bfae9dc2429e2b1adef24dc05
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/Scenes/Levels/02) Storage/Buildout_Storage_v2.7.unity
-    guid: ad0d02ad0ca82014ba5d58f3022a8d1a
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/TestMenu_10-28.unity
     guid: b9b4c497d7d71d04b929dba8741c2cee
   - enabled: 0
-    path: Assets/Scenes/Levels/02) Storage/Buildout_Storage_v2.10.unity
-    guid: 363e23c6e187b42419a131eae2a31183
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/Scenes/Levels/03) Hydro/Buildout_Hydro_v1.3.unity
-    guid: 53ffe824dae31294f808a9aad47c02ef
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/Scenes/Levels/04) Adding_Art/Buildout_Art_v2.0.unity
-    guid: bfb3d9c75596ec04c9f79766ee58493c
-  - enabled: 1
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
     path: Assets/Scenes/Levels/04) Adding_Art/Buildout_Art_Final.unity
     guid: ca770fc2abd2e6942826cc9102e286ff
   - enabled: 1
     path: Assets/Scenes/ComicScene.unity
     guid: 5eaa6009080c2a840ac776c010792117
+  - enabled: 1
+    path: Assets/Scenes/Levels/04) Adding_Art/Buildout_Art_Final_2.0.unity
+    guid: 95e40d120d07c2348a185de6727c7240
   m_configObjects: {}
