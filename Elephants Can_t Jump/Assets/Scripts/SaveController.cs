@@ -36,7 +36,7 @@ public class SaveController : MonoBehaviour
         {
             alienCollectables.Add(item.name, false);
         }
-        //DeleteFile();
+        DeleteFile();
 
         if (File.Exists(Application.persistentDataPath + "/gamesave.save"))
         {
