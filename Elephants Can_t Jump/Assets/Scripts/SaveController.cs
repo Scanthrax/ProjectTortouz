@@ -7,6 +7,10 @@ using System.IO;
 
 public class SaveController : MonoBehaviour
 {
+
+    public static SaveController instance;
+
+
     public Camera cam;
     public Transform pengin;
 
@@ -20,13 +24,19 @@ public class SaveController : MonoBehaviour
 
     private void Awake()
     {
+
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(this);
+
         cam = Camera.main;
 
         foreach (var item in listOfAliens)
         {
             alienCollectables.Add(item.name, false);
         }
-        //DeleteFile();
+        DeleteFile();
 
         if (File.Exists(Application.persistentDataPath + "/gamesave.save"))
         {

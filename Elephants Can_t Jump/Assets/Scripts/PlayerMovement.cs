@@ -5,6 +5,9 @@ using Utility;
 using UnityEngine.UI;
 //TODO: safeguard for groundslam animation not completing
 
+
+public enum AudioChannel { Environment, Character, Destruction}
+
 public class PlayerMovement : MonoBehaviour
 {
     #region Movement
@@ -223,6 +226,8 @@ public class PlayerMovement : MonoBehaviour
 
     public float quipTimer = 0f;
     public float quipTime = 10f;
+    public float quipLength;
+    public bool playingQuip = false;
 
     void Start()
     {
@@ -260,7 +265,7 @@ public class PlayerMovement : MonoBehaviour
         saveController.LoadGame();
 
         rend.flipX = faceDir == -1 ? true : false;
-        //Cursor.visible = false;
+        Cursor.visible = false;
     }
 
 
@@ -368,7 +373,7 @@ public class PlayerMovement : MonoBehaviour
         #endregion
 
         #region Holding spacebar enables grip
-        if (Input.GetKey(Variables.wallGrip))
+        if (Input.GetKey(Variables.wallGrip) || Input.GetButton("Grip"))
         {
             if (groundingLR != Grounding.None || groundingTB == Grounding.Top)
             {
@@ -392,8 +397,8 @@ public class PlayerMovement : MonoBehaviour
         // The player will only be able to move on walls when gripping
         if (gripping)
         {
-            up = Input.GetKey(KeyCode.W) ? 1 : 0;
-            down = Input.GetKey(KeyCode.S) ? -1 : 0;
+            up = (Input.GetKey(KeyCode.W) || Input.GetAxis("Vertical") < 0f) ? 1 : 0;
+            down = (Input.GetKey(KeyCode.S) || Input.GetAxis("Vertical") > 0f) ? -1 : 0;
         }
         else
         {
@@ -401,8 +406,8 @@ public class PlayerMovement : MonoBehaviour
             down = 0;
         }
 
-        left = Input.GetKey(KeyCode.A) ? -1 : 0;
-        right = Input.GetKey(KeyCode.D) ? 1 : 0;
+        left = (Input.GetKey(KeyCode.A) || Input.GetAxis("Horizontal") > 0f) ? -1 : 0;
+        right = (Input.GetKey(KeyCode.D) || Input.GetAxis("Horizontal") < 0f) ? 1 : 0;
 
 
         if (groundingLR == Grounding.Left)
@@ -634,7 +639,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-        if(hor != 0)
+        if(hor != 0 && !playingQuip)
         {
             //print("moving!");
             quipTimer = 0f;
@@ -644,9 +649,25 @@ public class PlayerMovement : MonoBehaviour
             quipTimer += Time.deltaTime;
         }
 
-        if(quipTimer >= quipTime)
+        if (!playingQuip)
         {
-            print("Time for a quip!");
+            if (quipTimer >= quipTime)
+            {
+                print("start quip!");
+                playingQuip = true;
+                quipTimer = 0f;
+                // get length of quip here
+                quipLength = 2f;
+            }
+        }
+        else
+        {
+            if (quipTimer >= quipLength)
+            {
+                playingQuip = false;
+                quipTimer = 0f;
+                print("done playing quip!");
+            }
         }
 
     }
@@ -787,7 +808,7 @@ public class PlayerMovement : MonoBehaviour
                 #endregion
 
                 #region Expand the Anchor tentacle when in range of anchor & key is pressed
-                if (((Input.GetKey(thisTentacle.key) || Input.GetMouseButton(thisTentacle.mouseButton))) && !delayLaunch)
+                if ((Input.GetKey(thisTentacle.key) || Input.GetMouseButton(thisTentacle.mouseButton) || Input.GetAxis("Tentacle Grab") != 0f) && !delayLaunch)
                 {
                     // there is only a single point
                     if (anchorPositions.Count == 1)
@@ -874,8 +895,8 @@ public class PlayerMovement : MonoBehaviour
                     // set state to Anchored
                     thisTentacle.state = Tentacles.Anchored;
 
-                    SoundLibrary.AudioSource[0].clip = SoundLibrary.TentacleSlap;
-                    SoundLibrary.AudioSource[0].Play();
+                    SoundLibrary.AudioSource[(int)AudioChannel.Environment].clip = SoundLibrary.TentacleSlap;
+                    SoundLibrary.AudioSource[(int)AudioChannel.Environment].Play();
 
                     #region switch tentacles
                     if (otherTentacle.state == Tentacles.Anchored)
@@ -892,7 +913,7 @@ public class PlayerMovement : MonoBehaviour
             case Tentacles.Anchored:
 
                 #region Press key to retract
-                if (!Input.GetKey(thisTentacle.key) && !Input.GetMouseButton(thisTentacle.mouseButton))
+                if (!Input.GetKey(thisTentacle.key) && !Input.GetMouseButton(thisTentacle.mouseButton) && Input.GetAxis("Tentacle Grab") == 0f)
                 {
                     thisTentacle.state = Tentacles.Retracting;
                     thisTentacle.anchorPos = null;
@@ -919,7 +940,7 @@ public class PlayerMovement : MonoBehaviour
                 
 
 
-                if (Input.GetKeyDown(Variables.launch) && otherTentacle.state == Tentacles.Anchored)
+                if ((Input.GetKeyDown(Variables.launch) || Input.GetButtonDown("Launch")) && otherTentacle.state == Tentacles.Anchored)
                 {
                     #region retract both tentacles
                     thisTentacle.state = Tentacles.Retracting;
@@ -929,8 +950,8 @@ public class PlayerMovement : MonoBehaviour
                     movement = Movement.Launch;
                     if (Random.Range(0, 3) == 0)
                     {
-                        SoundLibrary.AudioSource[1].clip = SoundLibrary.Launch[Random.Range(0, SoundLibrary.Launch.Length-1)];
-                        SoundLibrary.AudioSource[1].Play();
+                        SoundLibrary.AudioSource[(int)AudioChannel.Character].clip = SoundLibrary.Launch[Random.Range(0, SoundLibrary.Launch.Length-1)];
+                        SoundLibrary.AudioSource[(int)AudioChannel.Character].Play();
                     }
 
                 }

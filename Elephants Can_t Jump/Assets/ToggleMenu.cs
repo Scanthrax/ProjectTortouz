@@ -14,7 +14,7 @@ public class ToggleMenu : MonoBehaviour {
 
     private void Update()
     {
-        if(Input.GetKeyDown(esc))
+        if(Input.GetKeyDown(esc) || Input.GetButtonDown("Menu"))
         {
             buttons.SetActive(!buttons.activeSelf);
         }

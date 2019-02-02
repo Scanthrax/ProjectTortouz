@@ -10,6 +10,7 @@ public class MenuFunctions : MonoBehaviour
     public Object menuScene;
     public static Object GameScene;
     public static Object MenuScene;
+
     private void Start()
     {
         GameScene = gameScene;
@@ -25,13 +26,13 @@ public class MenuFunctions : MonoBehaviour
         SaveController.buttonsDict = new Dictionary<string, bool>();
         SaveController.breakableDict = new Dictionary<string, bool>();
         SaveController.alienCollectables = new Dictionary<string, bool>();
-        StartCoroutine(Fade.FadeOut(1.5f, "Buildout_Art_Final"));
+        StartCoroutine(Fade.FadeOut(1.5f, "ComicScene"));
     }
 
 
     public void ContinueGame()
     {
-        StartCoroutine(Fade.FadeOut(1.5f, "Buildout_Art_Final"));
+        StartCoroutine(Fade.FadeOut(1.5f, "Buildout_Art_Final_2.0"));
     }
 
     public static void LoadGame(Object scene)
