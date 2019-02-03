@@ -1,18 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Steamworks;
 
 public class Achievement1 : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public string achievementID;
+    bool temp = true;
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        
+
+        SteamUserStats.GetAchievement(achievementID, out temp);
+        if (!temp)
+        {
+            SteamUserStats.SetAchievement(achievementID);
+            SteamUserStats.StoreStats();
+        }
     }
 }
