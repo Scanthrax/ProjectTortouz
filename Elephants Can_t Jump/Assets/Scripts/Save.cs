@@ -26,5 +26,8 @@ public class Save
     [SerializeField]
     public Dictionary<string, bool> alienCollectables = new Dictionary<string, bool>();
 
+    [SerializeField]
+    public Music levelMusic = Music.Barn;
+
 }
 

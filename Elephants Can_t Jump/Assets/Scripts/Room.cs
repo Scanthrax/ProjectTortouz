@@ -10,6 +10,7 @@ public class Room : MonoBehaviour {
     public delegate void RoomChange(Room fromRoom, Room toRoom);
     public static event RoomChange roomChange;
     Room thisRoom;
+    PlayerMovement pm;
 
     void Awake()
     {
@@ -19,6 +20,7 @@ public class Room : MonoBehaviour {
     {
         player = CameraCenterpoints.player.transform;
         player.GetComponent<PlayerMovement>().room = thisRoom;
+        pm = player.GetComponent<PlayerMovement>();
     }
     void Update()
     {
@@ -35,7 +37,7 @@ public class Room : MonoBehaviour {
             player.position.y > transform.position.y + Variables.vertExtent ))
         {
             // if new room is entered, change rooms
-            if(player.GetComponent<PlayerMovement>().room != thisRoom)
+            if(player.GetComponent<PlayerMovement>().room != thisRoom && !pm.endgame)
             {
                 roomChange(player.GetComponent<PlayerMovement>().room, thisRoom);
             }

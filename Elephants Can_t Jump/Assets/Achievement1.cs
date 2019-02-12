@@ -5,17 +5,29 @@ using Steamworks;
 
 public class Achievement1 : MonoBehaviour
 {
+    // in the inspector, set the achievement ID
     public string achievementID;
-    bool temp = true;
+
+    // set a boolean that determines whether or not the achievement has been achieved
+    // by default, it is set to true so it doesn't immediately pass the condition
+    bool achieved = true;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
 
-        SteamUserStats.GetAchievement(achievementID, out temp);
-        if (!temp)
+        if (collision.gameObject.CompareTag("Player"))
         {
-            SteamUserStats.SetAchievement(achievementID);
-            SteamUserStats.StoreStats();
+            // this checks if the achievement has been achieved & spits out the result in the bool
+            SteamUserStats.GetAchievement(achievementID, out achieved);
+
+            // if we don't have the achievement yet, we can say that we've achieved it
+            if (!achieved)
+            {
+                // set the achievement
+                SteamUserStats.SetAchievement(achievementID);
+                // store it on steam's side
+                SteamUserStats.StoreStats();
+            }
         }
     }
 }

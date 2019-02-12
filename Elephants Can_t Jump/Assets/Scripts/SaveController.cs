@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using Steamworks;
 
 
 public class SaveController : MonoBehaviour
@@ -17,10 +18,9 @@ public class SaveController : MonoBehaviour
     public static Dictionary<string, bool> buttonsDict = new Dictionary<string, bool>();
     public static Dictionary<string, bool> breakableDict = new Dictionary<string, bool>();
 
-    public List<AlienObjects> listOfAliens;
     public static Dictionary<string, bool> alienCollectables = new Dictionary<string, bool>();
 
-    Save save = new Save();
+    public Save save = new Save();
 
     private void Awake()
     {
@@ -32,11 +32,8 @@ public class SaveController : MonoBehaviour
 
         cam = Camera.main;
 
-        foreach (var item in listOfAliens)
-        {
-            alienCollectables.Add(item.name, false);
-        }
-        DeleteFile();
+
+        //DeleteFile();
 
         if (File.Exists(Application.persistentDataPath + "/gamesave.save"))
         {
@@ -49,6 +46,20 @@ public class SaveController : MonoBehaviour
             buttonsDict = save.buttonsDict;
             breakableDict = save.breakableDict;
             alienCollectables = save.alienCollectables;
+        }
+
+
+
+        if(alienCollectables.Count > 0)
+        {
+            bool temp;
+
+            SteamUserStats.GetAchievement("First Critter", out temp);
+            if (!temp)
+            {
+                SteamUserStats.SetAchievement("First Critter");
+                SteamUserStats.StoreStats();
+            }
         }
 
     }
@@ -77,7 +88,7 @@ public class SaveController : MonoBehaviour
             alienCollectables = save.alienCollectables;
             buttonsDict = save.buttonsDict;
             breakableDict = save.breakableDict;
-
+            MusicManager.instance.levelMusic = save.levelMusic;
 
             Debug.Log("Game Loaded");
             SaveGame(save);
@@ -113,7 +124,7 @@ public class SaveController : MonoBehaviour
         save.alienCollectables = alienCollectables;
         save.lastSave = true;
 
-        
+        save.levelMusic = MusicManager.instance.levelMusic;
 
 
         BinaryFormatter bf = new BinaryFormatter();
@@ -130,6 +141,8 @@ public class SaveController : MonoBehaviour
         save.x = pengin.position.x;
         save.y = pengin.position.y;
         save.z = pengin.position.z;
+
+        save.levelMusic = MusicManager.instance.levelMusic;
 
         save.faceDirection = pengin.GetComponent<PlayerMovement>().faceDir;
 

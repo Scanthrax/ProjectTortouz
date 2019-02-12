@@ -40,7 +40,7 @@ public class Button : MonoBehaviour, IBreakable
 
         
 
-        print("Button Start " + keyID);
+        //print("Button Start " + keyID);
 
         bool temp;
         if (SaveController.buttonsDict.ContainsKey(keyID))

@@ -19,11 +19,13 @@ public class CritterPanel : MonoBehaviour
 
     private void Start()
     {
-        if(SaveController.alienCollectables[critter.name])
+        if (SaveController.alienCollectables.ContainsKey(critter.name))
         {
-            black.SetActive(false);
+            black.SetActive(!SaveController.alienCollectables[critter.name]);
         }
         else
+        {
             black.SetActive(true);
+        }
     }
 }

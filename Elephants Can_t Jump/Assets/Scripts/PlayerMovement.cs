@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utility;
 using UnityEngine.UI;
+using Steamworks;
+
 //TODO: safeguard for groundslam animation not completing
 
 
@@ -229,6 +231,9 @@ public class PlayerMovement : MonoBehaviour
     public float quipLength;
     public bool playingQuip = false;
 
+
+    public bool endgame;
+
     void Start()
     {
         // assign the rigidbody component
@@ -266,6 +271,8 @@ public class PlayerMovement : MonoBehaviour
 
         rend.flipX = faceDir == -1 ? true : false;
         Cursor.visible = false;
+
+        endgame = false;
     }
 
 
@@ -394,31 +401,40 @@ public class PlayerMovement : MonoBehaviour
         #endregion
 
         #region movement
-        // The player will only be able to move on walls when gripping
-        if (gripping)
+        if (!endgame)
         {
-            up = (Input.GetKey(KeyCode.W) || Input.GetAxis("Vertical") < 0f) ? 1 : 0;
-            down = (Input.GetKey(KeyCode.S) || Input.GetAxis("Vertical") > 0f) ? -1 : 0;
+            // The player will only be able to move on walls when gripping
+            if (gripping)
+            {
+                up = (Input.GetKey(KeyCode.W) || Input.GetAxis("Vertical") < 0f) ? 1 : 0;
+                down = (Input.GetKey(KeyCode.S) || Input.GetAxis("Vertical") > 0f) ? -1 : 0;
+            }
+            else
+            {
+                up = 0;
+                down = 0;
+            }
+
+            left = (Input.GetKey(KeyCode.A) || Input.GetAxis("Horizontal") > 0f) ? -1 : 0;
+            right = (Input.GetKey(KeyCode.D) || Input.GetAxis("Horizontal") < 0f) ? 1 : 0;
+
+
+            if (groundingLR == Grounding.Left)
+            {
+                left = 0;
+            }
+            else if (groundingLR == Grounding.Right)
+            {
+                right = 0;
+            }
         }
         else
         {
             up = 0;
             down = 0;
-        }
-
-        left = (Input.GetKey(KeyCode.A) || Input.GetAxis("Horizontal") > 0f) ? -1 : 0;
-        right = (Input.GetKey(KeyCode.D) || Input.GetAxis("Horizontal") < 0f) ? 1 : 0;
-
-
-        if (groundingLR == Grounding.Left)
-        {
-            left = 0;
-        }
-        else if (groundingLR == Grounding.Right)
-        {
+            left = -1;
             right = 0;
         }
-
 
 
         // horizontal movement with A & D
@@ -705,7 +721,7 @@ public class PlayerMovement : MonoBehaviour
         {
             // clamp the magnitude of the launch
             rb.AddForce(Vector2.ClampMagnitude(launchDir.right * SpringCalc2(), 7000f));
-            print((1/SpringCalc2()) * 1200f + " force");
+            //print((1/SpringCalc2()) * 1200f + " force");
             // no longer launching
             launch = false;
             LaunchDelay((1/SpringCalc2())* 1200f);
@@ -862,7 +878,7 @@ public class PlayerMovement : MonoBehaviour
                 #region retract & break if connection is broken
                 if (anchorPositions.Count == 0 || thisTentacle.anchorPos == null)
                 {
-                    print("Retracting & breaking connection");
+                    //print("Retracting & breaking connection");
                     thisTentacle.state = Tentacles.Retracting;
                     thisTentacle.anchorPos = null;
                     break;
@@ -871,7 +887,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     if(Vector2.Distance(transform.position, thisTentacle.anchorPos.position) > tentacleRange)
                     {
-                        print("Retracting & breaking connection");
+                        //print("Retracting & breaking connection");
                         thisTentacle.state = Tentacles.Retracting;
                         thisTentacle.anchorPos = null;
                         break;
@@ -1155,6 +1171,36 @@ public class PlayerMovement : MonoBehaviour
             AlienObjects thisAlien = collision.GetComponent<AlienCollectable>().alien;
             SaveController.alienCollectables[thisAlien.name] = true;
             print("Collected the alien: " + thisAlien.name);
+
+
+            bool temp = true;
+
+            if (SaveController.alienCollectables.Count == 1)
+            {
+                SteamUserStats.GetAchievement("First Critter", out temp);
+                if (!temp)
+                {
+                    SteamUserStats.SetAchievement("First Critter");
+                    SteamUserStats.StoreStats();
+                }
+            }
+
+
+            temp = true;
+
+            if (SaveController.alienCollectables.Count == 9)
+            {
+                SteamUserStats.GetAchievement("All Critters", out temp);
+                if (!temp)
+                {
+                    SteamUserStats.SetAchievement("All Critters");
+                    SteamUserStats.StoreStats();
+                }
+            }
+
+
+
+
             Destroy(collision.gameObject);
             
         }

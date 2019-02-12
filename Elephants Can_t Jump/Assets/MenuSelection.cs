@@ -63,6 +63,8 @@ public class MenuSelection : MonoBehaviour
         startMenu.gameObject.SetActive(true);
         startMenu.localPosition = new Vector2(0, 0);
 
+        DontDestroyOnLoad(gameObject);
+
     }
 
 

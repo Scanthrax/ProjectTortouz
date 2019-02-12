@@ -166,4 +166,11 @@ public class SteamManager : MonoBehaviour {
 		// Run Steam client callbacks
 		SteamAPI.RunCallbacks();
 	}
+
+
+    private void Start()
+    {
+        SteamUserStats.ClearAchievement("Escape The Barn");
+        SteamUserStats.ClearAchievement("First Critter");
+    }
 }
