@@ -65,7 +65,10 @@ public class SaveController : MonoBehaviour
     }
 
 
-    
+    public bool FileExists()
+    {
+        return File.Exists(Application.persistentDataPath + "/gamesave.save");
+    }
 
     public void LoadGame()
     {
@@ -155,7 +158,7 @@ public class SaveController : MonoBehaviour
     }
 
 
-    void DeleteFile()
+    public void DeleteFile()
     {
         File.Delete(Application.persistentDataPath + "/gamesave.save");
     }

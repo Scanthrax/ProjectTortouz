@@ -263,9 +263,7 @@ public class PlayerMovement : MonoBehaviour
 
 
         
-        Fade.Screen = blackscreen;
-        blackscreen.gameObject.SetActive(true);
-        StartCoroutine(Fade.FadeIn(2f));
+        
 
         saveController.LoadGame();
 
@@ -1188,7 +1186,7 @@ public class PlayerMovement : MonoBehaviour
 
             temp = true;
 
-            if (SaveController.alienCollectables.Count == 9)
+            if (SaveController.alienCollectables.Count == 8)
             {
                 SteamUserStats.GetAchievement("All Critters", out temp);
                 if (!temp)

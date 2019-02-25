@@ -18,7 +18,7 @@ public class MenuSelection : MonoBehaviour
     /// <summary>
     /// This dictionary keeps track of the different menus.  Feeding in a menu name will obtain the menu
     /// </summary>
-    Dictionary<Menu, RectTransform> menuDictionary = new Dictionary<Menu, RectTransform>();
+    public Dictionary<Menu, RectTransform> menuDictionary = new Dictionary<Menu, RectTransform>();
 
     /// <summary>
     /// This curve controls the sweeping motion between menu transitions
@@ -35,6 +35,9 @@ public class MenuSelection : MonoBehaviour
     /// </summary>
     public float duration = 0.4f;
 
+    public bool switching;
+
+    public Menu currentMenu;
 
     void Start()
     {
@@ -47,8 +50,8 @@ public class MenuSelection : MonoBehaviour
         // set button interactions
         // Get menu                  // locate the button & get the component   // add the function to the button listener  // out menu             // in menu                      // direction of sweep
 
-        menuDictionary[Menu.Critters].Find("Button").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { GoToNextMenu(menuDictionary[Menu.Critters], menuDictionary[Menu.Menu], Direction.Left); });
-        menuDictionary[Menu.Menu].Find("Buttons").Find("Collectables").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { GoToNextMenu(menuDictionary[Menu.Menu], menuDictionary[Menu.Critters], Direction.Right); });
+        menuDictionary[Menu.Critters].Find("Button").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { GoToNextMenu(Menu.Critters, Menu.Menu, Direction.Left); });
+        menuDictionary[Menu.Menu].Find("Buttons").Find("Collectables").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { GoToNextMenu(Menu.Menu, Menu.Critters, Direction.Right); });
 
         // disable all menus
         foreach (KeyValuePair<Menu, RectTransform> entry in menuDictionary)
@@ -63,6 +66,10 @@ public class MenuSelection : MonoBehaviour
         startMenu.gameObject.SetActive(true);
         startMenu.localPosition = new Vector2(0, 0);
 
+
+        switching = false;
+        currentMenu = Menu.Menu;
+
         DontDestroyOnLoad(gameObject);
 
     }
@@ -75,10 +82,13 @@ public class MenuSelection : MonoBehaviour
     /// <param name="outMenu">The menu we are leaving</param>
     /// <param name="inMenu">The menu we are entering</param>
     /// <param name="dir">The menu we are entering</param>
-    public void GoToNextMenu(RectTransform outMenu, RectTransform inMenu, Direction dir)
+    public void GoToNextMenu(Menu outMenu, Menu inMenu, Direction dir)
     {
-        MoveMenus(outMenu, true, dir);
-        MoveMenus(inMenu, false, dir);
+        var x = menuDictionary[outMenu];
+        var y = menuDictionary[inMenu];
+
+        MoveMenus(x, true, dir, inMenu);
+        MoveMenus(y, false, dir, inMenu);
     }
 
     /// <summary>
@@ -86,13 +96,16 @@ public class MenuSelection : MonoBehaviour
     /// </summary>
     /// <param name="obj">The menu to move</param>
     /// <param name="setInactive">Do we set the menu as inactive after transitioning?</param>
-    void MoveMenus(RectTransform obj, bool setInactive, Direction dir)
+    void MoveMenus(RectTransform obj, bool setInactive, Direction dir, Menu newMenu)
     {
-        StartCoroutine(AnimateMove(obj, setInactive, dir));
+        StartCoroutine(AnimateMove(obj, setInactive, dir, newMenu));
     }
 
-    IEnumerator AnimateMove(RectTransform obj, bool setInactive, Direction dir)
+    IEnumerator AnimateMove(RectTransform obj, bool setInactive, Direction dir, Menu newMenu)
     {
+
+        switching = true;
+
         Vector2 target;
         Vector2 origin;
         Vector2 offset;
@@ -148,6 +161,15 @@ public class MenuSelection : MonoBehaviour
         // the loop is now over, so if the menu is going out, we disable it
         if (setInactive)
             obj.gameObject.SetActive(false);
+        else
+        {
+            currentMenu = newMenu;
+        }
+
+        switching = false;
+
+
+
     }
 
 
