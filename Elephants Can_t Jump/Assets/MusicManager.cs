@@ -83,7 +83,7 @@ public class MusicManager : MonoBehaviour
 
 
         DontDestroyOnLoad(gameObject);
-        PlaySong(Music.Menu);
+        
 
         switchSong = false;
     }
@@ -93,6 +93,7 @@ public class MusicManager : MonoBehaviour
     {
         musicPlayer.clip = musicDict[music];
         musicPlayer.Play();
+        levelMusic = music;
     }
 
 
@@ -121,6 +122,7 @@ public class MusicManager : MonoBehaviour
 
         switchMusicTo = music;
         switchSong = true;
+        levelMusic = music;
     }
 
 

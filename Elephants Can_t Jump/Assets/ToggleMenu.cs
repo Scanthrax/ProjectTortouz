@@ -22,20 +22,23 @@ public class ToggleMenu : MonoBehaviour {
         {
             buttons.SetActive(!buttons.activeSelf);
             isMenuActive = !isMenuActive;
+            Cursor.visible = isMenuActive;
         }
 
-
-        if (Input.GetButton("Grip") && Input.GetButton("Y"))
+        if (isMenuActive)
         {
-            Restart();
+
+            if (Input.GetButton("Grip") && Input.GetButton("Y"))
+            {
+                Restart();
+            }
+
+
+            if (Input.GetButton("Back"))
+            {
+                MainMenu();
+            }
         }
-
-
-        if (Input.GetButton("Back"))
-        {
-            MainMenu();
-        }
-
 
 
 

@@ -11,6 +11,9 @@ public class Endgame : MonoBehaviour
         {
             pm.endgame = true;
         }
+
+        StartCoroutine(Fade.instance.FadeOut(3f, "CREDITS"));
+
     }
 
 

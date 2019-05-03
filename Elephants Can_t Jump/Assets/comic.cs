@@ -34,6 +34,8 @@ public class comic : MonoBehaviour {
         switching = false;
 
         menuFunctions = GetComponent<MenuFunctions>();
+
+        Cursor.visible = true;
     }
 
 
@@ -54,6 +56,7 @@ public class comic : MonoBehaviour {
         if (Input.GetButton("Wall Bash"))
         {
             menuFunctions.GoToGame();
+            SetMainMusic();
         }
     }
 
@@ -199,5 +202,8 @@ public class comic : MonoBehaviour {
     }
 
 
-
+    public void SetMainMusic()
+    {
+        MusicManager.instance.levelMusic = Music.Barn;
+    }
 }

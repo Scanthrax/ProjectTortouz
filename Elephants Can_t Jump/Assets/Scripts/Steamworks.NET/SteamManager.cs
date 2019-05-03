@@ -168,9 +168,4 @@ public class SteamManager : MonoBehaviour {
 	}
 
 
-    private void Start()
-    {
-        SteamUserStats.ClearAchievement("Escape The Barn");
-        SteamUserStats.ClearAchievement("First Critter");
-    }
 }

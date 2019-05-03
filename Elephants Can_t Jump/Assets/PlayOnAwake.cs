@@ -6,8 +6,12 @@ public class PlayOnAwake : MonoBehaviour
 {
     private void Start()
     {
-        MusicManager.instance.PlaySong(Music.Barn);
+
+
+        MusicManager.instance.PlaySong(MusicManager.instance.levelMusic);
         StartCoroutine(Fade.instance.FadeIn(2f));
+
+        Cursor.visible = false;
         
     }
 
